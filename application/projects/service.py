@@ -11,7 +11,7 @@ from typing import Optional
 from domain.documents.ports import SourceRepository
 from domain.projects.entities import Project
 from domain.projects.packaging import IntegrityReport, PackageManifest
-from domain.projects.ports import ConfigurationRepository, ProjectPackager, ProjectRepository
+from domain.projects.ports import ConfigurationRepository, ImportLock, ProjectPackager, ProjectRepository
 
 from .commands.archive_project import ArchiveProject
 from .commands.backup_project import BackupProject
@@ -37,12 +37,13 @@ class ProjectService:
         configuration_repository: ConfigurationRepository,
         packager: ProjectPackager,
         source_repository: Optional[SourceRepository] = None,
+        import_lock: Optional[ImportLock] = None,
     ):
         self._create = CreateProject(repository)
         self._clone = CloneProject(repository)
         self._archive = ArchiveProject(repository)
         self._export = ExportProject(repository, packager)
-        self._import = ImportProject(repository, packager)
+        self._import = ImportProject(repository, packager, import_lock=import_lock)
         self._validate_integrity = ValidateProjectIntegrity(packager)
         self._backup = BackupProject(repository, packager)
         self._get = GetProject(repository)
@@ -111,13 +112,15 @@ class ProjectService:
 
     def import_project(
         self, package_path: str, new_project_id: Optional[str] = None, new_name: Optional[str] = None,
-        set_aside_residue: bool = False,
+        set_aside_residue: bool = False, identity_policy: object = None,
     ) -> Project:
         """Ronda 88: new_name (importar con otro nombre) y set_aside_residue
-        (apartar restos de un intento anterior incompleto) -- ver
+        (apartar restos de un intento anterior incompleto). RAG-INC-01a:
+        `identity_policy` ("preserve" o "fork") es obligatoria -- ver
         application.projects.commands.import_project."""
         return self._import.execute(
             package_path, new_project_id=new_project_id, new_name=new_name, set_aside_residue=set_aside_residue,
+            identity_policy=identity_policy,
         )
 
     def validate_integrity(self, package_path: str) -> IntegrityReport:

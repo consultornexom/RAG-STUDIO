@@ -77,6 +77,7 @@ from infrastructure.extraction.text_extractors import (
 from infrastructure.filesystem.deployment_packager import FilesystemDeploymentPackager
 from infrastructure.filesystem.diagnostics import FilesystemDiagnosticsExporter
 from infrastructure.filesystem.import_batch_ledger import JsonlImportBatchLedger
+from infrastructure.filesystem.import_lock import FileImportLock
 from infrastructure.filesystem.packager import FilesystemProjectPackager
 from infrastructure.filesystem.paths import InstallationPaths
 from infrastructure.filesystem.project_snapshot_publisher import FilesystemProjectSnapshotPublisher
@@ -143,7 +144,11 @@ def bootstrap(
     # el que extraction_repository se adelanta más abajo para
     # DocumentService.
     source_repository = SqlAlchemySourceRepository(paths)
-    project_service = ProjectService(repository, configuration_repository, packager, source_repository)
+    project_service = ProjectService(
+        repository, configuration_repository, packager, source_repository,
+        # RAG-INC-01a: bloqueo entre procesos de la importación (INC01-R9).
+        import_lock=FileImportLock(paths.base_dir),
+    )
     # extraction_repository se construye aquí (antes que IngestionService)
     # porque DocumentService también la necesita: para saber si ya se
     # puede bloquear la edición de location/source_type de una fuente

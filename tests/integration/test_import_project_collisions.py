@@ -13,7 +13,11 @@ from pathlib import Path
 import pytest
 
 from domain.conversational.entities import Intent
-from domain.projects.exceptions import ImportNameCollisionError, ImportResidueError, ProjectIdCollisionError
+from domain.projects.exceptions import (
+    ImportNameCollisionError,
+    ImportResidueError,
+    KnowledgeBaseIdentityCollisionError,
+)
 from infrastructure.database.conversational_repositories import SqlAlchemyIntentRepository
 
 from .test_export_import_roundtrip import _make_service
@@ -35,13 +39,13 @@ def test_nombre_repetido_se_detecta_antes_de_copiar_y_no_deja_restos(tmp_path):
     service.create_project("AGENTE UDL")  # otro proyecto, mismo nombre (caso de la captura)
 
     with pytest.raises(ImportNameCollisionError) as exc:
-        service.import_project(str(package))
+        service.import_project(str(package), identity_policy="preserve")
     assert exc.value.suggested_name == "AGENTE UDL (importado)"
     assert not paths.project_dir(package_id).exists()
 
     # Reintento: ya no aparece "Ya existe un proyecto real con id=...".
     with pytest.raises(ImportNameCollisionError):
-        service.import_project(str(package))
+        service.import_project(str(package), identity_policy="preserve")
 
 
 def test_importar_con_otro_nombre_conserva_los_datos(tmp_path):
@@ -49,7 +53,7 @@ def test_importar_con_otro_nombre_conserva_los_datos(tmp_path):
     service, paths = _make_service(tmp_path / "equipo_destino")
     service.create_project("AGENTE UDL")
 
-    imported = service.import_project(str(package), new_name="AGENTE UDL (importado)")
+    imported = service.import_project(str(package), new_name="AGENTE UDL (importado)", identity_policy="preserve")
 
     assert imported.id == package_id
     assert {p.name for p in service.list_projects()} == {"AGENTE UDL", "AGENTE UDL (importado)"}
@@ -67,9 +71,9 @@ def test_restos_de_un_intento_fallido_se_apartan_sin_borrarse(tmp_path):
         zf.extractall(residuo)
 
     with pytest.raises(ImportResidueError):
-        service.import_project(str(package))
+        service.import_project(str(package), identity_policy="preserve")
 
-    imported = service.import_project(str(package), set_aside_residue=True)
+    imported = service.import_project(str(package), set_aside_residue=True, identity_policy="preserve")
 
     assert imported.id == package_id
     apartados = list((paths.base_dir / "residuos_importacion").iterdir())
@@ -83,16 +87,18 @@ def test_mismo_proyecto_ya_registrado_se_importa_como_copia_con_todos_sus_datos(
     proyecto copiado aparecía vacío."""
     package, package_id = _paquete_agente_udl(tmp_path)
     service, paths = _make_service(tmp_path / "equipo_destino")
-    service.import_project(str(package))
+    service.import_project(str(package), identity_policy="preserve")
 
-    with pytest.raises(ProjectIdCollisionError) as exc:
-        service.import_project(str(package))
-    assert exc.value.existing_name == "AGENTE UDL"
+    # RAG-INC-01a: con preserve, la identidad (knowledge_base_id) ya existe;
+    # se detecta antes que el id y la salida es "Importar como copia" (fork).
+    with pytest.raises(KnowledgeBaseIdentityCollisionError) as exc:
+        service.import_project(str(package), identity_policy="preserve")
+    assert exc.value.existing_project_id == package_id
 
     nuevo_id = str(uuid.uuid4())
     with pytest.raises(ImportNameCollisionError):
-        service.import_project(str(package), new_project_id=nuevo_id)
-    copia = service.import_project(str(package), new_project_id=nuevo_id, new_name="AGENTE UDL (copia)")
+        service.import_project(str(package), new_project_id=nuevo_id, identity_policy="fork")
+    copia = service.import_project(str(package), new_project_id=nuevo_id, new_name="AGENTE UDL (copia)", identity_policy="fork")
 
     assert copia.id == nuevo_id
     intents = SqlAlchemyIntentRepository(paths)
@@ -110,7 +116,7 @@ def test_si_el_registro_falla_se_deshace_la_copia(tmp_path, monkeypatch):
 
     monkeypatch.setattr(service._import._repository, "save", falla)
     with pytest.raises(RuntimeError):
-        service.import_project(str(package))
+        service.import_project(str(package), identity_policy="preserve")
 
     assert not paths.project_dir(package_id).exists()
     assert not [p for p in paths.projects_dir().iterdir() if p.name.startswith(".importando_")]

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-from domain.projects.entities import ConfigurationEntry, Project
+from domain.projects.entities import ConfigurationEntry, IdentityPolicy, Project
 from domain.projects.packaging import IntegrityReport, PackageManifest
 from domain.projects.ports import ConfigurationRepository, ProjectPackager, ProjectRepository
 
@@ -65,11 +65,22 @@ class FakeProjectPackager(ProjectPackager):
     manifest_project_id = "imported-id"
     manifest_project_name = "Proyecto importado"
 
-    def import_project(self, package_path, new_project_id=None, new_name=None):
+    # RAG-INC-01a: knowledge_base_id que "trae" el paquete falso.
+    manifest_knowledge_base_id = "kb-del-paquete"
+
+    def import_project(self, package_path, new_project_id=None, new_name=None,
+                       identity_policy=IdentityPolicy.PRESERVE):
         self.import_calls.append(package_path)
+        self.import_policies = getattr(self, "import_policies", []) + [IdentityPolicy(identity_policy)]
         project_id = new_project_id or self.manifest_project_id
         self.on_disk.add(project_id)
-        return Project(id=project_id, name=new_name or self.manifest_project_name)
+        if IdentityPolicy(identity_policy) == IdentityPolicy.FORK:
+            return Project(id=project_id, name=new_name or self.manifest_project_name)
+        return Project(id=project_id, name=new_name or self.manifest_project_name,
+                       knowledge_base_id=self.manifest_knowledge_base_id)
+
+    def read_knowledge_base_id(self, package_path):
+        return self.manifest_knowledge_base_id
 
     def inspect_package(self, package_path):
         return PackageManifest(

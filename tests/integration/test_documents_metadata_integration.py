@@ -160,7 +160,7 @@ def test_documents_and_metadata_survive_export_import_roundtrip(tmp_path):
     project_service.export_project(project.id, str(export_path))
 
     project_service_b, document_service_b, metadata_service_b, _ = _bootstrap_services(tmp_path / "laptop_b")
-    imported = project_service_b.import_project(str(export_path))
+    imported = project_service_b.import_project(str(export_path), identity_policy="preserve")
 
     imported_sources = document_service_b.list_sources(imported.id)
     assert len(imported_sources) == 1

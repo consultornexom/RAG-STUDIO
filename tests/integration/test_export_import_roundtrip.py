@@ -42,7 +42,7 @@ def test_export_import_roundtrip_across_installations(tmp_path):
     assert report.checked_files == 2
 
     service_b, paths_b = _make_service(tmp_path / "laptop_b")
-    imported = service_b.import_project(str(export_path))
+    imported = service_b.import_project(str(export_path), identity_policy="preserve")
     assert imported.id == project.id
     assert imported.name == "Agente RRHH"
 
@@ -147,7 +147,7 @@ def test_a_package_with_a_path_traversal_entry_is_reported_as_invalid(tmp_path):
     assert "insegura" in (report.error or "").lower() or "inválidos" in (report.error or "").lower()
 
     try:
-        service.import_project(str(malicious_path))
+        service.import_project(str(malicious_path), identity_policy="preserve")
         raise AssertionError("import_project debía rechazar el paquete con path traversal")
     except IntegrityViolationError:
         pass
@@ -233,7 +233,9 @@ def test_importing_a_package_whose_project_id_already_exists_is_rejected(tmp_pat
     assert report.is_valid  # el manifiesto es autoconsistente; la colisión se detecta al importar
 
     try:
-        service.import_project(str(tampered_path))
+        # RAG-INC-01a: el paquete conserva la identidad de INTRUSO (que sigue
+        # instalado); con fork se llega a la comprobación del project_id.
+        service.import_project(str(tampered_path), identity_policy="fork")
         raise AssertionError("import_project debía rechazar la colisión de project_id")
     except ProjectIdCollisionError as exc:
         assert exc.project_id == original.id

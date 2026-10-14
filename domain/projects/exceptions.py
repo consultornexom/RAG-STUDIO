@@ -108,3 +108,62 @@ class ProjectInUseError(ProjectDomainError):
         )
         self.project_id = project_id
         self.source_count = source_count
+
+
+class MissingIdentityPolicyError(ProjectDomainError):
+    """RAG-INC-01a (Alcance firmado, decisión INC01-D3): importar un proyecto
+    exige indicar explícitamente `identity_policy` ("preserve" o "fork").
+    Sin ella, la importación aborta antes de leer o modificar datos: RAG
+    Studio nunca decide en silencio qué hacer con la identidad."""
+
+    def __init__(self, recibido: object = None):
+        detalle = "" if recibido is None else f" (recibido: {recibido!r})"
+        super().__init__(
+            "Falta indicar cómo tratar la identidad del proyecto importado: "
+            f"identity_policy debe ser 'preserve' o 'fork'{detalle}."
+        )
+
+
+class KnowledgeBaseIdentityCollisionError(ProjectDomainError):
+    """RAG-INC-01a: el paquete conserva una identidad de base de conocimiento
+    (`knowledge_base_id`) que ya tiene un proyecto de esta instalación,
+    activo o archivado. Con `identity_policy="preserve"` la importación se
+    detiene sin modificar nada; la alternativa es importarlo como copia
+    (`identity_policy="fork"`), que le asigna una identidad nueva."""
+
+    def __init__(self, knowledge_base_id: str, existing_project_id: str, existing_name: str = ""):
+        nombre = f" «{existing_name}»" if existing_name else ""
+        super().__init__(
+            f"Este paquete conserva la identidad de una base de conocimiento que ya existe en esta "
+            f"instalación: la del proyecto{nombre} (id={existing_project_id!r}). Importarlo tal cual "
+            "dejaría dos proyectos con la misma identidad. Puede importarlo como copia: recibe una "
+            "identidad nueva y el proyecto existente no se toca."
+        )
+        self.knowledge_base_id = knowledge_base_id
+        self.existing_project_id = existing_project_id
+        self.existing_name = existing_name
+
+
+class ImportLockTimeoutError(ProjectDomainError):
+    """RAG-INC-01a: otra importación (de este u otro proceso) tiene tomado el
+    bloqueo de la instalación más allá del tiempo máximo. No se modificó nada."""
+
+    def __init__(self, segundos: float):
+        super().__init__(
+            f"Otra importación de proyecto está en curso en esta instalación (se esperó {segundos:.0f} s). "
+            "No se modificó nada; vuelva a intentarlo cuando termine."
+        )
+        self.segundos = segundos
+
+
+class ImportIdentityCheckError(ProjectDomainError):
+    """RAG-INC-01a (caso L-04): no se pudo leer la identidad de algún proyecto
+    instalado, así que no puede garantizarse la ausencia de colisión. La
+    importación aborta (fail-closed) sin modificar nada."""
+
+    def __init__(self, project_id: str, causa: str):
+        super().__init__(
+            f"No se pudo verificar la identidad del proyecto instalado id={project_id!r} ({causa}). "
+            "Por seguridad, la importación se detuvo sin modificar nada."
+        )
+        self.project_id = project_id

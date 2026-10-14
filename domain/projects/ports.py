@@ -7,9 +7,10 @@ depende de estas abstracciones.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from contextlib import AbstractContextManager
 from typing import Optional
 
-from .entities import ConfigurationEntry, Project
+from .entities import ConfigurationEntry, IdentityPolicy, Project
 from .packaging import IntegrityReport, PackageManifest
 
 
@@ -63,7 +64,20 @@ class ProjectPackager(ABC):
     @abstractmethod
     def import_project(
         self, package_path: str, new_project_id: Optional[str] = None, new_name: Optional[str] = None,
-    ) -> Project: ...
+        identity_policy: IdentityPolicy = IdentityPolicy.PRESERVE,
+    ) -> Project:
+        """RAG-INC-01a: con FORK, la copia temporal recibe un
+        `knowledge_base_id` nuevo y un `lineage_id` nuevo por familia ANTES
+        de quedar visible; con PRESERVE se conservan tal cual. Quien decide
+        la política y verifica colisiones es ImportProject."""
+        ...
+
+    @abstractmethod
+    def read_knowledge_base_id(self, package_path: str) -> Optional[str]:
+        """RAG-INC-01a: `knowledge_base_id` que trae el paquete, leído sin
+        escribir nada en la instalación. None si el paquete es anterior a la
+        migración 0021 (la identidad se asignará al migrarlo)."""
+        ...
 
     # Ronda 88 (2026-10-02): operaciones que ImportProject necesita para
     # comprobar colisiones ANTES de copiar nada y para deshacer una
@@ -97,3 +111,13 @@ class ProjectPackager(ABC):
     def backup(self, project_id: str, destination_path: str) -> PackageManifest:
         """Genera un respaldo completo (equivalente a export con documentos)."""
         ...
+
+
+class ImportLock(ABC):
+    """RAG-INC-01a (Alcance, INC01-R9): exclusión mutua ENTRE PROCESOS para la
+    secuencia comprobar → importar → registrar. Un bloqueo real del sistema
+    operativo, con tiempo máximo (ImportLockTimeoutError) y liberado
+    automáticamente si el proceso termina."""
+
+    @abstractmethod
+    def hold(self) -> AbstractContextManager[None]: ...

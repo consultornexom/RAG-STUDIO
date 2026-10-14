@@ -90,7 +90,7 @@ def test_import_rejects_invalid_package():
         FakeProjectPackager(integrity_is_valid=False),
     )
     with pytest.raises(IntegrityViolationError):
-        service.import_project("/tmp/paquete-corrupto.agentproj")
+        service.import_project("/tmp/paquete-corrupto.agentproj", identity_policy="preserve")
 
 
 def test_import_project_forwards_new_project_id_to_packager():
@@ -102,7 +102,7 @@ def test_import_project_forwards_new_project_id_to_packager():
     service = ProjectService(
         InMemoryProjectRepository(), InMemoryConfigurationRepository(), packager,
     )
-    imported = service.import_project("/tmp/paquete.agentproj", new_project_id="otro-id")
+    imported = service.import_project("/tmp/paquete.agentproj", new_project_id="otro-id", identity_policy="preserve")
     assert imported.id == "otro-id"
     assert packager.import_calls == ["/tmp/paquete.agentproj"]
 

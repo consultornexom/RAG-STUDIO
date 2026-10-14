@@ -76,7 +76,7 @@ def test_vector_index_survives_export_import_without_packager_changes(tmp_path):
     project_service.export_project(project.id, str(export_path))
 
     project_service_b, _, ingestion_service_b, rag_service_b, _ = _bootstrap_services(tmp_path / "laptop_b")
-    imported = project_service_b.import_project(str(export_path))
+    imported = project_service_b.import_project(str(export_path), identity_policy="preserve")
 
     # El índice importado debe responder búsquedas sin volver a indexar nada.
     info = rag_service_b.get_index_info(imported.id)

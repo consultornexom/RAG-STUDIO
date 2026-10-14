@@ -7,7 +7,6 @@ interfaz — toda tarea larga se delega a application.jobs.
 """
 from __future__ import annotations
 
-import uuid
 from typing import Optional
 
 from PySide6.QtCore import Qt, Signal
@@ -28,7 +27,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from application.projects.errors import ImportNameCollisionError, ImportResidueError, ProjectIdCollisionError
+from ui.projects.import_flow import ejecutar_importacion
 from ui.theme import aplicar_color_estado_item
 from ui.errors import describe_error
 
@@ -431,61 +430,35 @@ class ProjectsPanel(QWidget):
         )
         if not path:
             return
-        # Ronda 88 (2026-10-02, hallazgo real de usuario): antes, un nombre
-        # repetido terminaba en el error crudo de SQLite "UNIQUE constraint
-        # failed: project_index.name" y dejaba la importación a medias;
-        # el reintento chocaba con "Ya existe un proyecto real con id=...".
-        # Ahora cada colisión se detecta antes de copiar nada y aquí se
-        # ofrece la salida correspondiente, reintentando con la decisión
-        # del usuario. El límite de vueltas solo evita un ciclo infinito
-        # si algo inesperado se repitiera.
-        options: dict = {}
-        imported = None
-        for _ in range(6):
+        # Ronda 88: cada colisión se detecta antes de copiar nada y se ofrece
+        # la salida correspondiente. RAG-INC-01a (decisión NEXOM D-1): la
+        # importación normal usa identity_policy="preserve"; "Importar como
+        # copia" usa "fork"; una colisión de identidad se explica y se ofrece
+        # la copia, sin hacerla nunca sin la aceptación del usuario. La lógica
+        # vive en ui/projects/import_flow.py (probada sin interfaz gráfica).
+
+        def _importar(ruta: str, **opciones):
             QApplication.setOverrideCursor(Qt.WaitCursor)
             try:
-                imported = self._context.project_service.import_project(path, **options)
-                break
-            except ImportResidueError as exc:
-                QApplication.restoreOverrideCursor()
-                answer = QMessageBox.question(
-                    self, "Restos de una importación anterior",
-                    f"{exc}\n\n¿Apartarlos y continuar con la importación?",
-                    QMessageBox.Yes | QMessageBox.Cancel,
-                )
-                if answer != QMessageBox.Yes:
-                    return
-                options["set_aside_residue"] = True
-                continue
-            except ProjectIdCollisionError as exc:
-                QApplication.restoreOverrideCursor()
-                answer = QMessageBox.question(
-                    self, "El proyecto ya está en esta instalación",
-                    f"{exc}\n\n¿Importarlo como copia?",
-                    QMessageBox.Yes | QMessageBox.Cancel,
-                )
-                if answer != QMessageBox.Yes:
-                    return
-                options["new_project_id"] = str(uuid.uuid4())
-                continue
-            except ImportNameCollisionError as exc:
-                QApplication.restoreOverrideCursor()
-                name, ok = QInputDialog.getText(
-                    self, "Nombre del proyecto importado",
-                    f"{exc}\n\nNombre para el proyecto importado:",
-                    QLineEdit.Normal, exc.suggested_name,
-                )
-                if not ok or not name.strip():
-                    return
-                options["new_name"] = name.strip()
-                continue
-            except Exception as exc:  # noqa: BLE001
-                QApplication.restoreOverrideCursor()
-                self._report_error(exc)
-                return
+                return self._context.project_service.import_project(ruta, **opciones)
             finally:
-                # restoreOverrideCursor() sobre una pila ya vacía no hace nada.
                 QApplication.restoreOverrideCursor()
+
+        def _preguntar(titulo: str, texto: str) -> bool:
+            respuesta = QMessageBox.question(self, titulo, texto, QMessageBox.Yes | QMessageBox.Cancel)
+            return respuesta == QMessageBox.Yes
+
+        def _pedir_nombre(texto: str, sugerido: str) -> Optional[str]:
+            nombre, ok = QInputDialog.getText(
+                self, "Nombre del proyecto importado", texto, QLineEdit.Normal, sugerido,
+            )
+            return nombre if ok else None
+
+        try:
+            imported = ejecutar_importacion(_importar, path, _preguntar, _pedir_nombre)
+        except Exception as exc:  # noqa: BLE001
+            self._report_error(exc)
+            return
         if imported is None:
             return
         self._refresh_projects(select_project_id=imported.id)

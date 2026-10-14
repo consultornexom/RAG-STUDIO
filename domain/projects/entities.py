@@ -47,6 +47,20 @@ def _utcnow() -> datetime:
     return datetime.now(timezone.utc)
 
 
+class IdentityPolicy(str, Enum):
+    """RAG-INC-01a (Alcance firmado, INC01-D3; decisión NEXOM D-1): cómo trata
+    la importación de un `.agentproj` la identidad lógica del proyecto.
+
+    - PRESERVE: conserva `knowledge_base_id` y todos los `lineage_id`.
+      Si el `knowledge_base_id` ya existe en la instalación, aborta.
+    - FORK: el proyecto importado es otra base de conocimiento:
+      `knowledge_base_id` nuevo y un `lineage_id` nuevo por familia,
+      conservando quién supersede a quién y los ids locales."""
+
+    PRESERVE = "preserve"
+    FORK = "fork"
+
+
 class Project(BaseModel):
     """Raíz de agregado del contexto Proyectos.
 

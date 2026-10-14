@@ -19,7 +19,7 @@ from typing import Optional
 
 from pydantic import ValidationError
 
-from domain.projects.entities import Project
+from domain.projects.entities import IdentityPolicy, Project
 from domain.projects.exceptions import (
     ImportResidueError,
     IntegrityViolationError,
@@ -27,6 +27,7 @@ from domain.projects.exceptions import (
 )
 from domain.projects.packaging import FileEntry, IntegrityReport, PackageManifest
 from domain.projects.ports import ProjectPackager
+from infrastructure.database import migrations as _migraciones
 from infrastructure.database.engine import make_session_factory, make_sqlite_engine
 from infrastructure.database.models import ProjectRecord
 from infrastructure.database.repositories import record_to_project
@@ -184,6 +185,7 @@ class FilesystemProjectPackager(ProjectPackager):
 
     def import_project(
         self, package_path: str, new_project_id: Optional[str] = None, new_name: Optional[str] = None,
+        identity_policy: IdentityPolicy = IdentityPolicy.PRESERVE,
     ) -> Project:
         """Copia el paquete a projects/<id>/ y devuelve el Project leído de
         su project.db. NO lo registra en el índice global (eso lo hace
@@ -228,21 +230,43 @@ class FilesystemProjectPackager(ProjectPackager):
                     f"El paquete {package_path} no incluye project.db; no se puede "
                     f"reconstruir el registro del proyecto."
                 )
+            # RAG-INC-01a: la copia temporal se lleva a la versión actual del
+            # esquema ANTES de hacerla visible. Así un paquete anterior a 0021
+            # recibe sus identidades (y un fallo de cualquier migración, p. ej.
+            # 0017 con códigos de caso repetidos) deja la instalación intacta
+            # en vez de una carpeta a medio migrar en projects/<id>/.
+            _migraciones.upgrade_project(staged_db)
             source_id = self._rewrite_identity(staged_db, manifest.project_id, target_id, new_name)
+            if identity_policy == IdentityPolicy.FORK:
+                self._fork_identities(staged_db)
+            # RAG-INC-01a: el Project se lee de la copia temporal, antes de
+            # hacerla visible, para que nada pueda fallar después del rename.
+            project = self._leer_proyecto(staged_db, target_id, source_id)
             if final_dir.exists():
                 final_dir.rmdir()  # vacía (has_project_data lo garantizó); si no, falla y se limpia
             staging.rename(final_dir)
         except BaseException:
             shutil.rmtree(staging, ignore_errors=True)
             raise
-        self._paths.ensure_project_layout(target_id)
+        try:
+            self._paths.ensure_project_layout(target_id)
+        except BaseException:
+            # Atomicidad (01a): nada a medias en projects/<id>/.
+            shutil.rmtree(final_dir, ignore_errors=True)
+            raise
+        return project
 
-        session_factory = make_session_factory(make_sqlite_engine(self._paths.project_db_path(target_id)))
-        with session_factory() as session:
-            record = session.get(ProjectRecord, target_id) or session.get(ProjectRecord, source_id)
-            if record is None:
-                raise ProjectDomainError("El project.db importado no contiene un registro de proyecto.")
-            return record_to_project(record)
+    @staticmethod
+    def _leer_proyecto(db_path: Path, target_id: str, source_id: str) -> Project:
+        engine = make_sqlite_engine(db_path)
+        try:
+            with make_session_factory(engine)() as session:
+                record = session.get(ProjectRecord, target_id) or session.get(ProjectRecord, source_id)
+                if record is None:
+                    raise ProjectDomainError("El project.db importado no contiene un registro de proyecto.")
+                return record_to_project(record)
+        finally:
+            engine.dispose()
 
     def _extract(self, package_path: str, manifest: PackageManifest, target_dir: Path) -> None:
         target_dir.mkdir(parents=True, exist_ok=False)
@@ -259,6 +283,50 @@ class FilesystemProjectPackager(ProjectPackager):
                     )
                 out_path.parent.mkdir(parents=True, exist_ok=True)
                 out_path.write_bytes(zf.read(entry.relative_path))
+
+    @staticmethod
+    def _fork_identities(db_path: Path) -> None:
+        """RAG-INC-01a, política FORK (Alcance firmado, INC01-D3): el proyecto
+        importado pasa a ser OTRA base de conocimiento. Sobre la copia
+        temporal, en una sola transacción:
+        - `knowledge_base_id` nuevo (UUID4);
+        - un `lineage_id` nuevo por familia: todas las fuentes que compartían
+          un linaje comparten el nuevo, así que se conserva quién supersede a
+          quién;
+        - ningún id local (proyecto, fuentes, chunks) cambia aquí.
+        """
+        con = sqlite3.connect(db_path)
+        try:
+            with con:
+                con.execute("UPDATE project SET knowledge_base_id = ?", (str(uuid.uuid4()),))
+                linajes = [r[0] for r in con.execute("SELECT DISTINCT lineage_id FROM source")]
+                nuevos = {viejo: str(uuid.uuid4()) for viejo in linajes}
+                con.executemany(
+                    "UPDATE source SET lineage_id = ? WHERE lineage_id = ?",
+                    [(nuevo, viejo) for viejo, nuevo in nuevos.items()],
+                )
+        finally:
+            con.close()
+
+    def read_knowledge_base_id(self, package_path: str) -> Optional[str]:
+        """Lee `project.knowledge_base_id` del project.db del paquete, en una
+        copia temporal FUERA de la instalación (nada se escribe en
+        projects/). None si el paquete es anterior a 0021."""
+        import tempfile
+
+        with tempfile.TemporaryDirectory(prefix="ragstudio_kb_") as tmp:
+            destino = Path(tmp) / "project.db"
+            with zipfile.ZipFile(package_path) as zf, zf.open("project.db") as origen, destino.open("wb") as d:
+                shutil.copyfileobj(origen, d)
+            con = sqlite3.connect(destino.resolve().as_uri() + "?mode=ro&immutable=1", uri=True)
+            try:
+                columnas = {r[1] for r in con.execute("PRAGMA table_info(project)")}
+                if "knowledge_base_id" not in columnas:
+                    return None
+                fila = con.execute("SELECT knowledge_base_id FROM project LIMIT 1").fetchone()
+                return fila[0] if fila and fila[0] else None
+            finally:
+                con.close()
 
     @staticmethod
     def _rewrite_identity(db_path: Path, manifest_id: str, target_id: str, new_name: Optional[str]) -> str:

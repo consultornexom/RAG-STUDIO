@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nexom.com/knowledge-package/v1/acceptance_case.schema.json",
+  "title": "AcceptanceCase",
+  "description": "Una linea de acceptance_cases.jsonl -- corpus ejecutable para AR-INC-00 (protocolo de aceptacion por Agent Runtime, ver ADR seccion 9). Deliberadamente NO valida texto exacto de respuesta (varia segun el modelo generador) -- valida evidencia recuperada, citas, filtros de acceso y decision de guardrail, que son deterministas dado el mismo indice.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "case_id", "query", "user_access_level", "top_k", "match_policy", "minimum_recall",
+    "expected_source_ids", "expected_chunk_ids", "expected_evidence_ids",
+    "expected_guardrail_decision", "must_not_retrieve"
+  ],
+  "properties": {
+    "case_id": { "type": "string", "minLength": 1 },
+    "query": { "type": "string", "minLength": 1 },
+    "user_access_level": { "type": "string", "enum": ["publico", "interno", "confidencial", "restringido"] },
+    "top_k": { "type": "integer", "minimum": 1, "description": "Numero de resultados que el importador debe solicitar a su indice para esta prueba." },
+    "match_policy": {
+      "type": "string",
+      "enum": ["contains", "exact", "ranked"],
+      "description": "contains: todo expected_* debe aparecer entre los top_k resultados, se permiten extras. exact: el conjunto de resultados debe ser IGUAL a expected_* (sin extras, sin faltantes). ranked: expected_* debe aparecer en el orden dado, dentro de los top_k."
+    },
+    "minimum_recall": {
+      "type": "number", "minimum": 0, "maximum": 1,
+      "description": "Fraccion minima de expected_chunk_ids que debe recuperarse para considerar el caso aprobado (1.0 = todos)."
+    },
+    "expected_source_ids": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^urn:nexom:source:[0-9a-f-]{36}$" },
+      "uniqueItems": true,
+      "description": "SourceRecord.id que se espera que aparezcan citados, en cualquier orden. El validador de referencia ademas exige que cada uno exista en el paquete y sea autorizable para user_access_level segun access_hierarchy.json (rc3.1)."
+    },
+    "expected_chunk_ids": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^urn:nexom:chunk:[0-9a-f-]{36}:[0-9a-f]{64}$" },
+      "uniqueItems": true,
+      "description": "El validador de referencia resuelve cada chunk hasta su fuente y aplica la misma regla de access_hierarchy que a expected_source_ids (rc3.1 -- rc3 solo lo hacia con expected_source_ids)."
+    },
+    "expected_evidence_ids": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^urn:nexom:evidence:[0-9a-f-]{36}$" },
+      "uniqueItems": true,
+      "description": "El validador de referencia resuelve cada evidencia hasta chunk y fuente y aplica la misma regla de access_hierarchy (rc3.1)."
+    },
+    "expected_guardrail_decision": {
+      "type": ["string", "null"],
+      "enum": [null, "responder", "aclarar", "abstenerse", "canalizar"],
+      "description": "null si no se espera que ningun guardrail de este bundle se dispare."
+    },
+    "must_not_retrieve": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "anyOf": [
+          { "pattern": "^urn:nexom:source:[0-9a-f-]{36}$" },
+          { "pattern": "^urn:nexom:chunk:[0-9a-f-]{36}:[0-9a-f]{64}$" },
+          { "pattern": "^urn:nexom:evidence:[0-9a-f-]{36}$" }
+        ]
+      },
+      "uniqueItems": true,
+      "description": "IDs (source/chunk/evidence, URN reconocido -- ningun otro formato es valido) que el importador NUNCA debe devolver para esta consulta -- tipicamente por access_level insuficiente. Caso vacio es valido (no siempre aplica). El validador de referencia exige que cada id exista realmente en el paquete (rc3.1): un id inexistente aqui aprobaria una prueba de denegacion vacia."
+    },
+    "notes": { "type": "string" }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nexom.com/knowledge-package/v1/checksums.schema.json",
+  "title": "PackageChecksums",
+  "description": "checksums.json, DENTRO del paquete. No se incluye a si mismo. En v1.0-rc2, tampoco incluye NUNCA `signature.json` ni ningun archivo `.sha256`/`.sig`, porque esos ya no viajan dentro del paquete -- son sidecars externos (ver ADR seccion 3). El hash de todo el contenido (que si incorpora el hash de checksums.json) se llama `content_digest` y se calcula y entrega fuera del paquete.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["algorithm", "canonicalization", "files"],
+  "properties": {
+    "algorithm": { "const": "sha256" },
+    "canonicalization": { "const": "rfc8785" },
+    "files": {
+      "type": "object",
+      "additionalProperties": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+      "propertyNames": {
+        "not": { "enum": ["checksums.json", "signature.json"] },
+        "pattern": "^(?!.*\\.(sha256|sig)$).*$"
+      },
+      "minProperties": 1
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nexom.com/knowledge-package/v1/source_metadata.schema.json",
+  "title": "SourceMetadataValueRecord",
+  "description": "Una linea de source_metadata.jsonl -- el VALOR vigente de un campo de metadata para una fuente. La clave relacional real es `field_definition_id` (URN portable, resuelto en metadata_schema.json) -- `field_code` viaja aparte como atributo legible, NUNCA como clave de relacion (corregido en rc3: rc2 usaba el codigo local `field_id` como FK real).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "source_id", "field_definition_id", "field_code", "value", "created_at"],
+  "properties": {
+    "id": { "type": "string", "description": "`<source_id>:<field_definition_id>` -- clave compuesta, unica por fuente+campo." },
+    "source_id": { "type": "string", "pattern": "^urn:nexom:source:[0-9a-f-]{36}$" },
+    "field_definition_id": {
+      "type": "string",
+      "pattern": "^urn:nexom:field:[0-9a-f-]{36}$",
+      "description": "Debe existir como `id` de un FieldDefinition en metadata_schema.json -- esta es la clave de relacion real."
+    },
+    "field_code": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Codigo local legible (ej. 'campus'), informativo. Debe coincidir con el `field_id` del FieldDefinition referenciado por field_definition_id, pero NO debe usarse como clave de busqueda."
+    },
+    "value": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "description": "Siempre una lista (incluso para campos no `multiple`). Si el campo referencia un catalogo, cada elemento es un value_code que debe existir en la catalog_entry correspondiente."
+    },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

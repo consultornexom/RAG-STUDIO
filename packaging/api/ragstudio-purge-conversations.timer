@@ -1,0 +1,9 @@
+[Unit]
+Description=Purga diaria de conversaciones de RAG STUDIO (retencion de datos, Ronda 12)
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=timers.target

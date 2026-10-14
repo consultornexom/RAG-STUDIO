@@ -1,0 +1,1 @@
+[{"dimensions":384,"distance_metric":"cosine","dtype":"float32","fingerprint":null,"id":"text_semantic_384","modality":"text","model":"sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2","normalization":"unknown_not_verified","preprocessing":{"passage_prefix":null,"query_prefix":null},"provider":"fastembed","revision":null}]

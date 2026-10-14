@@ -1,0 +1,137 @@
+name: Pruebas
+
+# Ítem 6 de la segunda evaluación de madurez post-8-etapas (ver
+# bitácora en README): antes no existía ningún pipeline de integración
+# continua real -- nada evitaba que una regresión pasara inadvertida
+# hasta que alguien corriera pytest manualmente. Este es el andamiaje
+# mínimo: no hay repositorio remoto activo todavía para que se dispare
+# de verdad, pero queda listo para el momento en que este proyecto viva
+# en un remoto de GitHub.
+#
+# ruff y mypy (ver job lint-and-typecheck, ítem de la cuarta ronda de
+# madurez) se agregaron después, una vez que el proyecto ya tenía un
+# volumen de código considerable -- por eso son gates obligatorios
+# igual que unit-and-smoke: ambos corren limpios (cero hallazgos) desde
+# el día en que se configuraron, así que exigirlos desde ahora no
+# bloquea nada existente, solo evita que una regresión nueva pase
+# inadvertida.
+#
+# bandit se agregó al mismo job (ítem hallado al comparar con RAG
+# CONTENT STUDIO, herramienta hermana que ya lo tenía -- ver bitácora):
+# igual de rápido/determinista/sin red que ruff y mypy, así que es un
+# gate obligatorio desde el día uno. pip-audit, en cambio, consulta una
+# base de datos de vulnerabilidades por internet -- no es determinista
+# offline, así que sigue el mismo criterio que el job "integration":
+# informativo, no bloqueante (job security-audit, continue-on-error).
+#
+# A diferencia de mypy, bandit SÍ incluye ui/ en su alcance (agregado
+# en la auditoría de madurez ronda 5): mypy la excluye porque PySide6
+# no trae stubs de tipos completos (ruido, no errores reales), pero esa
+# razón no aplica a bandit -- ui/theme.py genera fragmentos de HTML por
+# interpolación de texto (`estado_html`), exactamente el tipo de código
+# que bandit sabe revisar, así que dejarla fuera del escaneo de
+# seguridad no tenía justificación.
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  lint-and-typecheck:
+    # Gate obligatorio: tan rápido y determinista como unit-and-smoke,
+    # sin red ni GUI. ruff (E/F/B, ver pyproject.toml para qué se
+    # excluye y por qué) y mypy (alcance: app/application/domain/
+    # infrastructure/workers, sin ui/ -- ver comentario en pyproject.toml)
+    # corren sobre el mismo código que cubre pytest.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Instalar dependencias
+        run: |
+          pip install -e .
+          pip install -r requirements-dev.txt
+      - name: ruff check
+        run: ruff check .
+      - name: mypy
+        run: mypy
+      - name: bandit
+        run: bandit -q -c pyproject.toml -r app application domain infrastructure workers ui
+
+  security-audit:
+    # Informativo, no bloqueante (ver comentario de arriba): pip-audit
+    # necesita internet para consultar vulnerabilidades conocidas contra
+    # las dependencias declaradas. Se acota a requirements.txt/-dev.txt
+    # (no un audit sin argumentos) para no reportar paquetes del entorno
+    # del runner que no son dependencias reales de RAG STUDIO.
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Instalar dependencias
+        run: |
+          pip install -e .
+          pip install -r requirements-dev.txt
+      - name: pip-audit
+        run: |
+          pip-audit -r requirements.txt
+          pip-audit -r requirements-dev.txt
+
+  unit-and-smoke:
+    # Gate obligatorio: rápido, determinista, sin red ni GUI. Corre en
+    # cada push/PR y sí puede bloquear un merge (branch protection es
+    # una decisión del propietario del repositorio, no de este workflow).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Instalar dependencias
+        run: |
+          pip install -e .
+          pip install -r requirements-dev.txt
+      - name: pytest (unit + smoke) con cobertura
+        # 80%: medido contra unit+smoke solamente (sin integración) en
+        # esta misma iteración -- ~82% real, con margen. Varios
+        # adaptadores de infrastructure (packager, keyring, qdrant,
+        # tiktoken) solo se ejercitan en tests/integration/ (necesitan
+        # disco/red/backend real), así que el número sube a ~95% cuando
+        # se incluye integración (ver el job de abajo y la bitácora en
+        # README) -- no se exige aquí porque ese job no es
+        # determinista/rápido de la misma forma.
+        run: >
+          pytest tests/unit tests/smoke -q
+          --cov=app --cov=application --cov=domain --cov=infrastructure --cov=workers
+          --cov-report=term-missing --cov-fail-under=80
+
+  integration:
+    # Informativo, no bloqueante: algunas pruebas necesitan red real
+    # (descarga de modelos de fastembed/tiktoken la primera vez) o un
+    # backend real de keyring (Secret Service de D-Bus -- los runners
+    # de GitHub Actions no traen uno por defecto), y se omiten
+    # explícitamente cuando no están disponibles -- ver bitácora de los
+    # ítems de tokenizador/CredentialStore. No se aplica
+    # --cov-fail-under aquí: el propósito es detectar regresiones
+    # reales de integración (SQLite, Alembic, export/import
+    # .agentproj, Qdrant local), no medir cobertura.
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Instalar dependencias
+        run: |
+          pip install -e .
+          pip install -r requirements-dev.txt
+      - name: pytest (integración)
+        run: pytest tests/integration -q

@@ -1,0 +1,4 @@
+# Necesario solo para ejecutar la interfaz de escritorio (ui/app.py).
+# En Linux puede requerir además las bibliotecas nativas del sistema
+# libegl1, libgl1, libxkbcommon0 (ver README, sección "Limitaciones").
+PySide6-Essentials>=6.5

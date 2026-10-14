@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nexom.com/knowledge-package/v1/embedding_spaces.schema.json",
+  "title": "EmbeddingSpaceList",
+  "description": "embedding_spaces.json: lista de espacios vectoriales declarados por el paquete (texto y, si aplica, imagen). Reemplaza al EmbeddingDescriptor singular de la propuesta original -- un proyecto puede tener mas de un espacio (ver ADR, brecha 5 del veredicto NEXOM).",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "id", "modality", "provider", "model", "dimensions", "distance_metric", "dtype"
+    ],
+    "properties": {
+      "id": { "type": "string", "minLength": 1, "description": "Identificador corto y estable del espacio dentro del paquete, ej. text_semantic_384." },
+      "modality": { "type": "string", "enum": ["text", "image"] },
+      "provider": { "type": "string", "minLength": 1 },
+      "model": { "type": "string", "minLength": 1 },
+      "revision": { "type": ["string", "null"], "description": "Revision/snapshot del modelo si el proveedor la expone; null si es desconocida (caso real de fastembed hoy)." },
+      "dimensions": { "type": "integer", "minimum": 1 },
+      "normalization": { "type": ["string", "null"], "description": "ej. l2, none, unknown_not_verified." },
+      "preprocessing": {
+        "type": ["object", "null"],
+        "properties": {
+          "query_prefix": { "type": ["string", "null"] },
+          "passage_prefix": { "type": ["string", "null"] }
+        }
+      },
+      "distance_metric": { "type": "string", "enum": ["cosine", "dot", "euclidean"] },
+      "dtype": { "type": "string", "enum": ["float32", "float16", "int8"] },
+      "fingerprint": {
+        "type": ["string", "null"],
+        "description": "Hash determinista de (provider+model+revision+dimensions+normalization+preprocessing+distance_metric+dtype). Null hasta que RAG-INC-04 lo calcule; un consumidor no debe asumir compatibilidad entre dos espacios con fingerprint null aunque coincidan en model/dimensions."
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nexom.com/knowledge-package/v1/indexes.schema.json",
+  "title": "IndexDescriptorList",
+  "description": "indexes.json: lista de indices logicos declarados, cada uno referenciando un embedding_space por id. Neutral respecto de la tecnologia real del indice (Qdrant u otra) -- ver ADR seccion 6.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["id", "embedding_space_id", "index_type", "points_count", "covers_chunk_types"],
+    "properties": {
+      "id": { "type": "string", "minLength": 1 },
+      "embedding_space_id": { "type": "string", "minLength": 1, "description": "Debe existir como `id` en embedding_spaces.json." },
+      "index_type": { "type": "string", "enum": ["flat_cosine", "flat_dot", "flat_euclidean", "hnsw"] },
+      "points_count": { "type": "integer", "minimum": 0 },
+      "covers_chunk_types": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": ["texto", "tabla", "pregunta_respuesta", "requisito", "excepcion", "encabezado", "padre", "estructurado", "imagen"]
+        }
+      },
+      "updated_at": { "type": "string", "format": "date-time" }
+    }
+  }
+}

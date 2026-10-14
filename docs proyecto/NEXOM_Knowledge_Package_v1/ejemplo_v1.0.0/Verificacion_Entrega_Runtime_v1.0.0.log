@@ -1,0 +1,23 @@
+# Verificación de portabilidad de entrega_runtime_v1.0.0
+# fecha_utc: 2026-09-24T19:41:56Z
+# método: carpeta copiada SOLA a un directorio aislado (/tmp/aislada), sin el resto del árbol
+# archivos en la carpeta: 8
+#   CONTRATO_v1.0.0_SHA256SUMS
+#   MANIFIESTO_ENTREGA_v1.0.0.sha256
+#   Solicitud_Importacion_Humo_v1.0.0.md
+#   nexom-knowledge-package-demo-v1.0.0.content.sha256
+#   nexom-knowledge-package-demo-v1.0.0.pubkey_DEMO.pem
+#   nexom-knowledge-package-demo-v1.0.0.sig
+#   nexom-knowledge-package-demo-v1.0.0.zip
+#   nexom-knowledge-package-demo-v1.0.0.zip.sha256
+# sha256 MANIFIESTO_ENTREGA_v1.0.0.sha256: 0c43b51a9ff8d20d8558f23e02364b547233daca818b72ea3217c7ab7c73de78
+
+$ sha256sum -c --strict MANIFIESTO_ENTREGA_v1.0.0.sha256
+nexom-knowledge-package-demo-v1.0.0.zip: OK
+nexom-knowledge-package-demo-v1.0.0.content.sha256: OK
+nexom-knowledge-package-demo-v1.0.0.sig: OK
+nexom-knowledge-package-demo-v1.0.0.pubkey_DEMO.pem: OK
+nexom-knowledge-package-demo-v1.0.0.zip.sha256: OK
+CONTRATO_v1.0.0_SHA256SUMS: OK
+Solicitud_Importacion_Humo_v1.0.0.md: OK
+# exit_code: 0

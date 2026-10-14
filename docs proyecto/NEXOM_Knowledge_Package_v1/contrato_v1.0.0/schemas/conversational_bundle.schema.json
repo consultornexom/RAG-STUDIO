@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nexom.com/knowledge-package/v1/conversational_bundle.schema.json",
+  "title": "ConversationalArtifactBundle",
+  "description": "conversational_bundle.json: intents + guardrail_rules + conversational_variables + channeling_schemes de un proyecto, con vinculos por ID portable (no por nombre libre como en RAG Studio -- este contrato SI los valida, ver validador de referencia).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["intents", "guardrail_rules", "conversational_variables", "channeling_schemes"],
+  "properties": {
+    "intents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id", "name", "positive_examples", "negative_examples", "priority",
+          "risk_level", "required_variables", "optional_variables",
+          "clarifying_questions", "response_rule", "resolution_mode",
+          "active", "created_at", "updated_at"
+        ],
+        "properties": {
+          "id": { "type": "string", "pattern": "^urn:nexom:intent:[0-9a-f-]{36}$" },
+          "name": { "type": "string", "minLength": 1 },
+          "description": { "type": "string" },
+          "positive_examples": { "type": "array", "items": { "type": "string" } },
+          "negative_examples": { "type": "array", "items": { "type": "string" } },
+          "priority": { "type": "integer" },
+          "risk_level": { "type": "string", "enum": ["bajo", "medio", "alto"] },
+          "required_variables": { "type": "array", "items": { "type": "string", "pattern": "^urn:nexom:variable:.+$" } },
+          "optional_variables": { "type": "array", "items": { "type": "string", "pattern": "^urn:nexom:variable:.+$" } },
+          "clarifying_questions": { "type": "object", "additionalProperties": { "type": "string" } },
+          "response_rule": { "type": "string" },
+          "fallback_channeling_code": { "type": ["string", "null"], "pattern": "^urn:nexom:channeling:.+$" },
+          "resolution_mode": { "type": "string", "enum": ["semantico", "estructurado"] },
+          "active": { "type": "boolean" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "guardrail_rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "rule_type", "conditions", "action", "priority", "active", "created_at", "updated_at"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^urn:nexom:guardrail:[0-9a-f-]{36}$" },
+          "name": { "type": "string", "minLength": 1 },
+          "rule_type": {
+            "type": "string",
+            "enum": ["elegibilidad", "vigencia", "validacion", "privacidad", "seguridad",
+                      "autoridad", "aclaracion", "abstencion", "canalizacion", "formato",
+                      "citacion", "tono", "limite_operativo"]
+          },
+          "conditions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["field", "operator", "value"],
+              "properties": {
+                "field": { "type": "string" },
+                "operator": { "type": "string", "enum": ["=", "!=", "<", "<=", ">", ">=", "contiene"] },
+                "value": { "type": "string" }
+              }
+            }
+          },
+          "action": { "type": "string", "enum": ["responder", "aclarar", "abstenerse", "canalizar"] },
+          "priority": { "type": "integer" },
+          "active": { "type": "boolean" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "conversational_variables": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "code", "display_name"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^urn:nexom:variable:.+$" },
+          "code": { "type": "string", "minLength": 1 },
+          "display_name": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "channeling_schemes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "code", "medium", "summary_template"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^urn:nexom:channeling:.+$" },
+          "code": { "type": "string", "minLength": 1 },
+          "medium": { "type": "string", "minLength": 1 },
+          "summary_template": { "type": "string" }
+        }
+      }
+    }
+  }
+}

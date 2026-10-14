@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nexom.com/knowledge-package/v1/source.schema.json",
+  "title": "SourceRecord",
+  "description": "Una linea de sources.jsonl. `id` es el portable_id DE VERSION (urn:nexom:source:<source_version_id>) -- cambia si cambia el contenido. `logical_id` (urn:nexom:source-logical:<lineage_id>) es OPACO y PERSISTENTE (rc3): se asigna una vez en RAG Studio cuando la fuente raiz se crea, y toda version que la supersede simplemente lo COPIA -- no se recalcula ni se deriva caminando `supersedes_source_id` en cada exportacion (defecto real de rc2: una exportacion sin el historial completo generaria un logical_id distinto). El validador de referencia verifica CONTINUIDAD de la cadena dentro del paquete, no recomputo del valor. `origin_id` es el id interno de RAG Studio, solo trazabilidad.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "logical_id", "origin_id", "title", "source_type", "access_level", "language",
+    "validation_status", "source_authority", "document_type_code",
+    "created_at", "updated_at",
+    "original_included", "original_omission_reason", "original_media_type",
+    "original_checksum", "original_relative_path"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^urn:nexom:source:[0-9a-f-]{36}$" },
+    "logical_id": { "type": "string", "pattern": "^urn:nexom:source-logical:[0-9a-f-]{36}$" },
+    "origin_id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "source_type": {
+      "type": "string",
+      "enum": ["pdf", "docx", "xlsx", "csv", "html", "txt", "markdown", "json", "xml",
+                "imagen_escaneada", "imagen_nativa", "api", "base_de_datos"]
+    },
+    "owner_area": { "type": ["string", "null"] },
+    "access_level": { "type": "string", "enum": ["publico", "interno", "confidencial", "restringido"] },
+    "language": { "type": "string", "minLength": 2 },
+    "content_hash": { "type": ["string", "null"] },
+    "validation_status": {
+      "type": "string",
+      "enum": ["borrador", "en_revision", "validado", "sustituido", "vencido", "rechazado"]
+    },
+    "valid_from": { "type": ["string", "null"], "format": "date" },
+    "valid_to": { "type": ["string", "null"], "format": "date" },
+    "source_authority": { "type": ["integer", "null"], "minimum": 1 },
+    "supersedes_source_id": {
+      "type": ["string", "null"],
+      "pattern": "^urn:nexom:source:[0-9a-f-]{36}$",
+      "description": "Contrato: si esta presente, DEBE apuntar a un SourceRecord con el MISMO logical_id (misma identidad logica, version anterior)."
+    },
+    "document_type_code": { "type": "string", "minLength": 1 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "original_included": {
+      "type": "boolean",
+      "description": "true solo bajo perfil AUDIT y cuando no aplica ninguna razon de omision. Siempre false bajo perfil CORE."
+    },
+    "original_omission_reason": {
+      "type": ["string", "null"],
+      "enum": [null, "license", "confidential", "size_limit", "not_applicable_profile_core", "no_binary_source", "other"],
+      "description": "Obligatorio (no null) cuando original_included=false Y el perfil es AUDIT. Bajo CORE, usar 'not_applicable_profile_core'."
+    },
+    "original_media_type": { "type": ["string", "null"], "description": "MIME type, ej. application/pdf." },
+    "original_checksum": { "type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$" },
+    "original_relative_path": {
+      "type": ["string", "null"],
+      "pattern": "^assets/originals/.+$",
+      "description": "Presente solo si original_included=true."
+    }
+  },
+  "if": { "properties": { "original_included": { "const": true } } },
+  "then": {
+    "properties": {
+      "original_omission_reason": { "const": null },
+      "original_relative_path": { "type": "string" },
+      "original_checksum": { "type": "string" }
+    }
+  },
+  "else": {
+    "properties": {
+      "original_relative_path": { "const": null },
+      "original_checksum": { "const": null },
+      "original_media_type": { "const": null },
+      "original_omission_reason": { "not": { "const": null } }
+    }
+  }
+}

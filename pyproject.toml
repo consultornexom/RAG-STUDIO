@@ -1,0 +1,161 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ragstudio"
+version = "0.1.0"
+description = "RAG STUDIO - nucleo de la Etapa 1 (esqueleto)"
+requires-python = ">=3.10"
+dependencies = [
+    "SQLAlchemy>=2.0",
+    "alembic>=1.13",
+    "pydantic>=2.0",
+    "pypdf>=6.14.2",  # pip-audit 2026-07-29: CVE-2026-59935 (GHSA-g867-7843-wf8q), CVE-2026-59936, CVE-2026-59937, CVE-2026-59938 -- DoS (bucle infinito / consumo excesivo de memoria) al parsear un PDF manipulado; hallado al comparar con RAG CONTENT STUDIO (misma corrección ya aplicada ahí). Piso mínimo que cubre las cuatro.
+    "python-docx>=1.1",
+    "qdrant-client>=1.19",  # Ronda 71 (hallazgo real, benchmark de RAG4 Fase -1): 1.18.0 no tiene el campo "memory" que agrega VectorParams desde 1.19.0 -- con extra="forbid", 1.18.x no puede leer NINGÚN índice Qdrant local escrito por 1.19.0+ (falla en QdrantLocalVectorStore.ensure_collection con un ValidationError real, no solo en este benchmark). Verificado instalando 1.18.0 en un venv aparte y confirmando que a VectorParams le falta el campo.
+    "fastembed>=0.8",
+    "openpyxl>=3.1",
+    "tiktoken>=0.7",
+    "keyring>=24.0",
+    "defusedxml>=0.7",  # XmlExtractor -- parseo seguro de XML (bandit B314/B405, ver bitácora)
+]
+
+[project.optional-dependencies]
+ui = ["PySide6-Essentials>=6.5"]
+ocr = ["pytesseract>=0.3.10", "Pillow>=10.0", "PyMuPDF>=1.24"]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.16",
+    "mypy>=2.0",
+    "bandit>=1.7",
+    "pip-audit>=2.7",
+    "pre-commit>=3.6",
+]
+# packaging (ítem 7 de la segunda evaluación de madurez post-8-etapas,
+# ver bitácora y packaging/README.md): solo necesario para generar el
+# ejecutable con `pyinstaller packaging/ragstudio.spec`, nunca para
+# correr la app ni las pruebas normalmente.
+packaging = ["pyinstaller>=6.0"]
+# api (ADR-002 "Runtime de producción", Fase 2, ver docs proyecto/
+# RAG_STUDIO_ADR-002_Runtime_Produccion.docx): la interfaz interfaces/api/
+# es un servicio HTTP hermano de ui/, con su propio ciclo de despliegue --
+# solo necesario para correr ese servicio, nunca para la app de
+# escritorio ni para las pruebas unitarias normales.
+api = ["fastapi>=0.116", "uvicorn>=0.34"]
+
+[tool.setuptools.packages.find]
+include = ["app*", "application*", "domain*", "infrastructure*", "interfaces*", "plugins*", "ui*", "workers*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+# Ítem 6 de la segunda evaluación de madurez post-8-etapas (ver
+# bitácora en README): antes no había ninguna medición de cobertura,
+# solo conteo de pruebas. `source` cubre todo el código de la app
+# (incluida `ui/`, para que el reporte sea honesto y completo), pero el
+# umbral que de verdad bloquea CI (`--cov-fail-under`, ver
+# .github/workflows/tests.yml) solo se aplica a app/application/domain/
+# infrastructure/workers, medido SOLO contra unit+smoke (rápido,
+# determinista, sin red): ~82% real en esta iteración, umbral fijado en
+# 80% con margen. Ese mismo subconjunto de paquetes sube a ~95% cuando
+# se agrega tests/integration/ (varios adaptadores de infrastructure --
+# packager, keyring, qdrant, tiktoken -- solo se ejercitan ahí, con
+# disco/red/backend real), pero ese número es informativo, no exigido,
+# porque el job de integración no es tan determinista (ver workflow).
+# `ui/` queda fuera del umbral a propósito: sus widgets Qt reales
+# (`*panel.py`, `main_window.py`, `app.py`) necesitan un servidor
+# gráfico real (falta libEGL en CI/este entorno de construcción) y solo
+# se validan manualmente en la máquina del usuario (ver
+# checklist_validacion_visual.md); la lógica que sí se puede extraer de
+# Qt y probar de verdad (`ui/conversational/parsing.py`,
+# `ui/ingestion/search_highlighting.py`, `ui/release/gate_status_logic.py`)
+# ya tiene sus propias pruebas unitarias y aparece con cobertura real
+# en el reporte de `ui/`.
+[tool.coverage.run]
+source = ["app", "application", "domain", "infrastructure", "workers", "ui"]
+omit = ["*/migrations/*"]
+
+[tool.coverage.report]
+show_missing = true
+
+# Ítem de la cuarta ronda de madurez post-8-etapas (ver bitácora en
+# README): antes no había ningún linter ni chequeo de tipos estático
+# configurado -- nada evitaba que una importación sin usar, una
+# variable muerta o un error de tipo obvio pasara inadvertido hasta
+# que alguien lo notara a mano. `E501` (línea larga) se ignora a
+# propósito: el estilo del proyecto prioriza comentarios explicativos
+# en español, deliberadamente largos, sobre un límite de columnas
+# arbitrario.
+[tool.ruff]
+target-version = "py310"
+extend-exclude = ["migrations", "build", "dist"]
+
+[tool.ruff.lint]
+# Deliberadamente NO se incluyen "I" (orden de imports) ni "UP"
+# (modernizar sintaxis, p. ej. Optional[X] -> X | None): son reglas
+# válidas pero hoy generarían un diff mecánico de cientos de líneas en
+# casi todo el proyecto sin corregir ningún error real -- puro ruido
+# para esta iteración. E/F/B se enfocan en detectar errores reales
+# (variables/imports sin usar, asserts rotos, zip sin strict=).
+select = ["E", "F", "B"]
+ignore = ["E501"]
+
+# B008 ("no llamar funciones en defaults de argumentos") es, en general,
+# una señal real -- pero `Depends(...)` de FastAPI (interfaces/api/app.py)
+# es exactamente lo contrario: ES el mecanismo de inyección de
+# dependencias del framework, sin ninguna alternativa limpia. Se probó
+# la alternativa "recomendada" por el propio mensaje de Ruff --
+# envolver el `Depends(...)` dentro de `Annotated[...]` en vez de dejarlo
+# como default -- y rompió el enforzamiento real en tiempo de ejecución
+# en este proyecto específico: interfaces/api/app.py tiene
+# `from __future__ import annotations`, que convierte las anotaciones de
+# tipo en texto sin evaluar; FastAPI resuelve ese texto contra los
+# GLOBALS del módulo, pero las dependencias de este archivo (p. ej.
+# `_require_message_auth`) son funciones LOCALES de `create_app(...)` --
+# dentro de un `Annotated[...]`, FastAPI nunca las encuentra y el
+# endpoint queda sin autenticar de verdad, sin ningún error visible (se
+# comprobó real, ver bitácora Ronda 27). Como default plano, en cambio,
+# `Depends(...)` se evalúa de inmediato al definir la función -- ahí sí
+# resuelve bien la variable local. Este allowlist explícito (en vez de
+# reestructurar el código) es la forma correcta y documentada de Ruff
+# de reconocer este idioma de FastAPI como una excepción legítima.
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends"]
+
+# mypy: mismo alcance que el umbral de cobertura de pytest-cov (ítem 6
+# de la segunda evaluación de madurez) -- app/application/domain/
+# infrastructure/workers, sin ui/ (los widgets de PySide6 no tienen
+# stubs de tipos completos y generarían ruido, no señal real). Empieza
+# en modo no estricto a propósito: exigir anotaciones completas en todo
+# el código de golpe, sin haber tenido nunca chequeo de tipos, generaría
+# cientos de avisos de bajo valor; mejor detectar errores de tipo reales
+# primero y subir el rigor gradualmente en una iteración futura si hace
+# falta.
+[tool.mypy]
+python_version = "3.10"
+files = ["app", "application", "domain", "infrastructure", "workers"]
+exclude = ["migrations"]
+ignore_missing_imports = true
+check_untyped_defs = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+# Necesario porque el nombre de la carpeta de instalación puede
+# contener espacios o no seguir la convención de nombres de paquete de
+# Python (por ejemplo, si el usuario instala/clona el repositorio en
+# una ruta como ".../RAG STUDIO/..."); sin esto, mypy intenta derivar
+# un nombre de paquete a partir del nombre de la carpeta contenedora y
+# falla con "contains __init__.py but is not a valid Python package
+# name".
+explicit_package_bases = true
+
+# Análisis estático de seguridad (hallado al comparar con RAG CONTENT
+# STUDIO, herramienta hermana del mismo autor, que ya lo tenía
+# configurado junto con pip-audit -- ver bitácora). Mismo alcance que
+# ruff/mypy (app/application/domain/infrastructure/workers); tests y
+# migrations quedan fuera porque generan datos de prueba deliberadamente
+# "inseguros" (rutas hardcodeadas a /tmp, contenido simulado) que no
+# representan un riesgo real.
+[tool.bandit]
+exclude_dirs = ["tests", "migrations", "build", "dist", ".venv"]

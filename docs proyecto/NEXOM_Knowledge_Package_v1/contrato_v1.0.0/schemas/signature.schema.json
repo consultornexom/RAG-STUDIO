@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nexom.com/knowledge-package/v1/signature.schema.json",
+  "title": "PackageSignature",
+  "description": "Contenido del sidecar `<paquete>.sig` -- SIEMPRE externo, nunca dentro del paquete/ZIP (v1.0-rc2, corrige la circularidad de rc1). Firma detached de `content_digest` (que ya incorpora el hash de checksums.json). La clave publica de verificacion NUNCA debe tomarse del propio paquete en produccion -- debe llegar por un canal separado y confiable. Ed25519 conforme RFC 8032.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["algorithm", "key_id", "signer", "signed_at", "checksums_json_hash", "content_digest", "signature"],
+  "properties": {
+    "algorithm": { "const": "ed25519" },
+    "key_id": { "type": "string", "minLength": 1 },
+    "signer": { "type": "string", "minLength": 1 },
+    "signed_at": { "type": "string", "format": "date-time" },
+    "checksums_json_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$", "description": "sha256 hex de checksums.json canonico (RFC 8785)." },
+    "content_digest": { "type": "string", "pattern": "^[0-9a-f]{64}$", "description": "Debe coincidir con el sidecar `<paquete>.content.sha256` entregado junto al paquete (rc3: renombrado desde `.sha256` para no confundirlo con un futuro hash de los bytes crudos del .zip)." },
+    "signature": { "type": "string", "minLength": 1, "description": "Firma Ed25519 de `checksums_json_hash + ':' + content_digest`, en base64." }
+  }
+}

@@ -1,0 +1,46 @@
+# .gitignore PROPUESTO para RAG Studio — preparación de RAG-INC-01, hito 01a
+# Estado: BORRADOR. No se ha copiado a la raíz ni se ha ejecutado git init.
+# Se copiará como `.gitignore` en la raíz después del PASS de humo, según
+# Procedimiento_Git_01a.md. Parte del .gitignore existente y lo amplía.
+
+# --- Entorno y cachés de Python / herramientas ---
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+
+# --- Datos reales de la instalación (proyectos, application.db, runtime.db, logs) ---
+data/
+logs/
+
+# --- Modelos locales (241 MB, se descargan o instalan aparte) ---
+models/
+modelos_ragstudio/
+
+# --- Paquetes y artefactos de construcción ---
+build/
+dist/
+# Corrige la regla del .gitignore actual, ".agentproj", que solo excluía un
+# archivo con ese nombre literal.
+*.agentproj
+
+# --- Bases de datos y auxiliares de SQLite (en cualquier ubicación) ---
+*.db
+*.db-wal
+*.db-shm
+*.db-journal
+*.sqlite
+
+# --- Secretos ---
+.env
+.env.*
+*.key
+*.pem
+# Excepción: claves PÚBLICAS DEMO publicadas con el contrato (no son secretos
+# y forman parte de la evidencia verificable).
+!docs\ proyecto/**/*.pubkey_DEMO.pem

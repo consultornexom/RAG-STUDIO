@@ -1,0 +1,1 @@
+{"order":["publico","interno","confidencial","restringido"],"rule":"Un usuario con user_access_level X puede acceder a fuentes cuyo access_level tenga indice <= indice(X) en `order`. Denegacion por defecto: cualquier access_level no reconocido, o ausencia de user_access_level, deniega el acceso -- nunca se asume el nivel mas permisivo."}

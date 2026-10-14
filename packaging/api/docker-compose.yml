@@ -1,0 +1,69 @@
+# Ejemplo de referencia para desplegar interfaces/api/ con
+# docker-compose -- Ronda 12, ver Validacion_observaciones_RAG_STUDIO.md.
+# Ajusta las rutas y variables antes de usarlo de verdad; no es un
+# archivo pensado para copiarse sin revisar (sobre todo las variables
+# marcadas como obligatorias más abajo).
+#
+# Uso, desde esta carpeta:
+#   1. Extrae el paquete de entrega al cliente (ver GUIA_DESPLIEGUE.md)
+#      de modo que su carpeta "instantanea/" quede accesible aquí,
+#      p. ej. copiada a ./instantanea.
+#   2. export RAGSTUDIO_API_KEY=<la clave del .env.example del paquete>
+#      (opcional) export RAGSTUDIO_SNAPSHOT_VERSION=<versión del paquete> -- solo como verificación
+#   3. docker compose -f packaging/api/docker-compose.yml up --build
+#
+# Escalar a varias réplicas (GUIA_DESPLIEGUE.md, sección 11, si un solo
+# proceso empieza a hacer fila con tráfico alto): NO uses
+# `docker compose up --scale ragstudio-api=N` tal cual sobre este
+# archivo -- todas las réplicas compartirían el mismo bind mount
+# ./instantanea:/snapshot, y eso es justo el caso que produce 500
+# intermitentes (verificado real, ver GUIA_DESPLIEGUE.md sección 11).
+# En su lugar, define un servicio por réplica, cada uno con su PROPIA
+# copia de ./instantanea (p. ej. ./instantanea-1, ./instantanea-2),
+# publicando un puerto distinto cada uno, y pon un balanceador (nginx,
+# un ALB, etc.) por delante repartiendo el tráfico entre esos puertos
+# -- runtime.db (el volumen ragstudio-data) sí puede y debe ser el
+# MISMO para todas las réplicas (SQLite en modo WAL tolera varios
+# procesos escribiendo a la vez; si cada réplica tuviera su propio
+# runtime.db, la pestaña Monitoreo solo vería una fracción de las
+# conversaciones reales).
+
+services:
+  ragstudio-api:
+    build:
+      context: ../..  # raíz del repositorio (necesita pyproject.toml + el código)
+      dockerfile: packaging/api/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      # Obligatoria -- el contenedor no arranca sin ella (ver
+      # docstring de create_app_from_env).
+      RAGSTUDIO_API_KEY: ${RAGSTUDIO_API_KEY:?define RAGSTUDIO_API_KEY antes de levantar este servicio}
+      # La instantánea se monta de solo lectura en /snapshot (ver
+      # volúmenes abajo) -- separada de /data (donde SÍ se escribe
+      # runtime.db y logs/) para no mezclar lo de solo lectura con lo
+      # que el proceso necesita modificar.
+      RAGSTUDIO_SNAPSHOT_DIR: /snapshot
+      # Opcional (Ronda 94): la versión se toma de /snapshot/snapshot_identity.json.
+      # Si se define, debe coincidir o el contenedor no arranca. Vacía = no se verifica.
+      RAGSTUDIO_SNAPSHOT_VERSION: ${RAGSTUDIO_SNAPSHOT_VERSION:-}
+      # Opcionales -- descomenta y ajusta según el despliegue real.
+      # RAGSTUDIO_WIDGET_ALLOWED_ORIGINS: https://sitio-del-cliente.example
+      # RAGSTUDIO_RATE_LIMIT_PER_MINUTE: "30"
+      # RAGSTUDIO_CHANNELING_WEBHOOK_URL: https://mesa-de-ayuda.example/webhook
+      # RAGSTUDIO_CHANNELING_WEBHOOK_SECRET: "..."
+      RAGSTUDIO_LOG_LEVEL: INFO
+    volumes:
+      - ./instantanea:/snapshot:ro
+      - ragstudio-data:/data
+    restart: unless-stopped
+    # /health no requiere ninguna instantánea cargada -- sirve como
+    # verificación mínima de que el proceso sigue vivo.
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  ragstudio-data:

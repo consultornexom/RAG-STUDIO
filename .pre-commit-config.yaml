@@ -1,0 +1,48 @@
+# Automatiza ruff + mypy + bandit + pytest antes de cada commit -- para
+# no depender de acordarse de correr cada herramienta a mano, y para que
+# ningún cambio que rompa una de ellas llegue a quedar commiteado por
+# accidente. Hallado al comparar con RAG CONTENT STUDIO, herramienta
+# hermana del mismo autor que ya lo tenía configurado (ver bitácora).
+#
+# pip-audit se deja fuera a propósito: necesita internet (consulta una
+# base de datos de vulnerabilidades) y no es determinista offline --
+# corre solo en CI (job security-audit, informativo), no en cada commit
+# local.
+#
+# Instalación (una sola vez por clon del repositorio):
+#   pip install -e ".[dev]"
+#   pre-commit install
+repos:
+  - repo: local
+    hooks:
+      - id: ruff
+        name: ruff (lint)
+        entry: ruff check
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: mypy
+        name: mypy (tipos)
+        entry: mypy
+        language: system
+        pass_filenames: false
+        types: [python]
+
+      - id: bandit
+        name: bandit (seguridad estática)
+        entry: bandit -q -c pyproject.toml -r
+        language: system
+        pass_filenames: false
+        types: [python]
+        # ui/ sí se incluye aquí (a diferencia de mypy, ver tests.yml):
+        # ui/theme.py genera HTML por interpolación de texto, código que
+        # bandit sabe revisar (auditoría de madurez ronda 5).
+        args: [app, application, domain, infrastructure, workers, ui]
+
+      - id: pytest
+        name: pytest (unitarias + humo + cobertura)
+        entry: pytest tests/unit tests/smoke
+        language: system
+        pass_filenames: false
+        types: [python]

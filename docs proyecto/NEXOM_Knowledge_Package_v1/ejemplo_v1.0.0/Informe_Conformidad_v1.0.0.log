@@ -1,0 +1,82 @@
+# verificar_conformidad.sh — log completo
+# fecha_utc: 2026-09-24T19:15:05Z
+# host: Linux 6.8.0-138-generic x86_64
+# python: Python 3.10.12
+# cryptography              50.0.1
+# jsonschema                4.26.0
+# rfc3339-validator         0.1.4
+# rfc8785                   0.1.4
+# sha256 verificar_conformidad.sh: 2e60671007799d435064801e2e6f8bde74dfab09dbd3122a304d6282e026d785
+
+== 1. Artefactos normativos (contrato_v1.0.0/SHA256SUMS)
+schemas/acceptance_case.schema.json: OK
+schemas/access_hierarchy.schema.json: OK
+schemas/checksums.schema.json: OK
+schemas/chunk.schema.json: OK
+schemas/conversational_bundle.schema.json: OK
+schemas/embedding_spaces.schema.json: OK
+schemas/evidence.schema.json: OK
+schemas/indexes.schema.json: OK
+schemas/manifest.schema.json: OK
+schemas/media.schema.json: OK
+schemas/metadata_schema.schema.json: OK
+schemas/signature.schema.json: OK
+schemas/source.schema.json: OK
+schemas/source_metadata.schema.json: OK
+common/id_scheme.py: OK
+validator/validate_knowledge_package.py: OK
+== 2. Ejemplo y QA (SHA256SUMS_EJEMPLO)
+LEEME.md: OK
+delivery/nexom-knowledge-package-demo-v1.0.0.content.sha256: OK
+delivery/nexom-knowledge-package-demo-v1.0.0.pubkey_DEMO.pem: OK
+delivery/nexom-knowledge-package-demo-v1.0.0.sig: OK
+delivery/nexom-knowledge-package-demo-v1.0.0.zip.sha256: OK
+example_package/acceptance_cases.jsonl: OK
+example_package/access_hierarchy.json: OK
+example_package/checksums.json: OK
+example_package/chunks.jsonl: OK
+example_package/conversational_bundle.json: OK
+example_package/embedding_spaces.json: OK
+example_package/evidence.jsonl: OK
+example_package/indexes.json: OK
+example_package/manifest.json: OK
+example_package/media.jsonl: OK
+example_package/metadata_schema.json: OK
+example_package/source_metadata.jsonl: OK
+example_package/sources.jsonl: OK
+generate_example.py: OK
+nexom-knowledge-package-demo-v1.0.0.zip: OK
+qa/test_negative_cases.py: OK
+requirements.lock.txt: OK
+verificar_conformidad.sh: OK
+== 3. Validador de referencia
+directorio: OK: 165 ERRORES: 0 exit=0
+directorio + trusted-key-id: OK: 166 ERRORES: 0 exit=0
+zip: OK: 167 ERRORES: 0 exit=0
+zip + trusted-key-id: OK: 168 ERRORES: 0 exit=0
+== 4. Suite positiva y negativa
+[01_invalid_date] PASS (rechazado correctamente)
+[02_omission_reason_null_falso] PASS (rechazado correctamente)
+[03_media_incluida_sin_binario] PASS (rechazado correctamente)
+[04_conteo_manifest_falso] PASS (rechazado correctamente)
+[05_activo_declarado_ausente] PASS (rechazado correctamente)
+[06_activo_sin_checksum] PASS (rechazado correctamente)
+[07_archivo_extra_no_declarado] PASS (rechazado correctamente)
+[08_entrada_duplicada_en_zip] PASS (rechazado correctamente)
+[09_sidecar_no_cumple_schema] PASS (rechazado correctamente)
+[10_evidencia_derivada_sin_omision] PASS (rechazado correctamente)
+[11_cadena_logical_id_rota] PASS (rechazado correctamente)
+[12_metadata_referencia_codigo_local] PASS (rechazado correctamente)
+[13_falta_top_k_en_acceptance_case] PASS (rechazado correctamente)
+[14_source_id_no_determinista] PASS (rechazado correctamente)
+[15_must_not_retrieve_inexistente] PASS (rechazado correctamente)
+[16_chunk_esperado_sobre_nivel_acceso] PASS (rechazado correctamente)
+[17_chunk_texto_manipulado] PASS (rechazado correctamente)
+[18_zip_path_traversal] PASS (rechazado correctamente)
+[19_evidence_source_id_no_coincide_con_chunk] PASS (rechazado correctamente)
+[00_baseline_valido] PASS (aceptado correctamente)
+
+RESUMEN: 20/20 casos correctos
+
+CONFORMIDAD v1.0.0: PASS
+# exit_code: 0

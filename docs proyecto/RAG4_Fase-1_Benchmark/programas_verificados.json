@@ -1,0 +1,463 @@
+{
+  "Administración de Empresas": {
+    "source_title_b": "admemp",
+    "cuatrimestres": {
+      "1": [
+        "Administración I",
+        "Contabilidad I",
+        "Teoría General del Derecho",
+        "Metodología de la Investigación",
+        "Autoconocimiento"
+      ],
+      "2": [
+        "Administración II",
+        "Contabilidad II",
+        "Derecho Mercantil",
+        "Matemáticas Básicas",
+        "Autoestima"
+      ],
+      "3": [
+        "Psicología Organizacional",
+        "Matemáticas Financieras",
+        "Informática I",
+        "Sistema de Valores"
+      ],
+      "6": [
+        "Costos II",
+        "Derecho Laboral II",
+        "Introducción a la Economía",
+        "Comunicación Administrativa",
+        "Optativa III",
+        "Metas, Hábitos y Tiempo Productivo"
+      ],
+      "9": [
+        "Investigación de Mercados",
+        "Análisis Financiero",
+        "Investigación de Operaciones I",
+        "Optativa VI",
+        "Proyecto Emprendedor"
+      ],
+      "14": [
+        "Producción II",
+        "Administración de Pequeñas Empresas",
+        "Desarrollo Organizacional",
+        "Seminario de Titulación"
+      ]
+    },
+    "duracion_cuatrimestres": 14,
+    "requisitos_ingreso": [
+      "Aprobación del examen psicométrico",
+      "Acta de nacimiento con vigencia no mayor a 6 meses",
+      "Certificado de bachillerato legalizado",
+      "Constancia de estudios actualizada de la escuela de procedencia",
+      "CURP original y copias",
+      "8 fotografías de frente"
+    ],
+    "perfil_egresado": [
+      "Tomará decisiones",
+      "Creará, desarrollará, fusionará, escindirá, reestructurará y liquidará organizaciones",
+      "Planeará, organizará, dirigirá y controlará el trabajo hacia resultados",
+      "Ejercerá y delegará autoridad",
+      "Diagnosticará la planeación, organización, dirección y control de cualquier empresa",
+      "Conocimiento de inglés y/o francés"
+    ],
+    "campo_trabajo": [
+      "Bufete independiente",
+      "Áreas de Mercadotecnia, Finanzas, Recursos Humanos o Administración de empresas privadas y organismos públicos",
+      "Instituciones educativas y de investigación",
+      "Creación y fundación de empresas"
+    ],
+    "perfil_aspirante": [
+      "Capacidad de pensamiento analítico",
+      "Capacidad de observación y percepción",
+      "Capacidad de asumir responsabilidades y tomar decisiones",
+      "Gusto y facilidad para el manejo cuantitativo",
+      "Gusto por el trabajo en equipo",
+      "Integridad moral"
+    ],
+    "planteles_rvoe": [
+      "Celaya",
+      "Dolores Hidalgo",
+      "Guanajuato",
+      "Irapuato",
+      "La Piedad",
+      "León",
+      "Moroleón",
+      "Salamanca",
+      "Silao",
+      "San Francisco del Rincón",
+      "San Luis de la Paz",
+      "San Miguel de Allende"
+    ]
+  },
+  "Ingeniería en Computación": {
+    "source_title_b": "ingcom",
+    "cuatrimestres": {
+      "1": [
+        "Álgebra Vectorial",
+        "Algoritmos",
+        "Metodología de la Investigación",
+        "Autoconocimiento"
+      ],
+      "2": [
+        "Introducción a la Computación",
+        "Geometría Analítica",
+        "Programación I",
+        "Autoestima"
+      ],
+      "3": [
+        "Administración",
+        "Cálculo",
+        "Programación II",
+        "Sistema de Valores"
+      ],
+      "7": [
+        "Análisis de Circuitos Digitales",
+        "Ingeniería de Comunicaciones",
+        "Lenguaje Ensamblador",
+        "Optativa IV",
+        "Comunicación"
+      ],
+      "12": [
+        "Compiladores I",
+        "Administración y Calidad de la Industria del Software",
+        "Bases de Datos",
+        "Inteligencia Artificial I",
+        "Optativa IX",
+        "Proceso de Cambio"
+      ],
+      "14": [
+        "Desarrollo de Utilerías y Manejadores",
+        "Sistemas de Información",
+        "Diseño e Interacción con Interfaces",
+        "Contabilidad y Costos",
+        "Finanzas y Economía",
+        "Seminario de Titulación"
+      ]
+    },
+    "duracion_cuatrimestres": 14,
+    "requisitos_ingreso": [
+      "Aprobación del examen psicométrico",
+      "Acta de nacimiento con vigencia no mayor a 6 meses",
+      "Certificado de bachillerato legalizado",
+      "Constancia de estudios actualizada de la escuela de procedencia",
+      "CURP original y copias",
+      "8 fotografías de frente"
+    ],
+    "perfil_egresado": [
+      "Diseñará, instalará y mantendrá sistemas de redes y telecomunicaciones",
+      "Automatización de procesos industriales mediante dispositivos electrónicos",
+      "Diseñará y programará sistemas computacionales para procesos industriales",
+      "Tomará el papel de líder en decisiones de redes de cómputo y telecomunicaciones",
+      "Aplicará técnicas de investigación para mejorar desempeño y seguridad de redes",
+      "Conocimiento de inglés y/o francés"
+    ],
+    "campo_trabajo": [
+      "Entidades públicas y privadas de todos los sectores",
+      "Ingeniería de software y soporte técnico",
+      "Diseño y desarrollo de sistemas y de hardware",
+      "Diseño y operación de redes de intranet e internet",
+      "Diseño y operación de seguridad, telecomunicaciones y teleprocesos",
+      "Diseño y operación robótica",
+      "Investigación y desarrollo de inteligencia artificial"
+    ],
+    "perfil_aspirante": [
+      "Liderazgo",
+      "Facilidad de expresión oral y escrita",
+      "Espíritu de servicio",
+      "Capacidad de análisis y crítica",
+      "Interés por sucesos políticos, sociales y económicos",
+      "Interés ecológico",
+      "Conocimiento y manejo de avances tecnológicos",
+      "Capacidad inventiva",
+      "Capacidad de abstracción y síntesis"
+    ],
+    "planteles_rvoe": [
+      "León",
+      "Celaya",
+      "Irapuato"
+    ]
+  },
+  "Derecho": {
+    "source_title_b": "der",
+    "cuatrimestres": {
+      "1": [
+        "Derecho Romano I",
+        "Derecho Mercantil I",
+        "Metodología de la Investigación",
+        "Teoría General del Derecho I",
+        "Sociología",
+        "Autoconocimiento"
+      ],
+      "2": [
+        "Derecho Romano II",
+        "Teoría del Estado",
+        "Derecho Penal I",
+        "Economía",
+        "Teoría General del Derecho II",
+        "Derecho Mercantil II",
+        "Autoestima"
+      ],
+      "3": [
+        "Derecho Penal II",
+        "Derecho Civil I",
+        "Derecho Mercantil III",
+        "Derecho Internacional Público",
+        "Sistema de Valores"
+      ],
+      "8": [
+        "Derecho Civil VI",
+        "Derecho Internacional Privado",
+        "Derecho Procesal Civil III",
+        "Derecho Constitucional I",
+        "Optativa V",
+        "Negociación y Manejo de Conflictos"
+      ],
+      "12": [
+        "Amparo II",
+        "Derecho Procesal Laboral",
+        "Derecho Municipal",
+        "Optativa IX",
+        "Proceso de Cambio"
+      ],
+      "14": [
+        "Derecho Procesal Agrario",
+        "Prácticas de Derecho Civil",
+        "Prácticas de Derecho Mercantil",
+        "Quiebras",
+        "Derecho Registral y Notarial",
+        "Filosofía del Derecho",
+        "Seminario de Titulación"
+      ]
+    },
+    "duracion_cuatrimestres": 14,
+    "requisitos_ingreso": [
+      "Aprobación del examen psicométrico",
+      "Acta de nacimiento con vigencia no mayor a 6 meses",
+      "Certificado de bachillerato legalizado",
+      "Constancia de estudios actualizada de la escuela de procedencia",
+      "CURP original y copias",
+      "8 fotografías de frente"
+    ],
+    "perfil_egresado": [
+      "Habilidad para aplicar las normas jurídicas",
+      "Habilidad para representar jurídicamente a dependencias y entidades del sector público y privado",
+      "Habilidad para asesorar individuos, grupos e instituciones en áreas civil, penal, mercantil, laboral, fiscal y agrario",
+      "Habilidad para aplicar el sistema normativo vigente y la justicia a casos específicos",
+      "Habilidad para fundamentar su pensamiento analítico en criterios de verdad y consistencia",
+      "Conocimiento de inglés y/o francés"
+    ],
+    "campo_trabajo": [
+      "Bufete independiente",
+      "Departamento de asesoría jurídica de organismos públicos y empresas privadas",
+      "Poder Ejecutivo, Legislativo y Judicial",
+      "Instituciones educativas de investigación",
+      "Docencia e investigación jurídica"
+    ],
+    "perfil_aspirante": [
+      "Facilidad de expresión oral y escrita",
+      "Gusto y facilidad para el estudio de las Ciencias Sociales",
+      "Conciencia y gusto por la justicia",
+      "Aprecio de los principios morales éticos",
+      "Vocación de servicio",
+      "Gusto por la lectura"
+    ],
+    "planteles_rvoe": [
+      "Celaya",
+      "Dolores Hidalgo",
+      "Guanajuato",
+      "Irapuato",
+      "La Piedad",
+      "León",
+      "Moroleón",
+      "Salamanca",
+      "Silao",
+      "San Luis de la Paz",
+      "San Miguel de Allende",
+      "San Francisco del Rincón"
+    ]
+  },
+  "Psicología": {
+    "source_title_b": "psi",
+    "cuatrimestres": {
+      "1": [
+        "Introducción a la Informática",
+        "Lectura y Redacción",
+        "Metodología de la Investigación",
+        "Introducción a la Psicología",
+        "Estadística I",
+        "Autoconocimiento"
+      ],
+      "2": [
+        "Antropología Social",
+        "Teorías y Sistemas en Psicología",
+        "Neuroanatomía",
+        "Estadística II",
+        "Sensopercepción",
+        "Autoestima"
+      ],
+      "3": [
+        "Sociología",
+        "Aprendizaje y Memoria",
+        "Psicofisiología",
+        "Psicología Evolutiva I",
+        "Sistema de Valores"
+      ],
+      "9": [
+        "Psicopatología Infantil",
+        "Evaluación de Estudios Psicoeducativos",
+        "Teoría y Técnica de la Entrevista Educativa",
+        "Psicología de la Educación",
+        "Optativa VI",
+        "Proyecto Emprendedor"
+      ],
+      "12": [
+        "Prácticas Educativas Profesionales II",
+        "Modificación de la Conducta Escolar",
+        "Educación Especial II",
+        "Orientación Vocacional",
+        "Optativa IX",
+        "Proceso de Cambio"
+      ],
+      "14": [
+        "Seminario de Titulación",
+        "Prácticas Educativas Profesionales IV",
+        "Planeación Curricular",
+        "Administración de Centros Escolares",
+        "Ética Profesional"
+      ]
+    },
+    "duracion_cuatrimestres": 14,
+    "requisitos_ingreso": [
+      "Aprobación del examen psicométrico",
+      "Acta de nacimiento con vigencia no mayor a 6 meses",
+      "Certificado de bachillerato legalizado",
+      "Constancia de estudios actualizada de la escuela de procedencia",
+      "CURP original y copias",
+      "8 fotografías de frente"
+    ],
+    "perfil_egresado": [
+      "Conocimientos sobre teorías y prácticas de la Psicología General",
+      "Conocimientos sobre modelos y enfoques psicopedagógicos",
+      "Conocimientos sobre orientación educativa, vocacional y profesional",
+      "Conocimientos sobre detección y tratamiento de problemas psicofisiológicos de aprendizaje, lenguaje y conducta",
+      "Habilidades para diseñar y realizar programas psicopedagógicos",
+      "Habilidades para diagnosticar, evaluar y tratar problemas de aprendizaje",
+      "Conocimiento de inglés y/o francés"
+    ],
+    "campo_trabajo": [
+      "Empresas privadas, de gobierno o consultoría independiente",
+      "Estudios psico-educativos para detección y valoración de problemas conductuales, de aprendizaje, lenguaje y coordinación psicomotora"
+    ],
+    "perfil_aspirante": [
+      "Conocimientos elementales de biología, anatomía y química",
+      "Conocimientos en metodología de la investigación",
+      "Hábito de estudio sistemático y mentalidad analítica y crítica",
+      "Búsqueda eficaz de información y gusto por la lectura",
+      "Interés por la problemática y funcionamiento de la conducta del hombre",
+      "Actitud dinámica dentro de la sociedad"
+    ],
+    "planteles_rvoe": [
+      "Celaya",
+      "Guanajuato",
+      "León",
+      "Moroleón",
+      "Salamanca",
+      "San Francisco del Rincón",
+      "San Miguel de Allende"
+    ]
+  },
+  "Arquitectura": {
+    "source_title_b": "arq",
+    "cuatrimestres": {
+      "1": [
+        "Introducción al Estudio de la Arquitectura",
+        "Metodología de la Investigación",
+        "Dibujo Natural",
+        "Dibujo Técnico Arquitectónico I",
+        "Autoconocimiento"
+      ],
+      "2": [
+        "Geometría Descriptiva I",
+        "Dibujo Técnico Arquitectónico II",
+        "Matemáticas I",
+        "Técnicas de Representación Básicas",
+        "Autoestima"
+      ],
+      "3": [
+        "Geometría Descriptiva II",
+        "Representación Tridimensional",
+        "Matemáticas II",
+        "Técnicas de Representación Mixtas",
+        "Sistema de Valores"
+      ],
+      "7": [
+        "Taller de Construcción II",
+        "Costos y Presupuestos",
+        "Arquitectura Asistida por Computadora",
+        "Estructuras de Concreto I",
+        "Optativa IV",
+        "Comunicación"
+      ],
+      "10": [
+        "Taller de Proyectos I",
+        "Teoría de la Arquitectura II",
+        "Historia de la Arquitectura en México",
+        "Criterios de Estructuración",
+        "Optativa VII",
+        "Control de Estrés"
+      ],
+      "14": [
+        "Taller Terminal",
+        "Taller de Planeación Urbana",
+        "Seminario de Actualización",
+        "Seminario de Titulación"
+      ]
+    },
+    "duracion_cuatrimestres": 14,
+    "requisitos_ingreso": [
+      "Aprobación del examen psicométrico",
+      "Acta de nacimiento con vigencia no mayor a 6 meses",
+      "Certificado de bachillerato legalizado",
+      "Constancia de estudios actualizada de la escuela de procedencia",
+      "CURP original y copias",
+      "8 fotografías de frente"
+    ],
+    "perfil_egresado": [
+      "Conocimientos sobre aspectos funcionales, estéticos, técnicos, económicos y de sustentación medioambiental",
+      "Conocimiento de inglés y/o francés",
+      "Habilidad para expresar ideas mediante representación gráfica y tridimensional",
+      "Habilidad para aplicar metodología científica como sustento de sus propuestas",
+      "Habilidad para proponer nuevos espacios que solucionen problemas sociales",
+      "Actitud de servicio a la comunidad"
+    ],
+    "campo_trabajo": [
+      "Bufete independiente",
+      "Áreas de proyectos arquitectónicos, urbanísticos o de construcción, de organismos públicos o empresas privadas",
+      "Instituciones educativas y de investigación"
+    ],
+    "perfil_aspirante": [
+      "Capacidad para la percepción tridimensional",
+      "Capacidad para la abstracción",
+      "Gusto por las Artes Plásticas",
+      "Interés por los aspectos técnico-constructivos",
+      "Interés por la historia y la cultura",
+      "Facilidad para las ciencias exactas",
+      "Disposición para el trabajo manual en tiempo prolongado",
+      "Capacidad de observación y retentiva visual"
+    ],
+    "planteles_rvoe": [
+      "Celaya",
+      "Dolores Hidalgo",
+      "Guanajuato",
+      "Irapuato",
+      "La Piedad",
+      "León",
+      "Moroleón",
+      "Salamanca",
+      "San Francisco del Rincón",
+      "San Luis de la Paz",
+      "San Miguel de Allende"
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+[Unit]
+Description=RAG STUDIO - runtime de produccion (interfaces/api/)
+Documentation=https://example.invalid/GUIA_DESPLIEGUE.md
+After=network.target
+
+[Service]
+Type=simple
+User=ragstudio
+Group=ragstudio
+WorkingDirectory=/opt/ragstudio
+; Variables de entorno (obligatorias: RAGSTUDIO_API_KEY, RAGSTUDIO_SNAPSHOT_DIR
+; -> .../entrega_cliente_<proyecto>_v<N>/instantanea; opcional: RAGSTUDIO_SNAPSHOT_VERSION,
+; solo como verificación -- la versión se toma de instantanea/snapshot_identity.json)
+; -- ver GUIA_DESPLIEGUE.md del paquete de entrega. Este archivo NO
+; debe tener permisos de lectura para otros usuarios (chmod 600):
+; contiene la clave operativa en texto plano.
+EnvironmentFile=/opt/ragstudio/ragstudio-api.env
+; Ronda 92: validación previa -- si la configuración no cuadra, el
+; servicio no arranca y el motivo queda en "journalctl -u ragstudio-api".
+ExecStartPre=/opt/ragstudio/.venv/bin/python -m interfaces.api.check_config
+ExecStart=/opt/ragstudio/.venv/bin/uvicorn interfaces.api.app:create_app_from_env --factory --host 0.0.0.0 --port 8000
+Restart=on-failure
+RestartSec=5
+; Endurecimiento razonable para un servicio de red sin privilegios
+; especiales -- no reemplaza revisar los permisos reales de
+; /opt/ragstudio en la máquina de destino.
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

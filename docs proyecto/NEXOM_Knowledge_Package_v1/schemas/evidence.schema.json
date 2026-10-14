@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nexom.com/knowledge-package/v1/evidence.schema.json",
+  "title": "EvidenceRecord",
+  "description": "Una linea de evidence.jsonl. IMPORTANTE: `verification_status` distingue lo que RAG Studio acredito realmente de lo que el exportador solo derivo por proyeccion de chunk+source -- Agent Runtime no debe tratar `derived` como una garantia editorial equivalente a `verified_manual`.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "evidence_kind", "derivation_method", "verification_status",
+    "source_id", "chunk_id"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^urn:nexom:evidence:[0-9a-f-]{36}$" },
+    "evidence_kind": {
+      "type": "string",
+      "enum": ["citation_anchor", "verified_manual", "derived_automatic"],
+      "description": "citation_anchor: ancla de cita basica (chunk+source, hoy la unica implementada). verified_manual/derived_automatic: reservados para cuando RAG Studio incorpore verificacion editorial explicita de evidencia (no implementado en RAG-INC-00)."
+    },
+    "derivation_method": { "type": "string", "minLength": 1 },
+    "verification_status": {
+      "type": "string",
+      "enum": ["derived", "verified"],
+      "description": "En esta version, siempre `derived` -- no existe hoy en RAG Studio ningun flujo de verificacion manual de evidencia (ver ADR)."
+    },
+    "source_id": { "type": "string", "pattern": "^urn:nexom:source:[0-9a-f-]{36}$" },
+    "chunk_id": { "type": "string", "pattern": "^urn:nexom:chunk:[0-9a-f-]{36}:[0-9a-f]{64}$" },
+    "page_range": {
+      "type": "array",
+      "items": { "type": ["integer", "null"] },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "section_title": { "type": ["string", "null"] },
+    "content_hash": { "type": ["string", "null"] },
+    "source_authority": { "type": ["integer", "null"] },
+    "source_valid_from": { "type": ["string", "null"], "format": "date" },
+    "source_valid_to": { "type": ["string", "null"], "format": "date" }
+  }
+}

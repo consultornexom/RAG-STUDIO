@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nexom.com/knowledge-package/v1/media.schema.json",
+  "title": "MediaRecord",
+  "description": "Una linea de media.jsonl -- descriptor de un activo binario (imagen) asociado a un chunk. `included_in_package` distingue perfil CORE (solo descriptor, false) de perfil AUDIT (binario real bajo assets/, true).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "media_type", "chunk_id", "source_id", "relative_path",
+    "checksum", "included_in_package"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^urn:nexom:media:[0-9a-f-]{36}$" },
+    "media_type": { "type": "string", "enum": ["image"] },
+    "chunk_id": { "type": "string", "pattern": "^urn:nexom:chunk:[0-9a-f-]{36}:[0-9a-f]{64}$" },
+    "source_id": { "type": "string", "pattern": "^urn:nexom:source:[0-9a-f-]{36}$" },
+    "relative_path": { "type": "string", "pattern": "^assets/images/[^/]+$" },
+    "checksum": { "type": "string", "pattern": "^sha256:.+$" },
+    "included_in_package": { "type": "boolean" },
+    "note": { "type": "string" }
+  },
+  "if": { "properties": { "included_in_package": { "const": true } } },
+  "then": {
+    "description": "Si el binario viaja en el paquete (perfil AUDIT), su checksum real DEBE aparecer tambien en checksums.json bajo la misma relative_path."
+  }
+}

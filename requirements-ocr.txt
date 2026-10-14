@@ -1,0 +1,14 @@
+# Necesario solo para OCR de PDF escaneado (Módulo 4, ver README).
+# Además de estos paquetes de Python, requiere el binario de Tesseract
+# instalado en el sistema operativo, con el paquete de idioma español
+# (el motor OCR en sí, no una librería de Python):
+#   Ubuntu/Debian: sudo apt install tesseract-ocr tesseract-ocr-spa
+#   macOS (Homebrew): brew install tesseract tesseract-lang
+#   Windows: instalador de https://github.com/UB-Mannheim/tesseract/wiki
+# Sin el binario y el paquete de idioma "spa" instalados, el OCR sigue
+# sin funcionar aunque estos paquetes de Python sí estén instalados --
+# la app lo reporta con un mensaje claro (OcrEngineUnavailableError),
+# no un traceback crudo.
+pytesseract>=0.3.10
+Pillow>=10.0
+PyMuPDF>=1.24

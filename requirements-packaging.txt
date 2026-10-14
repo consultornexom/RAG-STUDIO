@@ -1,0 +1,5 @@
+# Necesario solo para generar el ejecutable con PyInstaller (ítem 7 de
+# la segunda evaluación de madurez post-8-etapas, ver packaging/README.md
+# y bitácora en README). No es requisito para correr la app ni las
+# pruebas normalmente.
+pyinstaller>=6.0

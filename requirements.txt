@@ -1,0 +1,39 @@
+SQLAlchemy>=2.0
+alembic>=1.13
+pydantic>=2.0
+pypdf>=6.14.2  # CVE-2026-59935/-36/-37/-38 (DoS al parsear PDF manipulado) -- ver pyproject.toml
+python-docx>=1.1
+qdrant-client>=1.18
+fastembed>=0.8
+openpyxl>=3.1
+defusedxml>=0.7
+pytest>=7.0
+pytest-cov>=5.0
+ruff>=0.16
+mypy>=2.0
+bandit>=1.7
+pip-audit>=2.7
+pre-commit>=3.6
+# Necesario solo para OCR de PDF escaneado (Módulo 4, ver README).
+# Además de estos paquetes de Python, requiere el binario de Tesseract
+# instalado en el sistema operativo, con el paquete de idioma español
+# (el motor OCR en sí, no una librería de Python):
+#   Ubuntu/Debian: sudo apt install tesseract-ocr tesseract-ocr-spa
+#   macOS (Homebrew): brew install tesseract tesseract-lang
+#   Windows: instalador de https://github.com/UB-Mannheim/tesseract/wiki
+# Sin el binario y el paquete de idioma "spa" instalados, el OCR sigue
+# sin funcionar aunque estos paquetes de Python sí estén instalados --
+# la app lo reporta con un mensaje claro (OcrEngineUnavailableError),
+# no un traceback crudo.
+pytesseract>=0.3.10
+Pillow>=10.0
+PyMuPDF>=1.24
+# Necesario solo para generar el ejecutable con PyInstaller (ítem 7 de
+# la segunda evaluación de madurez post-8-etapas, ver packaging/README.md
+# y bitácora en README). No es requisito para correr la app ni las
+# pruebas normalmente.
+pyinstaller>=6.0
+# Necesario solo para ejecutar la interfaz de escritorio (ui/app.py).
+# En Linux puede requerir además las bibliotecas nativas del sistema
+# libegl1, libgl1, libxkbcommon0 (ver README, sección "Limitaciones").
+PySide6-Essentials>=6.5

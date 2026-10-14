@@ -1,0 +1,17 @@
+[Unit]
+Description=RAG STUDIO - purga de conversaciones (retencion de datos, Ronda 12)
+; Ejecutado por ragstudio-purge-conversations.timer -- no depende de
+; que ragstudio-api.service esté corriendo (runtime.db es un SQLite
+; normal, se puede leer/escribir aunque el servicio principal esté
+; parado).
+
+[Service]
+Type=oneshot
+User=ragstudio
+Group=ragstudio
+WorkingDirectory=/opt/ragstudio
+EnvironmentFile=/opt/ragstudio/ragstudio-api.env
+; Ajusta --retention-days a la política de retención acordada con el
+; cliente -- ver GUIA_DESPLIEGUE.md, sección "Retención de la
+; bitácora de conversaciones". No hay valor por defecto a propósito.
+ExecStart=/opt/ragstudio/.venv/bin/python -m interfaces.api.purge_conversations --retention-days 90

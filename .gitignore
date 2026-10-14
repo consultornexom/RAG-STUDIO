@@ -1,0 +1,67 @@
+# .gitignore de RAG Studio — definitivo para RAG-INC-01 (2026-10-14).
+# Base: docs proyecto/RAG-INC-01/preparacion_01a/gitignore_propuesto.txt,
+# ampliado tras la revisión de contenido de Cierre_Precondiciones_01a.md, sección 2.
+
+# --- Entorno y cachés de Python / herramientas ---
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# --- Datos reales de la instalación (proyectos, application.db, runtime.db, logs) ---
+data/
+logs/
+
+# --- Modelos locales (se descargan o instalan aparte) ---
+models/
+modelos_ragstudio/
+
+# --- Paquetes y artefactos de construcción ---
+build/
+dist/
+*.agentproj
+
+# --- Bases de datos y auxiliares de SQLite (en cualquier ubicación) ---
+*.db
+*.db-wal
+*.db-shm
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# --- Secretos ---
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.pfx
+# Excepción: claves PÚBLICAS DEMO publicadas con el contrato (evidencia verificable).
+!docs\ proyecto/**/*.pubkey_DEMO.pem
+
+# --- Documentos y paquetes del cliente (UDL): datos, no código ---
+# Licenciatura/: 25 PDF oficiales de planes de estudio de la Universidad (escaneados).
+/Licenciatura/
+# PRUEBAS_...: dos .agentproj reales congelados como corpus B y C de 01a (se controlan por hash).
+/PRUEBAS_RAG_STUDIO_UDL_2026-08-20/
+
+# --- Copias históricas del árbol (respaldos, no fuente) ---
+/Actualizacion_*/
+/_respaldos_rag_inc_01/
+
+# --- Datos de trabajo del benchmark RAG4 (copias de PDF del cliente, proyectos,
+#     caché de modelos de 235 MB). El código y los JSON de resultados quedan
+#     fuera también; la evidencia se conserva en el respaldo fechado. ---
+/docs\ proyecto/RAG4_Fase-1_Benchmark/prototipo/trabajo/
+
+# --- Documentos de hallazgos recibidos en la raíz (entradas temporales;
+#     si deben conservarse, moverlos a docs proyecto/hallazgos/) ---
+/contrato\ de\ integracion*.docx
+/inconsistencia_en_contrato*.docx
+/Revisar\ identidad\ de\ package*.docx

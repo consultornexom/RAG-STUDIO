@@ -25,6 +25,7 @@ def _source_to_record(source: Source) -> SourceRecord:
         validation_status=source.validation_status.value, valid_from=source.valid_from,
         valid_to=source.valid_to, source_authority=source.source_authority,
         supersedes_source_id=source.supersedes_source_id, original_copy_path=source.original_copy_path,
+        lineage_id=source.lineage_id,
         document_type_code=source.document_type_code,
         created_at=source.created_at, updated_at=source.updated_at,
     )
@@ -39,7 +40,7 @@ def _record_to_source(record: SourceRecord) -> Source:
         validation_status=SourceValidationStatus(record.validation_status),
         valid_from=record.valid_from, valid_to=record.valid_to,
         source_authority=record.source_authority, supersedes_source_id=record.supersedes_source_id,
-        original_copy_path=record.original_copy_path,
+        original_copy_path=record.original_copy_path, lineage_id=record.lineage_id,
         document_type_code=record.document_type_code,
         created_at=record.created_at, updated_at=record.updated_at,
     )

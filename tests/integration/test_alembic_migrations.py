@@ -1,7 +1,16 @@
+import pytest
 from sqlalchemy import inspect, create_engine
 
 from infrastructure.database import migrations as mig
 from infrastructure.filesystem.paths import InstallationPaths
+
+
+@pytest.fixture(autouse=True)
+def _permitir_downgrade_de_0021(monkeypatch):
+    """RAG-INC-01a: 0021 bloquea el downgrade salvo con la bandera de pruebas
+    sobre bases desechables (ver migrations/project/versions/0021_nexom_identities.py).
+    Estas pruebas bajan de head a revisiones anteriores sobre bases temporales."""
+    monkeypatch.setenv("RAGSTUDIO_PERMITIR_DOWNGRADE_0021", "1")
 
 
 def test_global_migration_upgrade_and_downgrade(tmp_path):

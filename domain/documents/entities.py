@@ -169,6 +169,12 @@ class Source(BaseModel):
     source_authority: Optional[int] = None
     """Convención: 1 = máxima autoridad. None = no priorizada."""
     supersedes_source_id: Optional[str] = None
+    lineage_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    """RAG-INC-01a (migración 0021): identidad de la FAMILIA de versiones de
+    la fuente (contrato NEXOM Knowledge Package v1.0.0, `logical_id`). Opaca
+    y persistente: una fuente raíz recibe un UUID4 nuevo; una fuente que
+    supersede a otra COPIA el de la anterior (RegisterSource). Nunca se
+    recalcula."""
     document_type_code: str = "default"
     """Tipo de documento de la fuente (mismo vocabulario libre que
     domain.ingestion.entities.FragmentationPolicy.document_type_code,

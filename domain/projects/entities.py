@@ -56,6 +56,11 @@ class Project(BaseModel):
     """
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    knowledge_base_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    """RAG-INC-01a (migración 0021): identidad lógica portable de la base de
+    conocimiento del proyecto (contrato NEXOM Knowledge Package v1.0.0).
+    UUID4 asignado una sola vez y persistido; a diferencia de `id`, no cambia
+    al importar el proyecto en otra instalación. Nunca se recalcula."""
     name: str
     agent_type_hint: Optional[str] = None
     description: str = ""

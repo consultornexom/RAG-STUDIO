@@ -61,7 +61,7 @@ Con la estructura de la Ronda 88 la integración es más simple que la prevista 
 
 ## 5. Decisiones que el Alcance no resuelve frente al código actual
 
-**D-1. Importación desde la interfaz.** El Alcance hace `identity_policy` **obligatorio y sin valor por defecto** ("no indicada → aborta") y deja la UI fuera de alcance ("Sin cambios en la UI"). Pero la UI de escritorio llama hoy a la importación (Ronda 88) y, desde la Ronda 88, su opción "Importar como copia" crea un `project_id` nuevo **conservando** el contenido. Si 01a se implementa tal cual:
+**D-1. Importación desde la interfaz. — RESUELTA: opción (a) aprobada por NEXOM (2026-10-14).** El Alcance hace `identity_policy` **obligatorio y sin valor por defecto** ("no indicada → aborta") y deja la UI fuera de alcance ("Sin cambios en la UI"). Pero la UI de escritorio llama hoy a la importación (Ronda 88) y, desde la Ronda 88, su opción "Importar como copia" crea un `project_id` nuevo **conservando** el contenido. Si 01a se implementa tal cual:
 - toda importación desde la UI abortaría por falta de política (regresión funcional visible para el usuario);
 - "Importar como copia" equivale semánticamente a `fork` (otra base), pero la UI no lo sabría.
 
@@ -70,20 +70,27 @@ Opciones:
 - **(b)** Mantener la UI fuera y que la fachada de aplicación pase `preserve` por defecto solo para la UI, sin cambiar el caso de uso obligatorio. `KnowledgeBaseIdentityCollisionError` se mostraría como error genérico, sin reintento guiado.
 - **(c)** Deshabilitar la importación desde la UI hasta un incremento posterior.
 
-**D-2. Paquete de entrega al cliente.** Decidir si 01a (o 01b) llena `identity.knowledge_base_id` en el `manifest.json` de entrega y si `grouping_key` pasa de `project_id` a `knowledge_base_id`. Cambiar la clave afecta a NEXOM Testing Agent (Ronda 95). Opción conservadora: llenar el campo sin cambiar `grouping_key` hasta acordarlo con Testing Agent.
+> **Resolución de D-1 (NEXOM, 2026-10-14).** Se autoriza que 01a incluya la adaptación mínima de la UI:
+> importación normal → `identity_policy = "preserve"`; "Importar como copia" → `identity_policy = "fork"`;
+> si `preserve` produce `KnowledgeBaseIdentityCollisionError`, la UI permite continuar por el flujo "Importar como copia" (`fork`).
+> No modifica el contrato v1.0.0 ni las reglas de `preserve`/`fork`; es una adaptación mínima para evitar una regresión
+> funcional y queda autorizada explícitamente como parte de 01a. Propuesta de RAG Studio, pendiente de confirmar: actualizar la sección 4.3 del Manual de Usuario para describir los dos modos.
 
-**D-3. Corpus D.** NEXOM incorporó como corpus adicional el proyecto real AGENTE UDL `6073eda1-…`, posterior a la preparación. No cambia gates. Requiere congelamiento por hash (ver `Cierre_Precondiciones_01a.md`).
+**D-2. Paquete de entrega al cliente. — DIFERIDA A RAG-INC-01b (NEXOM, 2026-10-14).** Decidir si 01a (o 01b) llena `identity.knowledge_base_id` en el `manifest.json` de entrega y si `grouping_key` pasa de `project_id` a `knowledge_base_id`. Cambiar la clave afecta a NEXOM Testing Agent (Ronda 95). Opción conservadora: llenar el campo sin cambiar `grouping_key` hasta acordarlo con Testing Agent.
+
+> **Resolución de D-2 (NEXOM, 2026-10-14).** Durante 01a: no cambiar `grouping_key`; no modificar la integración
+> actual con Testing Agent; no usar el paquete de entrega del widget como sustituto del NEXOM Knowledge Package. Si
+> `knowledge_base_id` existe después de `0021`, su incorporación al `manifest.json` del paquete de entrega se analiza
+> en 01b o en una decisión posterior específica.
+
+**D-3. Corpus D. — CERRADA (2026-10-14): confirmado por NEXOM y congelado (`project.db` `ca45dd6f…354a`; ver `Cierre_Precondiciones_01a.md`, sección 8.3).** NEXOM incorporó como corpus adicional el proyecto real AGENTE UDL `6073eda1-…`, posterior a la preparación. No cambia gates. Requiere congelamiento por hash (ver `Cierre_Precondiciones_01a.md`).
 
 Ninguna de estas decisiones cambia el contrato v1.0.0, ni las reglas de `preserve`/`fork`, ni la migración `0021`, ni los criterios de PASS de 01a. D-1 sí toca una exclusión explícita del Alcance ("Sin cambios en la UI"): implementar 01a literalmente rompe una función existente de la aplicación.
 
 ---
 
-## Conclusión: **REQUIERE DECISIÓN NEXOM**
+## Conclusión
 
-La estructura técnica actual **favorece** la implementación de 01a: la detección previa, la copia atómica y el rollback de la Ronda 88 son exactamente donde encajan `preserve`, `fork` y el bloqueo. Las reglas firmadas no cambian.
+**Evaluación original (2026-10-14): REQUIERE DECISIÓN NEXOM**, por D-1: el Alcance dice a la vez "`identity_policy` obligatorio" y "sin cambios en la UI", y la UI actual importa proyectos.
 
-Hace falta una decisión por **D-1**. El Alcance dice a la vez "`identity_policy` obligatorio" y "sin cambios en la UI", y la UI actual importa proyectos (con un flujo de "Importar como copia" agregado en la Ronda 88 que equivale a `fork`). Cumplir ambas literalmente produce una regresión visible para el usuario. NEXOM debe elegir (a), (b) o (c).
-
-D-2 y D-3 son decisiones menores. D-2 puede diferirse a 01b; D-3 ya está decidida y solo falta ejecutar el congelamiento.
-
-Con D-1 resuelta, el alcance de 01a queda **sin cambio**, salvo lo que NEXOM autorice expresamente sobre la UI.
+**Estado tras las decisiones de NEXOM (2026-10-14): ALCANCE SIN CAMBIO** en todo lo contractual y técnico de 01a (contrato v1.0.0, migración `0021`, reglas de `preserve`/`fork`, bloqueo, criterios de PASS), con **una ampliación autorizada expresamente**: la adaptación mínima de la UI de importación (D-1, opción a); la nota del Manual queda como propuesta a confirmar. D-2 queda diferida a 01b y D-3 confirmada; su congelamiento es una precondición de ejecución de `0021`, no un cambio de alcance.

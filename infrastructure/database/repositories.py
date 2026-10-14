@@ -21,6 +21,7 @@ from .models import ConfigurationRecord, ProjectIndexRecord, ProjectRecord
 def _project_to_record(project: Project) -> ProjectRecord:
     return ProjectRecord(
         id=project.id,
+        knowledge_base_id=project.knowledge_base_id,
         name=project.name,
         agent_type_hint=project.agent_type_hint,
         description=project.description,
@@ -40,6 +41,7 @@ def _project_to_record(project: Project) -> ProjectRecord:
 def record_to_project(record: ProjectRecord) -> Project:
     return Project(
         id=record.id,
+        knowledge_base_id=record.knowledge_base_id,
         name=record.name,
         agent_type_hint=record.agent_type_hint,
         description=record.description,

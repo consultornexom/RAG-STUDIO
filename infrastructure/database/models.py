@@ -71,6 +71,8 @@ class ProjectRecord(ProjectBase):
     __tablename__ = "project"
 
     id: Mapped[str] = mapped_column(String, primary_key=True)
+    knowledge_base_id: Mapped[str] = mapped_column(String, nullable=False, unique=True)
+    """RAG-INC-01a (migración 0021): UUID4 persistente, ver Project.knowledge_base_id."""
     name: Mapped[str] = mapped_column(String, nullable=False, unique=True)
     agent_type_hint: Mapped[str | None] = mapped_column(String, nullable=True)
     description: Mapped[str] = mapped_column(String, nullable=False, default="")
@@ -126,6 +128,8 @@ class SourceRecord(ProjectBase):
     valid_to: Mapped[date | None] = mapped_column(Date, nullable=True)
     source_authority: Mapped[int | None] = mapped_column(Integer, nullable=True)
     supersedes_source_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    lineage_id: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    """RAG-INC-01a (migración 0021): ver Source.lineage_id."""
     original_copy_path: Mapped[str | None] = mapped_column(String, nullable=True)
     document_type_code: Mapped[str] = mapped_column(String, nullable=False, server_default="default")
     created_at: Mapped[datetime] = mapped_column(UTCDateTime(), nullable=False)

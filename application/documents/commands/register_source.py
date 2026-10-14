@@ -46,12 +46,22 @@ class RegisterSource:
             if existing is not None and existing.id != supersedes_source_id:
                 raise DuplicateSourceError(content_hash)
 
+        # RAG-INC-01a (migración 0021): una sucesora COPIA el lineage_id de la
+        # fuente que supersede; sin supersesión válida, la fuente es raíz y
+        # conserva el UUID4 nuevo por defecto (misma regla que el relleno de
+        # 0021 para referencias rotas).
+        lineage_kwargs: dict = {}
+        if supersedes_source_id:
+            predecesora = self._repository.get(project_id, supersedes_source_id)
+            if predecesora is not None:
+                lineage_kwargs["lineage_id"] = predecesora.lineage_id
+
         source = Source(
             project_id=project_id, title=title, source_type=source_type, location=location,
             owner_area=owner_area, access_level=access_level, language=language,
             content_hash=content_hash, valid_from=valid_from, valid_to=valid_to,
             source_authority=source_authority, supersedes_source_id=supersedes_source_id,
-            document_type_code=document_type_code,
+            document_type_code=document_type_code, **lineage_kwargs,
         )
         self._repository.save(source)
         source = self._try_copy_original(source)

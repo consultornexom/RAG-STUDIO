@@ -109,6 +109,15 @@ class SqlAlchemyProjectSnapshotRepository(ProjectSnapshotRepository):
             ).scalars().first()
             return None if record is None else _record_to_snapshot(record)
 
+    def get(self, project_id: str, snapshot_id: str) -> Optional[ProjectSnapshot]:
+        with _session_factory_for(self._paths, project_id)() as session:
+            record = session.execute(
+                select(ProjectSnapshotRecord).where(
+                    ProjectSnapshotRecord.project_id == project_id, ProjectSnapshotRecord.id == snapshot_id,
+                )
+            ).scalars().first()
+            return None if record is None else _record_to_snapshot(record)
+
 
 def _record_to_snapshot(record: ProjectSnapshotRecord) -> ProjectSnapshot:
     return ProjectSnapshot(

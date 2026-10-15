@@ -54,6 +54,13 @@ class ProjectSnapshotRepository(ABC):
     @abstractmethod
     def get_latest(self, project_id: str) -> Optional[ProjectSnapshot]: ...
 
+    @abstractmethod
+    def get(self, project_id: str, snapshot_id: str) -> Optional[ProjectSnapshot]:
+        """RAG-INC-01b: lectura por id (exportador NKP). Este repositorio es
+        de solo inserción: no tiene ni debe tener operaciones de
+        actualización (prueba de arquitectura en tests/unit/domain)."""
+        ...
+
 
 class ProjectSnapshotPublisher(ABC):
     """Copia el estado actual en disco de un proyecto a un directorio

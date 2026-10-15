@@ -19,6 +19,7 @@ dependencies = [
     "tiktoken>=0.7",
     "keyring>=24.0",
     "defusedxml>=0.7",  # XmlExtractor -- parseo seguro de XML (bandit B314/B405, ver bitácora)
+    "rfc8785==0.1.4",  # RAG-INC-01b: canonicalización RFC 8785 del NEXOM Knowledge Package (id_scheme.py del contrato v1.0.0; misma versión fijada en su requirements.lock.txt)
 ]
 
 [project.optional-dependencies]

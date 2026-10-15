@@ -83,6 +83,8 @@ from infrastructure.filesystem.paths import InstallationPaths
 from infrastructure.filesystem.project_snapshot_publisher import FilesystemProjectSnapshotPublisher
 from infrastructure.filesystem.release_packager import FilesystemReleasePackager
 from infrastructure.filesystem.source_file_store import FilesystemSourceFileStore
+from application.knowledge_package.commands.export_knowledge_package import ExportKnowledgePackage
+from infrastructure.exporters.nexom_knowledge_package import NexomKnowledgePackageExporter
 from infrastructure.filesystem.source_original_hasher import FilesystemSourceOriginalHasher
 from infrastructure.filesystem.backfill_report_store import JsonBackfillReportStore
 from infrastructure.database.content_hash_writer import SqliteSourceContentHashWriter
@@ -114,6 +116,9 @@ class AppContext:
     jobs: BackgroundJobs
     diagnostics: DiagnosticsFacade
     logger: logging.Logger
+    # RAG-INC-01b: exportador CORE del NEXOM Knowledge Package (solo caso de
+    # uso; sin interfaz de usuario en este incremento).
+    knowledge_package_export: Optional[ExportKnowledgePackage] = None
 
 
 def bootstrap(
@@ -406,4 +411,7 @@ def bootstrap(
         jobs=jobs,
         diagnostics=diagnostics,
         logger=logger,
+        knowledge_package_export=ExportKnowledgePackage(
+            project_snapshot_repository, NexomKnowledgePackageExporter(),
+        ),
     )

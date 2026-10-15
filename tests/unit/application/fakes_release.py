@@ -67,6 +67,9 @@ class InMemoryProjectSnapshotRepository(ProjectSnapshotRepository):
         snapshots = self.list_for_project(project_id)
         return snapshots[0] if snapshots else None
 
+    def get(self, project_id: str, snapshot_id: str) -> Optional[ProjectSnapshot]:
+        return next((s for s in self._snapshots if s.project_id == project_id and s.id == snapshot_id), None)
+
 
 class FakeProjectSnapshotPublisher(ProjectSnapshotPublisher):
     """No toca el sistema de archivos real -- solo registra la llamada

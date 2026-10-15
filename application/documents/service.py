@@ -6,9 +6,18 @@ from typing import Optional
 
 from domain.documents.entities import Source
 from domain.documents.import_batch import ImportBatchRecord
-from domain.documents.ports import ImportBatchLedger, SourceFileStore, SourceRepository
+from domain.documents.content_hash_backfill import ContentHashBackfillReport
+from domain.documents.ports import (
+    BackfillReportStore,
+    ImportBatchLedger,
+    SourceContentHashWriter,
+    SourceFileStore,
+    SourceOriginalHasher,
+    SourceRepository,
+)
 from domain.ingestion.ports import ExtractionRepository
 
+from .commands.backfill_source_content_hashes import BackfillSourceContentHashes
 from .commands.bulk_set_document_type_code import BulkSetDocumentTypeCode, BulkSetDocumentTypeCodeResult
 from .commands.register_source import RegisterSource
 from .commands.register_sources_from_folder import ImportSourcesFromFolderResult, RegisterSourcesFromFolder
@@ -24,6 +33,9 @@ class DocumentService:
     def __init__(
         self, repository: SourceRepository, extraction_repository: ExtractionRepository,
         file_store: Optional[SourceFileStore] = None, batch_ledger: Optional[ImportBatchLedger] = None,
+        original_hasher: Optional[SourceOriginalHasher] = None,
+        content_hash_writer: Optional[SourceContentHashWriter] = None,
+        backfill_report_store: Optional[BackfillReportStore] = None,
     ):
         self._register = RegisterSource(repository, file_store=file_store)
         self._import_from_folder = RegisterSourcesFromFolder(self._register, batch_ledger=batch_ledger)
@@ -35,6 +47,20 @@ class DocumentService:
         self._list = ListSources(repository)
         self._get_lineage = GetSourceLineage(repository)
         self._extraction_repository = extraction_repository
+        # RAG-INC-01 (INC01-R1, opción B): relleno explícito de content_hash.
+        self._backfill: Optional[BackfillSourceContentHashes] = None
+        if original_hasher is not None and content_hash_writer is not None:
+            self._backfill = BackfillSourceContentHashes(
+                repository, original_hasher, content_hash_writer, report_store=backfill_report_store,
+            )
+
+    def backfill_content_hashes(self, project_id: str) -> ContentHashBackfillReport:
+        """Rellena `content_hash` de las fuentes heredadas desde la copia del
+        original (`sources/original/`), con informe por fuente en `reports/`.
+        Ver BackfillSourceContentHashes."""
+        if self._backfill is None:
+            raise RuntimeError("El relleno de huellas de contenido no está configurado en esta instalación.")
+        return self._backfill.execute(project_id)
 
     def list_import_batches(self, project_id: str) -> list[ImportBatchRecord]:
         """Ronda 92: lotes de RAG CONTENT importados (procedencia multi-lote)."""

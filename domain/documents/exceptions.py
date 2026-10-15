@@ -57,3 +57,38 @@ class SourceStructuralFieldsLockedError(DocumentDomainError):
             "eso conserva la trazabilidad en vez de reescribir el historial."
         )
         self.source_id = source_id
+
+
+class OriginalCopyMissingError(DocumentDomainError):
+    """RAG-INC-01 (relleno de content_hash): no existe la copia del original
+    de la fuente en <proyecto>/sources/original/."""
+
+    def __init__(self, source_id: str, detalle: str = ""):
+        super().__init__(
+            f"No hay copia del original de la fuente {source_id!r} en sources/original/ del proyecto."
+            + (f" {detalle}" if detalle else "")
+        )
+        self.source_id = source_id
+        self.detalle = detalle
+
+
+class OriginalCopyUnreadableError(DocumentDomainError):
+    """La copia del original existe pero no se pudo leer (o es ambigua)."""
+
+    def __init__(self, source_id: str, causa: str):
+        super().__init__(f"No se pudo leer la copia del original de la fuente {source_id!r}: {causa}")
+        self.source_id = source_id
+        self.causa = causa
+
+
+class ContentHashBackfillConflictError(DocumentDomainError):
+    """Al escribir, otra fuente del mismo linaje ya tenía el mismo hash
+    (p. ej. registrada por otro proceso durante el relleno). La escritura se
+    revirtió completa; volver a ejecutar el relleno la reclasifica."""
+
+    def __init__(self, source_ids: list[str]):
+        super().__init__(
+            "El relleno de huellas se revirtió sin escribir nada: al escribir apareció una colisión de "
+            f"contenido dentro del mismo linaje para {', '.join(sorted(source_ids))}. Vuelva a ejecutarlo."
+        )
+        self.source_ids = list(source_ids)

@@ -83,6 +83,9 @@ from infrastructure.filesystem.paths import InstallationPaths
 from infrastructure.filesystem.project_snapshot_publisher import FilesystemProjectSnapshotPublisher
 from infrastructure.filesystem.release_packager import FilesystemReleasePackager
 from infrastructure.filesystem.source_file_store import FilesystemSourceFileStore
+from infrastructure.filesystem.source_original_hasher import FilesystemSourceOriginalHasher
+from infrastructure.filesystem.backfill_report_store import JsonBackfillReportStore
+from infrastructure.database.content_hash_writer import SqliteSourceContentHashWriter
 from infrastructure.rerankers.fastembed_cross_encoder import FastEmbedReranker
 from infrastructure.security.keyring_credential_store import KeyringCredentialStore
 from infrastructure.tokenization.tiktoken_counter import TiktokenCounter
@@ -165,6 +168,10 @@ def bootstrap(
     document_service = DocumentService(
         source_repository, extraction_repository, file_store=source_file_store,
         batch_ledger=JsonlImportBatchLedger(paths),
+        # RAG-INC-01 (INC01-R1, opción B): relleno explícito de content_hash.
+        original_hasher=FilesystemSourceOriginalHasher(paths),
+        content_hash_writer=SqliteSourceContentHashWriter(paths),
+        backfill_report_store=JsonBackfillReportStore(paths),
     )
 
     schema_repository = SqlAlchemyMetadataSchemaRepository(paths)

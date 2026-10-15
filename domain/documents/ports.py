@@ -62,3 +62,36 @@ class ImportBatchLedger(ABC):
 
     @abstractmethod
     def append(self, project_id: str, record: ImportBatchRecord) -> None: ...
+
+
+class SourceOriginalHasher(ABC):
+    """RAG-INC-01 (relleno de content_hash, decisión NEXOM sobre INC01-R1):
+    SHA-256 de los bytes de la copia del original que vive en
+    `<proyecto>/sources/original/<source_id>.<ext>`. NUNCA lee `location`:
+    el archivo externo pudo cambiar después de la extracción."""
+
+    @abstractmethod
+    def sha256_of_original(self, project_id: str, source: Source) -> str:
+        """Hex en minúsculas. Lanza OriginalCopyMissingError u
+        OriginalCopyUnreadableError (domain.documents.exceptions)."""
+        ...
+
+
+class SourceContentHashWriter(ABC):
+    """Escritura condicional y atómica de `source.content_hash`."""
+
+    @abstractmethod
+    def fill_missing(self, project_id: str, hashes: dict[str, str]) -> set[str]:
+        """En UNA transacción: `content_hash = hash` solo donde sigue NULL.
+        Devuelve los ids efectivamente escritos. Si al terminar alguna fuente
+        escrita comparte (lineage_id, content_hash) con otra, revierte todo y
+        lanza ContentHashBackfillConflictError. Cualquier otro error también
+        revierte todo. Nunca toca `updated_at`."""
+        ...
+
+
+class BackfillReportStore(ABC):
+    @abstractmethod
+    def save(self, project_id: str, report: dict) -> str:
+        """Guarda el informe JSON en `<proyecto>/reports/` y devuelve la ruta."""
+        ...

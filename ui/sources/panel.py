@@ -17,6 +17,7 @@ from PySide6.QtCore import QDate, Qt, Signal
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import (
     QAbstractItemView,
+    QApplication,
     QCheckBox,
     QComboBox,
     QDateEdit,
@@ -45,6 +46,7 @@ from application.documents.options import (
     TERMINAL_VALIDATION_STATUS_VALUES, VALIDATION_STATUS_OPTIONS,
 )
 from ui.errors import describe_error
+from ui.sources import content_hash_backfill_summary as backfill_ui
 
 
 class _RegisterSourceDialog(QDialog):
@@ -504,12 +506,17 @@ class SourcesPanel(QWidget):
         # versionado visible era el campo "Sustituye a: ..." del
         # detalle, un solo salto hacia atrás.
         self._btn_view_lineage = QPushButton("Ver linaje de versiones…", self)
+        # RAG-INC-01 (INC01-R1, decisión NEXOM opción B): acción explícita
+        # para completar content_hash de fuentes heredadas (nunca automática).
+        self._btn_backfill_hashes = QPushButton("Completar huellas de contenido…", self)
+        self._btn_backfill_hashes.setToolTip(backfill_ui.TOOLTIP)
         buttons.addWidget(self._btn_register)
         buttons.addWidget(self._btn_edit)
         buttons.addWidget(self._btn_change_status)
         buttons.addWidget(self._btn_import_folder)
         buttons.addWidget(self._btn_bulk_document_type)
         buttons.addWidget(self._btn_view_lineage)
+        buttons.addWidget(self._btn_backfill_hashes)
         layout.addLayout(buttons)
 
         self._btn_register.clicked.connect(self._on_register_source)
@@ -518,6 +525,7 @@ class SourcesPanel(QWidget):
         self._btn_import_folder.clicked.connect(self._on_import_from_folder)
         self._btn_bulk_document_type.clicked.connect(self._on_bulk_set_document_type_code)
         self._btn_view_lineage.clicked.connect(self._on_view_lineage)
+        self._btn_backfill_hashes.clicked.connect(self._on_backfill_content_hashes)
         self._source_list.currentItemChanged.connect(self._on_selection_changed)
 
         self._set_enabled(False)
@@ -615,6 +623,7 @@ class SourcesPanel(QWidget):
         self._btn_change_status.setEnabled(enabled)
         self._btn_import_folder.setEnabled(enabled)
         self._btn_bulk_document_type.setEnabled(enabled)
+        self._btn_backfill_hashes.setEnabled(enabled)
         self._source_list.setEnabled(enabled)
         # _btn_edit se maneja aparte: además de haber proyecto activo,
         # necesita una fuente seleccionada (ver _on_selection_changed).
@@ -835,6 +844,25 @@ class SourcesPanel(QWidget):
             for skipped in result.skipped:
                 lines.append(f"- {skipped.title}: {skipped.reason}")
         QMessageBox.information(self, "Importación desde RAG CONTENT", "\n".join(lines))
+
+    def _on_backfill_content_hashes(self) -> None:
+        if self._project_id is None:
+            return
+        respuesta = QMessageBox.question(
+            self, backfill_ui.TITULO, backfill_ui.CONFIRMACION, QMessageBox.Yes | QMessageBox.Cancel,
+        )
+        if respuesta != QMessageBox.Yes:
+            return
+        QApplication.setOverrideCursor(Qt.WaitCursor)
+        try:
+            informe = self._context.document_service.backfill_content_hashes(self._project_id)
+        except Exception as exc:  # noqa: BLE001 - incluye la escritura revertida
+            QApplication.restoreOverrideCursor()
+            self._report_error(exc)
+            return
+        QApplication.restoreOverrideCursor()
+        self._refresh_sources()
+        QMessageBox.information(self, backfill_ui.TITULO, backfill_ui.resumen(informe))
 
     def _on_bulk_set_document_type_code(self) -> None:
         # Ronda 4, punto 4a: corregir en bloque las fuentes atípicas de

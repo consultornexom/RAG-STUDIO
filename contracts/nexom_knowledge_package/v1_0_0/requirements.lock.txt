@@ -1,0 +1,14 @@
+# NEXOM Knowledge Package v1.0-rc3 -- dependencias FIJADAS del validador y
+# del generador de ejemplo. Instalar exactamente estas versiones para
+# reproducir el resultado documentado en el ADR (seccion "Reproducibilidad").
+#
+#   pip install -r requirements.lock.txt --break-system-packages
+#
+# rc3 agrega `rfc3339-validator`: sin este paquete, jsonschema's
+# format="date-time" es un no-op silencioso (no lanza error aunque el
+# validador reciba format_checker=...) -- ver ADR seccion 4, correccion 1.
+
+jsonschema==4.26.0
+rfc3339-validator==0.1.4
+rfc8785==0.1.4
+cryptography==50.0.1

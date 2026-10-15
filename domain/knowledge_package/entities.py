@@ -3,8 +3,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime
+from typing import Optional
 
 from domain.release.entities import ProjectSnapshot
+
+from .conformance import ConformanceReport
 
 CONTRACT_SCHEMA_VERSION = "1.0.0"
 """`manifest.schema_version`: versión del FORMATO (contrato firmado v1.0.0)."""
@@ -47,3 +50,5 @@ class KnowledgePackageExportResult:
     checksums_json_hash: str
     zip_sha256: str
     counts: dict[str, int] = field(default_factory=dict)
+    conformance: Optional[ConformanceReport] = None
+    """Resultado PASS de la compuerta de conformidad (RAG-INC-01c)."""

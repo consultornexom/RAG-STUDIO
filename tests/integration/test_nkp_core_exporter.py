@@ -28,11 +28,12 @@ from domain.knowledge_package.exceptions import (
 )
 from infrastructure.database.migrations import upgrade_project
 from infrastructure.exporters import nexom_knowledge_package as modulo
-from infrastructure.exporters.nexom_kp_v1_0_0 import id_scheme as k
+from contracts.nexom_knowledge_package import load_id_scheme
 from infrastructure.filesystem.snapshot_identity import content_fingerprint
 
 from . import nkp_export_fixtures as fx
 
+k = load_id_scheme()
 TENANT = "nexom-pruebas"
 ARCHIVOS = sorted([*modulo.DATA_FILES, "manifest.json", "checksums.json"])
 requiere_validador = pytest.mark.skipif(not fx.validador_disponible(), reason="validador v1.0.0 sin dependencias")

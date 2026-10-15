@@ -96,3 +96,15 @@ class OutputExistsError(KnowledgePackageExportError):
     def __init__(self, ruta: str):
         super().__init__(f"Ya existe {ruta!r}: la exportación no sobrescribe archivos existentes.")
         self.ruta = ruta
+
+
+class ContractConformanceError(KnowledgePackageExportError):
+    """La compuerta de conformidad (RAG-INC-01c) rechazó el paquete generado:
+    no se publica nada en output_dir."""
+
+    def __init__(self, report):
+        super().__init__(
+            "El paquete generado no cumple el contrato NEXOM Knowledge Package y no se publicó.\n"
+            + report.summary()
+        )
+        self.report = report

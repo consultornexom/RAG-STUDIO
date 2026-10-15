@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nexom.com/knowledge-package/v1/chunk.schema.json",
+  "title": "ChunkRecord",
+  "description": "Una linea de chunks.jsonl. `id` = urn:nexom:chunk:<source_version_uuid>:<chunk_fingerprint>, donde chunk_fingerprint = sha256(f'{chunk_index}:{text}').hexdigest() (256 bits completos, no truncado) -- recomputable y verificable por el importador sin confiar ciegamente en el exportador (ver validador de referencia). El UUID de la primera mitad es el de `source.id` (version), NO `source.logical_id`.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "source_id", "chunk_index", "text", "token_count", "chunk_type",
+    "previous_chunk_id", "next_chunk_id", "parent_chunk_id",
+    "inherited_metadata", "created_at"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^urn:nexom:chunk:[0-9a-f-]{36}:[0-9a-f]{64}$" },
+    "source_id": { "type": "string", "pattern": "^urn:nexom:source:[0-9a-f-]{36}$" },
+    "chunk_index": { "type": "integer", "minimum": 0 },
+    "text": { "type": "string" },
+    "token_count": { "type": "integer", "minimum": 0 },
+    "chunk_type": {
+      "type": "string",
+      "enum": ["texto", "tabla", "pregunta_respuesta", "requisito", "excepcion",
+                "encabezado", "padre", "estructurado", "imagen"]
+    },
+    "section_title": { "type": ["string", "null"] },
+    "page_start": { "type": ["integer", "null"], "minimum": 0 },
+    "page_end": { "type": ["integer", "null"], "minimum": 0 },
+    "previous_chunk_id": { "type": ["string", "null"], "pattern": "^urn:nexom:chunk:[0-9a-f-]{36}:[0-9a-f]{64}$" },
+    "next_chunk_id": { "type": ["string", "null"], "pattern": "^urn:nexom:chunk:[0-9a-f-]{36}:[0-9a-f]{64}$" },
+    "parent_chunk_id": { "type": ["string", "null"], "pattern": "^urn:nexom:chunk:[0-9a-f-]{36}:[0-9a-f]{64}$" },
+    "structured_content": { "type": ["object", "null"] },
+    "semantic_summary": { "type": ["string", "null"] },
+    "inherited_metadata": {
+      "type": "object",
+      "additionalProperties": { "type": "string" },
+      "propertyNames": { "pattern": "^urn:nexom:field:[0-9a-f-]{36}$" },
+      "description": "dict field_definition_id (URN portable, NUNCA el codigo local field_id) -> value, heredado de la Source (campos con inherited_by_chunks=True). Corregido en rc3 -- rc2 usaba el codigo local ('campus') como clave."
+    },
+    "image_relative_path": {
+      "type": "string",
+      "description": "Solo presente si chunk_type=imagen. Ruta relativa dentro del paquete bajo perfil AUDIT (assets/images/...); bajo perfil CORE el binario no se incluye, ver media.jsonl."
+    },
+    "created_at": { "type": "string", "format": "date-time" }
+  },
+  "if": { "properties": { "chunk_type": { "const": "imagen" } } },
+  "then": { "required": ["image_relative_path"] },
+  "else": {
+    "properties": { "text": { "minLength": 1 } }
+  }
+}

@@ -85,7 +85,7 @@ def test_repositorio_de_instantaneas_es_de_solo_insercion():
 
 
 def test_id_scheme_vendorizado_identico_al_firmado():
-    copia = RAIZ / "infrastructure" / "exporters" / "nexom_kp_v1_0_0" / "id_scheme.py"
+    copia = RAIZ / "contracts" / "nexom_knowledge_package" / "v1_0_0" / "common" / "id_scheme.py"
     assert hashlib.sha256(copia.read_bytes()).hexdigest() == ID_SCHEME_FIRMADO_SHA256
     sumas = RAIZ / "docs proyecto" / "NEXOM_Knowledge_Package_v1" / "contrato_v1.0.0" / "SHA256SUMS"
     if sumas.exists():

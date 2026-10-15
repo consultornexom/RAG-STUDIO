@@ -18,7 +18,7 @@ from infrastructure.database.ingestion_repositories import SqlAlchemyChunkReposi
 from infrastructure.database.rag_repositories import SqlAlchemyIndexInfoRepository
 
 RAIZ = Path(__file__).resolve().parents[2]
-CONTRATO = RAIZ / "docs proyecto" / "NEXOM_Knowledge_Package_v1" / "contrato_v1.0.0"
+CONTRATO = RAIZ / "contracts" / "nexom_knowledge_package" / "v1_0_0"  # vendorizado en 01c
 VALIDADOR = CONTRATO / "validator" / "validate_knowledge_package.py"
 MODELO = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 

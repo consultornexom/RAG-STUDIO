@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nexom.com/knowledge-package/v1/manifest.schema.json",
+  "title": "KnowledgePackageManifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "package_id", "schema_version", "knowledge_version", "created_at",
+    "source_system", "tenant", "knowledge_base_id", "project_id_origin",
+    "project_revision", "snapshot_id", "profile", "counts", "files",
+    "capabilities", "omissions"
+  ],
+  "properties": {
+    "package_id": { "type": "string", "pattern": "^urn:nexom:package:[0-9a-f]{32}$" },
+    "schema_version": { "type": "string", "description": "Version del FORMATO del paquete (este contrato). No confundir con knowledge_version." },
+    "knowledge_version": { "type": "string", "description": "Version del CONTENIDO exportado (aumenta con cada nueva exportacion del mismo proyecto)." },
+    "created_at": { "type": "string", "format": "date-time" },
+    "source_system": { "const": "rag-studio" },
+    "exporter_version": { "type": ["string", "null"] },
+    "tenant": { "type": "string", "minLength": 1 },
+    "knowledge_base_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "description": "UUID PORTABLE, generado una sola vez por base de conocimiento y persistido por el exportador -- NUNCA derivado de project_id. Ancla de todas las formulas de ID portable (ver id_scheme.py)."
+    },
+    "project_id_origin": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identificador ORIGEN (RAG Studio), NO portable, solo trazabilidad de depuracion. Nunca debe usarse en una formula de ID portable -- por eso se renombra explicitamente `_origin` (a diferencia de rc1, que lo llamaba `project_id` y lo usaba en las formulas)."
+    },
+    "project_revision": { "type": "string", "minLength": 1 },
+    "snapshot_id": { "type": "string", "minLength": 1 },
+    "parent_package_id": { "type": ["string", "null"], "pattern": "^urn:nexom:package:[0-9a-f]{32}$" },
+    "profile": { "type": "string", "enum": ["CORE", "AUDIT", "PREINDEXED"] },
+    "counts": {
+      "type": "object",
+      "additionalProperties": { "type": "integer", "minimum": 0 }
+    },
+    "files": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true,
+      "minItems": 1,
+      "description": "Lista CERRADA de rutas relativas que forman el paquete (incluye manifest.json y checksums.json). Un .zip del paquete no debe contener ninguna entrada fuera de esta lista mas las declaradas en media.jsonl/sources.jsonl con included_in_package/original_included=true."
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text_retrieval", "structured_retrieval", "image_retrieval"],
+      "properties": {
+        "text_retrieval": { "type": "boolean" },
+        "structured_retrieval": { "type": "boolean" },
+        "image_retrieval": {
+          "type": "boolean",
+          "description": "false si el paquete NO permite reconstruir busqueda visual (p. ej. perfil CORE con media.jsonl.included_in_package=false para todo item de tipo imagen)."
+        }
+      }
+    },
+    "omissions": {
+      "type": "array",
+      "description": "Lista de degradaciones conocidas y declaradas explicitamente -- nunca implicitas. Ver ADR seccion 6.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "description"],
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": ["MEDIA_BINARIES_NOT_INCLUDED", "ORIGINALS_NOT_INCLUDED", "VECTORS_NOT_INCLUDED", "EVIDENCE_NOT_VERIFIED"]
+          },
+          "description": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

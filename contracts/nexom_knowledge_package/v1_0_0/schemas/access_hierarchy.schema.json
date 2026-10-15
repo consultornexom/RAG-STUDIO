@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nexom.com/knowledge-package/v1/access_hierarchy.schema.json",
+  "title": "AccessHierarchy",
+  "description": "access_hierarchy.json -- declara EXPLICITAMENTE el orden total de access_level y la regla de autorizacion. Nuevo en rc3: el orden de un `enum` en JSON Schema no garantiza semantica de jerarquia (la especificacion no lo promete); dejarlo implicito en el orden textual del enum de source.schema.json/acceptance_case.schema.json era una suposicion no verificable por Agent Runtime. Este archivo es la unica fuente de verdad.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["order", "rule"],
+  "properties": {
+    "order": {
+      "type": "array",
+      "description": "Del nivel MAS permisivo al MAS restrictivo -- indice mas bajo = mas permisivo.",
+      "items": { "type": "string", "enum": ["publico", "interno", "confidencial", "restringido"] },
+      "minItems": 4,
+      "maxItems": 4,
+      "uniqueItems": true
+    },
+    "rule": {
+      "const": "Un usuario con user_access_level X puede acceder a fuentes cuyo access_level tenga indice <= indice(X) en `order`. Denegacion por defecto: cualquier access_level no reconocido, o ausencia de user_access_level, deniega el acceso -- nunca se asume el nivel mas permisivo."
+    }
+  }
+}

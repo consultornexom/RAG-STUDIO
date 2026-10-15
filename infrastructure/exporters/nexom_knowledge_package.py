@@ -4,8 +4,9 @@ Fuente de verdad: el contrato firmado en
 `docs proyecto/NEXOM_Knowledge_Package_v1/contrato_v1.0.0/` y el mapeo
 archivo por archivo del Alcance firmado de RAG-INC-01 (§5). Las fórmulas de
 identidad, la canonicalización RFC 8785 y `content_digest` vienen de la
-implementación de referencia `id_scheme.py` (copia byte a byte en
-`nexom_kp_v1_0_0/`), nunca reimplementadas aquí.
+implementación de referencia `id_scheme.py` firmada, vendorizada byte a byte
+en `contracts/nexom_knowledge_package/v1_0_0/` (RAG-INC-01c), nunca
+reimplementadas aquí.
 
 Flujo:
 
@@ -21,6 +22,9 @@ Flujo:
    contrato (texto de chunks no imagen); ids portables sin duplicados.
 3. Staging en `output_dir/.nkp-staging-<uuid>/`: 13 archivos internos,
    `checksums.json`, ZIP determinista y verificación del ZIP recién escrito.
+   RAG-INC-01c: compuerta de conformidad obligatoria (validador firmado
+   v1.0.0 + comprobaciones de unicidad, `nkp_conformance.py`) sobre el ZIP y
+   su sidecar; si no es PASS, ContractConformanceError y no se publica nada.
 4. Publicación sin sobrescribir: el ZIP y luego el sidecar
    `<paquete>.content.sha256` (fuera del paquete). Si algo falla, se borra
    lo publicado y el staging.
@@ -58,6 +62,7 @@ from domain.knowledge_package.entities import (
 )
 from domain.knowledge_package.exceptions import (
     BrokenReferenceError,
+    ContractConformanceError,
     ContractConstraintError,
     MissingContentHashError,
     MissingIdentityError,
@@ -66,11 +71,14 @@ from domain.knowledge_package.exceptions import (
     SnapshotDirectoryMissingError,
     SnapshotInconsistentError,
 )
-from domain.knowledge_package.ports import KnowledgePackageExporter
+from domain.knowledge_package.conformance import ConformanceReport
+from domain.knowledge_package.ports import KnowledgePackageConformanceValidator, KnowledgePackageExporter
 
-from .nexom_kp_v1_0_0 import id_scheme as k
+from contracts.nexom_knowledge_package import load_id_scheme
 
 logger = logging.getLogger(__name__)
+
+k = load_id_scheme()
 
 EXPORTER_VERSION = "1.0.0"
 """Versión propia del exportador NKP (Alcance §4, hito 01b). Se incrementa
@@ -189,6 +197,15 @@ class _Lectura:
 
 
 class NexomKnowledgePackageExporter(KnowledgePackageExporter):
+    def __init__(self, conformance: Optional[KnowledgePackageConformanceValidator] = None):
+        """RAG-INC-01c: la compuerta de conformidad es obligatoria. Sin una
+        explícita se usa la del contrato v1.0.0 vendorizado."""
+        if conformance is None:
+            from .nkp_conformance import ContractV1ConformanceValidator
+
+            conformance = ContractV1ConformanceValidator()
+        self._conformance = conformance
+
     def export(self, snapshot: SnapshotDescriptor, tenant: str, output_dir: str) -> KnowledgePackageExportResult:
         carpeta = Path(snapshot.snapshot_dir)
         db_instantanea = carpeta / "project.db"
@@ -631,6 +648,13 @@ class NexomKnowledgePackageExporter(KnowledgePackageExporter):
             digest_staging = staging / f"{nombre}.content.sha256"
             digest_staging.write_bytes((digest + "\n").encode("ascii"))
 
+            # RAG-INC-01c: compuerta de conformidad sobre el ZIP y el sidecar
+            # tal como se van a publicar. FAIL ⇒ no se publica nada.
+            conformidad: ConformanceReport = self._conformance.validate(str(zip_staging), str(digest_staging))
+            if not conformidad.passed:
+                logger.error("Exportación NKP rechazada por la compuerta de conformidad:\n%s", conformidad.summary())
+                raise ContractConformanceError(conformidad)
+
             for origen, destino in ((zip_staging, final_zip), (digest_staging, final_digest)):
                 self._publicar_sin_sobrescribir(origen, destino)
                 publicados.append(destino)
@@ -648,7 +672,7 @@ class NexomKnowledgePackageExporter(KnowledgePackageExporter):
             package_id=manifest["package_id"], knowledge_base_id=manifest["knowledge_base_id"],
             snapshot_id=manifest["snapshot_id"], tenant=tenant, zip_path=str(final_zip),
             content_digest_path=str(final_digest), content_digest=digest, checksums_json_hash=checksums_hash,
-            zip_sha256=_sha256_archivo(final_zip), counts=dict(manifest["counts"]),
+            zip_sha256=_sha256_archivo(final_zip), counts=dict(manifest["counts"]), conformance=conformidad,
         )
 
     @staticmethod

@@ -19,6 +19,8 @@ dependencies = [
     "tiktoken>=0.7",
     "keyring>=24.0",
     "defusedxml>=0.7",  # XmlExtractor -- parseo seguro de XML (bandit B314/B405, ver bitácora)
+    "jsonschema==4.26.0",  # RAG-INC-01c: compuerta de conformidad NKP (validador firmado v1.0.0; versión de su requirements.lock.txt)
+    "rfc3339-validator==0.1.4",  # RAG-INC-01c: sin él, jsonschema no valida format="date-time" (ver validador firmado, corrección 1)
     "rfc8785==0.1.4",  # RAG-INC-01b: canonicalización RFC 8785 del NEXOM Knowledge Package (id_scheme.py del contrato v1.0.0; misma versión fijada en su requirements.lock.txt)
 ]
 
@@ -47,7 +49,12 @@ packaging = ["pyinstaller>=6.0"]
 api = ["fastapi>=0.116", "uvicorn>=0.34"]
 
 [tool.setuptools.packages.find]
-include = ["app*", "application*", "domain*", "infrastructure*", "interfaces*", "plugins*", "ui*", "workers*"]
+include = ["app*", "application*", "contracts*", "domain*", "infrastructure*", "interfaces*", "plugins*", "ui*", "workers*"]
+
+# RAG-INC-01c: el contrato NKP v1.0.0 vendorizado (schemas, validador,
+# id_scheme y fixture oficial) viaja como datos del paquete `contracts`.
+[tool.setuptools.package-data]
+"contracts.nexom_knowledge_package" = ["VENDORIZADO_v1_0_0.json", "v1_0_0/**/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -91,7 +98,9 @@ show_missing = true
 # arbitrario.
 [tool.ruff]
 target-version = "py310"
-extend-exclude = ["migrations", "build", "dist"]
+# contracts/nexom_knowledge_package/v1_0_0: artefactos firmados del contrato
+# NKP v1.0.0, copias byte a byte que no se pueden "limpiar" (RAG-INC-01c).
+extend-exclude = ["migrations", "build", "dist", "contracts/nexom_knowledge_package/v1_0_0"]
 
 [tool.ruff.lint]
 # Deliberadamente NO se incluyen "I" (orden de imports) ni "UP"

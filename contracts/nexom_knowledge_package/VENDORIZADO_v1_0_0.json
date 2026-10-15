@@ -1,0 +1,312 @@
+{
+  "contrato": "NEXOM Knowledge Package",
+  "version": "1.0.0",
+  "vendorizado_en": "RAG-INC-01c",
+  "regla": "Copias byte a byte; no se editan. tests/unit/contracts/test_vendored_contract.py verifica cada hash.",
+  "archivos": [
+    {
+      "ruta": "SHA256SUMS",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/contrato_v1.0.0/SHA256SUMS",
+      "sha256_esperado": "863844f7b6f264cfdc45974b9a9f0ab4e92a830d01b70e9634958fde6b675208",
+      "fuente_del_esperado": "copia de la lista publicada con el contrato (sin hash firmado propio)",
+      "sha256_incorporado": "863844f7b6f264cfdc45974b9a9f0ab4e92a830d01b70e9634958fde6b675208",
+      "coincide": true
+    },
+    {
+      "ruta": "SHA256SUMS_EJEMPLO",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/ejemplo_v1.0.0/SHA256SUMS_EJEMPLO",
+      "sha256_esperado": "72f6f01a968e17a143b7c18e996c5d8d3c48c9ddc1a5be53f256cc68ae50ea8f",
+      "fuente_del_esperado": "copia de la lista publicada con el ejemplo (sin hash firmado propio)",
+      "sha256_incorporado": "72f6f01a968e17a143b7c18e996c5d8d3c48c9ddc1a5be53f256cc68ae50ea8f",
+      "coincide": true
+    },
+    {
+      "ruta": "common/id_scheme.py",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/contrato_v1.0.0/common/id_scheme.py",
+      "sha256_esperado": "559847df560b8033b20a4e797ca32448320eef8d84f81cb654bcad6c1a942ba8",
+      "fuente_del_esperado": "Declaración v1.0.0 §4.1 (contrato_v1.0.0/SHA256SUMS) — normativo",
+      "sha256_incorporado": "559847df560b8033b20a4e797ca32448320eef8d84f81cb654bcad6c1a942ba8",
+      "coincide": true
+    },
+    {
+      "ruta": "delivery/nexom-knowledge-package-demo-v1.0.0.content.sha256",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/ejemplo_v1.0.0/delivery/nexom-knowledge-package-demo-v1.0.0.content.sha256",
+      "sha256_esperado": "e0cca1d15c78d53f98a33e44c3e88d2fb96eba357568b1acdb431980a96bf137",
+      "fuente_del_esperado": "ejemplo_v1.0.0/SHA256SUMS_EJEMPLO — fixture oficial del ejemplo 1.0.0 (no normativo)",
+      "sha256_incorporado": "e0cca1d15c78d53f98a33e44c3e88d2fb96eba357568b1acdb431980a96bf137",
+      "coincide": true
+    },
+    {
+      "ruta": "delivery/nexom-knowledge-package-demo-v1.0.0.pubkey_DEMO.pem",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/ejemplo_v1.0.0/delivery/nexom-knowledge-package-demo-v1.0.0.pubkey_DEMO.pem",
+      "sha256_esperado": "e3f3a4b08494a04a1a0c6fd91dbac5a41e49291706fc65390bd58d3116081cab",
+      "fuente_del_esperado": "ejemplo_v1.0.0/SHA256SUMS_EJEMPLO — fixture oficial del ejemplo 1.0.0 (no normativo)",
+      "sha256_incorporado": "e3f3a4b08494a04a1a0c6fd91dbac5a41e49291706fc65390bd58d3116081cab",
+      "coincide": true
+    },
+    {
+      "ruta": "delivery/nexom-knowledge-package-demo-v1.0.0.sig",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/ejemplo_v1.0.0/delivery/nexom-knowledge-package-demo-v1.0.0.sig",
+      "sha256_esperado": "fcba37d600f80b1df10b3dbfb5ccd482095bb2b6a90c9579e336a04ea46695a1",
+      "fuente_del_esperado": "ejemplo_v1.0.0/SHA256SUMS_EJEMPLO — fixture oficial del ejemplo 1.0.0 (no normativo)",
+      "sha256_incorporado": "fcba37d600f80b1df10b3dbfb5ccd482095bb2b6a90c9579e336a04ea46695a1",
+      "coincide": true
+    },
+    {
+      "ruta": "delivery/nexom-knowledge-package-demo-v1.0.0.zip.sha256",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/ejemplo_v1.0.0/delivery/nexom-knowledge-package-demo-v1.0.0.zip.sha256",
+      "sha256_esperado": "1a0cefcccce6e9743c197b9f4724adf711fdca0246d49a6f42d787eb28d25015",
+      "fuente_del_esperado": "ejemplo_v1.0.0/SHA256SUMS_EJEMPLO — fixture oficial del ejemplo 1.0.0 (no normativo)",
+      "sha256_incorporado": "1a0cefcccce6e9743c197b9f4724adf711fdca0246d49a6f42d787eb28d25015",
+      "coincide": true
+    },
+    {
+      "ruta": "example_package/acceptance_cases.jsonl",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/ejemplo_v1.0.0/example_package/acceptance_cases.jsonl",
+      "sha256_esperado": "1783d5d8d45f022ec4be5ce8669eb86f1a7b5a47c5a68392c8aca022805a5c6c",
+      "fuente_del_esperado": "ejemplo_v1.0.0/SHA256SUMS_EJEMPLO — fixture oficial del ejemplo 1.0.0 (no normativo)",
+      "sha256_incorporado": "1783d5d8d45f022ec4be5ce8669eb86f1a7b5a47c5a68392c8aca022805a5c6c",
+      "coincide": true
+    },
+    {
+      "ruta": "example_package/access_hierarchy.json",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/ejemplo_v1.0.0/example_package/access_hierarchy.json",
+      "sha256_esperado": "283b0e992f1b6a68281f0d00026b786576018d4733c86a4dd326378a1ec1d979",
+      "fuente_del_esperado": "ejemplo_v1.0.0/SHA256SUMS_EJEMPLO — fixture oficial del ejemplo 1.0.0 (no normativo)",
+      "sha256_incorporado": "283b0e992f1b6a68281f0d00026b786576018d4733c86a4dd326378a1ec1d979",
+      "coincide": true
+    },
+    {
+      "ruta": "example_package/checksums.json",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/ejemplo_v1.0.0/example_package/checksums.json",
+      "sha256_esperado": "b63b370dd9ee59c03832ca3e4f0bfef9176d4ce50600e7c0e3232f3e40361312",
+      "fuente_del_esperado": "ejemplo_v1.0.0/SHA256SUMS_EJEMPLO — fixture oficial del ejemplo 1.0.0 (no normativo)",
+      "sha256_incorporado": "b63b370dd9ee59c03832ca3e4f0bfef9176d4ce50600e7c0e3232f3e40361312",
+      "coincide": true
+    },
+    {
+      "ruta": "example_package/chunks.jsonl",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/ejemplo_v1.0.0/example_package/chunks.jsonl",
+      "sha256_esperado": "d575282679f276d74cfe1c0c97557783051d821b618d1bb3fdce406978783c1a",
+      "fuente_del_esperado": "ejemplo_v1.0.0/SHA256SUMS_EJEMPLO — fixture oficial del ejemplo 1.0.0 (no normativo)",
+      "sha256_incorporado": "d575282679f276d74cfe1c0c97557783051d821b618d1bb3fdce406978783c1a",
+      "coincide": true
+    },
+    {
+      "ruta": "example_package/conversational_bundle.json",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/ejemplo_v1.0.0/example_package/conversational_bundle.json",
+      "sha256_esperado": "db31099581b893b24f799b8a64efcc4acf51c0246fc61b3228e79a022febd458",
+      "fuente_del_esperado": "ejemplo_v1.0.0/SHA256SUMS_EJEMPLO — fixture oficial del ejemplo 1.0.0 (no normativo)",
+      "sha256_incorporado": "db31099581b893b24f799b8a64efcc4acf51c0246fc61b3228e79a022febd458",
+      "coincide": true
+    },
+    {
+      "ruta": "example_package/embedding_spaces.json",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/ejemplo_v1.0.0/example_package/embedding_spaces.json",
+      "sha256_esperado": "82f90ebb6aeedca13ca07b47df6231df09e8abdd5bbf603a0b9c13be9fa9491b",
+      "fuente_del_esperado": "ejemplo_v1.0.0/SHA256SUMS_EJEMPLO — fixture oficial del ejemplo 1.0.0 (no normativo)",
+      "sha256_incorporado": "82f90ebb6aeedca13ca07b47df6231df09e8abdd5bbf603a0b9c13be9fa9491b",
+      "coincide": true
+    },
+    {
+      "ruta": "example_package/evidence.jsonl",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/ejemplo_v1.0.0/example_package/evidence.jsonl",
+      "sha256_esperado": "78c89301e25e6eb1168524bb0480c98be17482d791510ff4b7ebe4c580c22b6e",
+      "fuente_del_esperado": "ejemplo_v1.0.0/SHA256SUMS_EJEMPLO — fixture oficial del ejemplo 1.0.0 (no normativo)",
+      "sha256_incorporado": "78c89301e25e6eb1168524bb0480c98be17482d791510ff4b7ebe4c580c22b6e",
+      "coincide": true
+    },
+    {
+      "ruta": "example_package/indexes.json",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/ejemplo_v1.0.0/example_package/indexes.json",
+      "sha256_esperado": "9c2267d8f99c64a995764715ec90599986ed62550c7e12274a9e560de71b0c8a",
+      "fuente_del_esperado": "ejemplo_v1.0.0/SHA256SUMS_EJEMPLO — fixture oficial del ejemplo 1.0.0 (no normativo)",
+      "sha256_incorporado": "9c2267d8f99c64a995764715ec90599986ed62550c7e12274a9e560de71b0c8a",
+      "coincide": true
+    },
+    {
+      "ruta": "example_package/manifest.json",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/ejemplo_v1.0.0/example_package/manifest.json",
+      "sha256_esperado": "d56dea3b20de6c71030d76aacba4b28a292fd5c6b78d7513e1d85db2247de09d",
+      "fuente_del_esperado": "ejemplo_v1.0.0/SHA256SUMS_EJEMPLO — fixture oficial del ejemplo 1.0.0 (no normativo)",
+      "sha256_incorporado": "d56dea3b20de6c71030d76aacba4b28a292fd5c6b78d7513e1d85db2247de09d",
+      "coincide": true
+    },
+    {
+      "ruta": "example_package/media.jsonl",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/ejemplo_v1.0.0/example_package/media.jsonl",
+      "sha256_esperado": "f6d93b17b507e56c8e714604ffc346e59ffc7439f4cea4c3bda01b274d7b5e50",
+      "fuente_del_esperado": "ejemplo_v1.0.0/SHA256SUMS_EJEMPLO — fixture oficial del ejemplo 1.0.0 (no normativo)",
+      "sha256_incorporado": "f6d93b17b507e56c8e714604ffc346e59ffc7439f4cea4c3bda01b274d7b5e50",
+      "coincide": true
+    },
+    {
+      "ruta": "example_package/metadata_schema.json",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/ejemplo_v1.0.0/example_package/metadata_schema.json",
+      "sha256_esperado": "4c1c33b8874c3eddd7d7af8c2a045ef71f6fcdab02fbbd6dcb5025ab43f86786",
+      "fuente_del_esperado": "ejemplo_v1.0.0/SHA256SUMS_EJEMPLO — fixture oficial del ejemplo 1.0.0 (no normativo)",
+      "sha256_incorporado": "4c1c33b8874c3eddd7d7af8c2a045ef71f6fcdab02fbbd6dcb5025ab43f86786",
+      "coincide": true
+    },
+    {
+      "ruta": "example_package/source_metadata.jsonl",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/ejemplo_v1.0.0/example_package/source_metadata.jsonl",
+      "sha256_esperado": "e8fea22002d95f6205c153a2ebfa1f66a6c61839fdfc6225ecd5b857dde37a0c",
+      "fuente_del_esperado": "ejemplo_v1.0.0/SHA256SUMS_EJEMPLO — fixture oficial del ejemplo 1.0.0 (no normativo)",
+      "sha256_incorporado": "e8fea22002d95f6205c153a2ebfa1f66a6c61839fdfc6225ecd5b857dde37a0c",
+      "coincide": true
+    },
+    {
+      "ruta": "example_package/sources.jsonl",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/ejemplo_v1.0.0/example_package/sources.jsonl",
+      "sha256_esperado": "5db3af16ccb757b8934ec21bb6fac34d7fb69aa220e49c3d17bd07abc4bfe26b",
+      "fuente_del_esperado": "ejemplo_v1.0.0/SHA256SUMS_EJEMPLO — fixture oficial del ejemplo 1.0.0 (no normativo)",
+      "sha256_incorporado": "5db3af16ccb757b8934ec21bb6fac34d7fb69aa220e49c3d17bd07abc4bfe26b",
+      "coincide": true
+    },
+    {
+      "ruta": "nexom-knowledge-package-demo-v1.0.0.zip",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/ejemplo_v1.0.0/nexom-knowledge-package-demo-v1.0.0.zip",
+      "sha256_esperado": "5dff57bb41680e2a5cf4a39b40ca99d641ef5beeda810d7bce3c1a58db91cbff",
+      "fuente_del_esperado": "ejemplo_v1.0.0/SHA256SUMS_EJEMPLO — fixture oficial del ejemplo 1.0.0 (no normativo)",
+      "sha256_incorporado": "5dff57bb41680e2a5cf4a39b40ca99d641ef5beeda810d7bce3c1a58db91cbff",
+      "coincide": true
+    },
+    {
+      "ruta": "requirements.lock.txt",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/ejemplo_v1.0.0/requirements.lock.txt",
+      "sha256_esperado": "c9f8bb792efb25272fa6f6eeef41b426830b84704f3a9237fc087bbb3ac7594d",
+      "fuente_del_esperado": "Declaración v1.0.0 §4.2 — reproducibilidad y QA (no normativo)",
+      "sha256_incorporado": "c9f8bb792efb25272fa6f6eeef41b426830b84704f3a9237fc087bbb3ac7594d",
+      "coincide": true
+    },
+    {
+      "ruta": "schemas/acceptance_case.schema.json",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/contrato_v1.0.0/schemas/acceptance_case.schema.json",
+      "sha256_esperado": "7cb0cf09e1b153c895bf3e5130713a7ca1588afa475d0f6d499eab4110a27581",
+      "fuente_del_esperado": "Declaración v1.0.0 §4.1 (contrato_v1.0.0/SHA256SUMS) — normativo",
+      "sha256_incorporado": "7cb0cf09e1b153c895bf3e5130713a7ca1588afa475d0f6d499eab4110a27581",
+      "coincide": true
+    },
+    {
+      "ruta": "schemas/access_hierarchy.schema.json",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/contrato_v1.0.0/schemas/access_hierarchy.schema.json",
+      "sha256_esperado": "92e2c6ac9eb3b33527e4728447ad1c0bc9b882913d0b26c96ec63f62fd4a4b25",
+      "fuente_del_esperado": "Declaración v1.0.0 §4.1 (contrato_v1.0.0/SHA256SUMS) — normativo",
+      "sha256_incorporado": "92e2c6ac9eb3b33527e4728447ad1c0bc9b882913d0b26c96ec63f62fd4a4b25",
+      "coincide": true
+    },
+    {
+      "ruta": "schemas/checksums.schema.json",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/contrato_v1.0.0/schemas/checksums.schema.json",
+      "sha256_esperado": "bef9d65d5c210f72a5fe04daa8a5af0d7ec378551e22f9d5d698be7b7d282c46",
+      "fuente_del_esperado": "Declaración v1.0.0 §4.1 (contrato_v1.0.0/SHA256SUMS) — normativo",
+      "sha256_incorporado": "bef9d65d5c210f72a5fe04daa8a5af0d7ec378551e22f9d5d698be7b7d282c46",
+      "coincide": true
+    },
+    {
+      "ruta": "schemas/chunk.schema.json",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/contrato_v1.0.0/schemas/chunk.schema.json",
+      "sha256_esperado": "169d8f6d05dad78624ec8f0aa06276022b6aa83588c76922a775ce7ccd788999",
+      "fuente_del_esperado": "Declaración v1.0.0 §4.1 (contrato_v1.0.0/SHA256SUMS) — normativo",
+      "sha256_incorporado": "169d8f6d05dad78624ec8f0aa06276022b6aa83588c76922a775ce7ccd788999",
+      "coincide": true
+    },
+    {
+      "ruta": "schemas/conversational_bundle.schema.json",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/contrato_v1.0.0/schemas/conversational_bundle.schema.json",
+      "sha256_esperado": "d72f8ff680d4895d5628bf4b9a58980ef222b521196f284ebfdc00561f0e5ef5",
+      "fuente_del_esperado": "Declaración v1.0.0 §4.1 (contrato_v1.0.0/SHA256SUMS) — normativo",
+      "sha256_incorporado": "d72f8ff680d4895d5628bf4b9a58980ef222b521196f284ebfdc00561f0e5ef5",
+      "coincide": true
+    },
+    {
+      "ruta": "schemas/embedding_spaces.schema.json",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/contrato_v1.0.0/schemas/embedding_spaces.schema.json",
+      "sha256_esperado": "b9468913bb640f28a284d99eb17a36e1c704aecb304679fa9e44186f2f04a753",
+      "fuente_del_esperado": "Declaración v1.0.0 §4.1 (contrato_v1.0.0/SHA256SUMS) — normativo",
+      "sha256_incorporado": "b9468913bb640f28a284d99eb17a36e1c704aecb304679fa9e44186f2f04a753",
+      "coincide": true
+    },
+    {
+      "ruta": "schemas/evidence.schema.json",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/contrato_v1.0.0/schemas/evidence.schema.json",
+      "sha256_esperado": "043ec0dd5448bd1dd3229dfcb72002cb01704d31f890ca2651ee70bda9569b00",
+      "fuente_del_esperado": "Declaración v1.0.0 §4.1 (contrato_v1.0.0/SHA256SUMS) — normativo",
+      "sha256_incorporado": "043ec0dd5448bd1dd3229dfcb72002cb01704d31f890ca2651ee70bda9569b00",
+      "coincide": true
+    },
+    {
+      "ruta": "schemas/indexes.schema.json",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/contrato_v1.0.0/schemas/indexes.schema.json",
+      "sha256_esperado": "d981e3e622d641965c15997e2e0f78165a1ae099b065d7849c3e419235b43ac0",
+      "fuente_del_esperado": "Declaración v1.0.0 §4.1 (contrato_v1.0.0/SHA256SUMS) — normativo",
+      "sha256_incorporado": "d981e3e622d641965c15997e2e0f78165a1ae099b065d7849c3e419235b43ac0",
+      "coincide": true
+    },
+    {
+      "ruta": "schemas/manifest.schema.json",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/contrato_v1.0.0/schemas/manifest.schema.json",
+      "sha256_esperado": "46dee8ed56f809f9e5acda005a259a53a9d2af74561996c3c74691683913c463",
+      "fuente_del_esperado": "Declaración v1.0.0 §4.1 (contrato_v1.0.0/SHA256SUMS) — normativo",
+      "sha256_incorporado": "46dee8ed56f809f9e5acda005a259a53a9d2af74561996c3c74691683913c463",
+      "coincide": true
+    },
+    {
+      "ruta": "schemas/media.schema.json",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/contrato_v1.0.0/schemas/media.schema.json",
+      "sha256_esperado": "c3ed9324203bbc2147ad342f78886c17d6af4f5991f7d8aec7caa9a6b57ec9fc",
+      "fuente_del_esperado": "Declaración v1.0.0 §4.1 (contrato_v1.0.0/SHA256SUMS) — normativo",
+      "sha256_incorporado": "c3ed9324203bbc2147ad342f78886c17d6af4f5991f7d8aec7caa9a6b57ec9fc",
+      "coincide": true
+    },
+    {
+      "ruta": "schemas/metadata_schema.schema.json",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/contrato_v1.0.0/schemas/metadata_schema.schema.json",
+      "sha256_esperado": "c443b7bcc26356a4a7daf58769cb71049fe284f77b80fe0af38e7c442266f7e1",
+      "fuente_del_esperado": "Declaración v1.0.0 §4.1 (contrato_v1.0.0/SHA256SUMS) — normativo",
+      "sha256_incorporado": "c443b7bcc26356a4a7daf58769cb71049fe284f77b80fe0af38e7c442266f7e1",
+      "coincide": true
+    },
+    {
+      "ruta": "schemas/signature.schema.json",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/contrato_v1.0.0/schemas/signature.schema.json",
+      "sha256_esperado": "bb583efda303eb2b81d43ebc0c83710bcf6bba9485c1a7cb6acc1dd3bc8a55f1",
+      "fuente_del_esperado": "Declaración v1.0.0 §4.1 (contrato_v1.0.0/SHA256SUMS) — normativo",
+      "sha256_incorporado": "bb583efda303eb2b81d43ebc0c83710bcf6bba9485c1a7cb6acc1dd3bc8a55f1",
+      "coincide": true
+    },
+    {
+      "ruta": "schemas/source.schema.json",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/contrato_v1.0.0/schemas/source.schema.json",
+      "sha256_esperado": "8a61ecce31d1fc2207a342e7a9c8dabfb3970f324f2c5ebb51891b2ec087cd90",
+      "fuente_del_esperado": "Declaración v1.0.0 §4.1 (contrato_v1.0.0/SHA256SUMS) — normativo",
+      "sha256_incorporado": "8a61ecce31d1fc2207a342e7a9c8dabfb3970f324f2c5ebb51891b2ec087cd90",
+      "coincide": true
+    },
+    {
+      "ruta": "schemas/source_metadata.schema.json",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/contrato_v1.0.0/schemas/source_metadata.schema.json",
+      "sha256_esperado": "4b9bcbf3242d7e701595e377cd41f05a3a67657445acf2cf5e7988276832fde3",
+      "fuente_del_esperado": "Declaración v1.0.0 §4.1 (contrato_v1.0.0/SHA256SUMS) — normativo",
+      "sha256_incorporado": "4b9bcbf3242d7e701595e377cd41f05a3a67657445acf2cf5e7988276832fde3",
+      "coincide": true
+    },
+    {
+      "ruta": "validator/test_negative_cases.py",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/ejemplo_v1.0.0/qa/test_negative_cases.py",
+      "sha256_esperado": "b0eeec1e217fc402bb30f2fb816364a88d18d4861eff90736a832a701c54380a",
+      "fuente_del_esperado": "Declaración v1.0.0 §4.2 — reproducibilidad y QA (no normativo)",
+      "sha256_incorporado": "b0eeec1e217fc402bb30f2fb816364a88d18d4861eff90736a832a701c54380a",
+      "coincide": true
+    },
+    {
+      "ruta": "validator/validate_knowledge_package.py",
+      "origen": "docs proyecto/NEXOM_Knowledge_Package_v1/contrato_v1.0.0/validator/validate_knowledge_package.py",
+      "sha256_esperado": "96f18a4fa5105e94dae9d894cd6f6b63ad1a035d747cfff2568af227af9eef74",
+      "fuente_del_esperado": "Declaración v1.0.0 §4.1 (contrato_v1.0.0/SHA256SUMS) — normativo",
+      "sha256_incorporado": "96f18a4fa5105e94dae9d894cd6f6b63ad1a035d747cfff2568af227af9eef74",
+      "coincide": true
+    }
+  ]
+}

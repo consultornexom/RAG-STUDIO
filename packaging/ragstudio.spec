@@ -37,6 +37,12 @@ datas = [
     # busca esta carpeta también dentro de sys._MEIPASS cuando la app
     # corre congelada (ver ese módulo, mismo ítem).
     (str(REPO_ROOT / "migrations"), "migrations"),
+    # RAG-INC-01c: contrato NEXOM Knowledge Package v1.0.0 vendorizado
+    # (schemas, validador e id_scheme firmados, cargados desde archivo por
+    # contracts.nexom_knowledge_package; sin ellos la compuerta de
+    # conformidad falla cerrada y no se exporta ningún paquete).
+    (str(REPO_ROOT / "contracts" / "nexom_knowledge_package" / "v1_0_0"), "contracts/nexom_knowledge_package/v1_0_0"),
+    (str(REPO_ROOT / "contracts" / "nexom_knowledge_package" / "VENDORIZADO_v1_0_0.json"), "contracts/nexom_knowledge_package"),
 ]
 
 hiddenimports = [
@@ -47,6 +53,11 @@ hiddenimports = [
     "fastembed",
     "onnxruntime",
     "keyring.backends",
+    # RAG-INC-01c: los importan el validador e id_scheme firmados, que se
+    # cargan desde archivo (PyInstaller no los ve al recorrer imports).
+    "jsonschema",
+    "rfc3339_validator",
+    "rfc8785",
     # tiktoken registra sus codificaciones (cl100k_base, etc.) vía
     # plugins descubiertos con pkgutil.iter_modules en tiktoken_ext/ --
     # PyInstaller no lo detecta caminando imports normales, hay que

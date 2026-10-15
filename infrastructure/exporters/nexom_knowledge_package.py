@@ -655,6 +655,12 @@ class NexomKnowledgePackageExporter(KnowledgePackageExporter):
                 logger.error("Exportación NKP rechazada por la compuerta de conformidad:\n%s", conformidad.summary())
                 raise ContractConformanceError(conformidad)
 
+            # RAG-INC-01d: el SHA-256 del ZIP se obtiene del archivo en staging,
+            # el mismo que se publica sin modificación. Nunca se relee el ZIP
+            # publicado: en un sistema de archivos montado (FUSE) esa relectura
+            # falló de forma transitoria con los archivos ya publicados.
+            zip_sha256 = _sha256_archivo(zip_staging)
+
             for origen, destino in ((zip_staging, final_zip), (digest_staging, final_digest)):
                 self._publicar_sin_sobrescribir(origen, destino)
                 publicados.append(destino)
@@ -672,7 +678,7 @@ class NexomKnowledgePackageExporter(KnowledgePackageExporter):
             package_id=manifest["package_id"], knowledge_base_id=manifest["knowledge_base_id"],
             snapshot_id=manifest["snapshot_id"], tenant=tenant, zip_path=str(final_zip),
             content_digest_path=str(final_digest), content_digest=digest, checksums_json_hash=checksums_hash,
-            zip_sha256=_sha256_archivo(final_zip), counts=dict(manifest["counts"]), conformance=conformidad,
+            zip_sha256=zip_sha256, counts=dict(manifest["counts"]), conformance=conformidad,
         )
 
     @staticmethod
@@ -698,16 +704,34 @@ class NexomKnowledgePackageExporter(KnowledgePackageExporter):
 
     @staticmethod
     def _publicar_sin_sobrescribir(origen: Path, destino: Path) -> None:
+        """Publica `origen` (staging) como `destino` sin sobrescribir nunca un
+        archivo existente. Si falla, no deja `destino`.
+
+        1. `os.link`: crea el nombre final de forma atómica y falla si ya
+           existe (el staging está en la misma carpeta de salida, así que es
+           el mismo sistema de archivos).
+        2. Sin enlaces duros: se reserva el nombre en exclusiva (`open(..., "x")`)
+           y se reemplaza con `os.replace`, que es un rename atómico. Si el
+           reemplazo falla, se retira la reserva vacía.
+        La atomicidad es por archivo. La pareja ZIP + sidecar la garantiza
+        `_publicar`, que retira el ZIP si falla el sidecar."""
         try:
             os.link(origen, destino)  # atómico y falla si el destino ya existe
+            return
         except FileExistsError:
             raise OutputExistsError(str(destino)) from None
         except OSError:
-            # Sistemas de archivos sin enlaces duros: se reserva el nombre en
-            # exclusiva y se reemplaza con el contenido completo.
-            try:
-                with open(destino, "xb"):
-                    pass
-            except FileExistsError:
-                raise OutputExistsError(str(destino)) from None
+            pass  # sin enlaces duros: alternativa con reserva exclusiva
+        try:
+            with open(destino, "xb"):
+                pass
+        except FileExistsError:
+            raise OutputExistsError(str(destino)) from None
+        try:
             os.replace(origen, destino)
+        except BaseException:
+            try:
+                destino.unlink()
+            except OSError:  # pragma: no cover - se informa en el log
+                logger.warning("No se pudo retirar la reserva %s tras un fallo de publicación.", destino)
+            raise

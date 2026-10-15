@@ -83,3 +83,10 @@ SHA-256 de `informe_backfill.json`:
 4. **Deduplicación más estricta.** Tras el relleno, volver a registrar el mismo archivo de una fuente heredada da `DuplicateSourceError`, igual que con las fuentes nuevas.
 5. **Instantáneas.** Las existentes no se tocan y no pasarán el gate de 01b. Hay que publicar una nueva después del relleno.
 6. **Informe no guardado.** Si falla el guardado del informe (por ejemplo, disco lleno), la escritura confirmada se conserva. La interfaz avisa "No se pudo guardar el informe" y el detalle queda en el log.
+7. **Fallos preexistentes en pruebas de Metadatos con Qt (fuera de alcance).** Al ejecutar las pruebas de interfaz con las bibliotecas Qt/EGL cargadas, fallan dos casos de `tests/unit/ui/test_metadata_conversational_field_refresh.py` con `CatalogRequiredForFieldTypeError`:
+   - `test_metadata_field_combo_refreshes_when_schema_is_created_after_project_selection`;
+   - `test_metadata_field_combo_does_not_refresh_without_the_signal_connected`.
+
+   Son preexistentes: se reproducen igual sin los cambios de este incremento. Se comprobó retirando temporalmente los cambios del árbol de trabajo y volviendo a ejecutar las mismas pruebas: 2 failed, 117 passed. Con los cambios: 2 failed, 122 passed; los 5 casos de más son pruebas nuevas del relleno.
+
+   En la suite normal se omiten, porque el sandbox no tiene las bibliotecas Qt/EGL. Por eso no figuran en los conteos de regresión (unitarias 944 passed / 9 skipped). No pertenecen al alcance de este incremento y no se corrigieron.

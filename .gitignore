@@ -44,6 +44,8 @@ dist/
 *.pfx
 # Excepción: claves PÚBLICAS DEMO publicadas con el contrato (evidencia verificable).
 !docs\ proyecto/**/*.pubkey_DEMO.pem
+# Excepción RAG-INC-01c: clave PÚBLICA DEMO del contrato NKP v1.0.0 vendorizado (artefacto de la fixture oficial).
+!contracts/nexom_knowledge_package/v1_0_0/delivery/nexom-knowledge-package-demo-v1.0.0.pubkey_DEMO.pem
 
 # --- Documentos y paquetes del cliente (UDL): datos, no código ---
 # Licenciatura/: 25 PDF oficiales de planes de estudio de la Universidad (escaneados).

@@ -7024,3 +7024,4 @@ entre capas.
        impedir indexar sin metadatos aprobados en el momento mismo de
        indexar, no solo al liberar) -- alcance deliberadamente pospuesto,
        ver "Limitaciones conocidas".
+# RAG-STUDIO

@@ -1329,6 +1329,57 @@ conexión a Hugging Face (ver "Limitaciones conocidas").
   este entorno), `ruff` sin hallazgos. Ver
   `Validacion_observaciones_RAG_STUDIO.md`, Ronda 24, puntos 67-70.
 
+- **2026-11-09 -- Ronda 97: hallazgo real de NEXOM (AGENTE UDL, prioridad
+  alta) -- selección múltiple de catálogo en "Valores por fuente".**
+  - **Problema:** con un campo `seleccion_multiple` con catálogo y
+    "Permite varios valores" (p. ej. `campus` con `hilario_medina` y
+    `torres_landa`), el selector de "Valores por fuente" solo dejaba
+    elegir UNA entrada; guardar la segunda sustituía a la primera. La
+    capa de aplicación ya aceptaba listas (guardadas como `a|b`), y la
+    herencia a fragmentos, el filtro de recuperación (Ronda 89) y el
+    exportador NKP ya leían varios valores: el defecto estaba en la
+    interfaz y en que no había forma de agregar ni de quitar un valor suelto.
+  - **Interfaz (`ui/metadata/panel.py`):** para campos de varios valores
+    con catálogo, lista con casillas que muestra marcadas las entradas que
+    la fuente ya tiene; "Guardar valor" guarda exactamente las marcadas
+    (desmarcar una la quita) y no permite guardar sin ninguna marcada
+    (para dejar el campo vacío se usa "Quitar valor"). "Valores actuales"
+    muestra una fila por valor, con su etiqueta de catálogo, y "Quitar
+    valor" sobre una de esas filas quita solo ese valor. "Aplicar a varias
+    fuentes…" usa las casillas marcadas y, con la nueva casilla "agregar a
+    los valores que cada fuente ya tiene" (activada por defecto), suma los
+    valores sin borrar los existentes; desactivada, reemplaza. Un campo de
+    tipo `seleccion_multiple` sin "Permite varios valores" muestra un aviso.
+    Los campos de un solo valor conservan el selector de siempre.
+  - **Aplicación:** `set_source_metadata_value` y
+    `bulk_set_source_metadata_value` aceptan `mode="agregar"` (solo campos
+    de varios valores) además de `"reemplazar"` (por defecto, sin cambio de
+    comportamiento). Nuevo `remove_source_metadata_value_item`
+    (`RemoveSourceMetadataValueItem`): quita un valor y conserva los demás;
+    si era el último, el campo queda sin asignar; todo queda en el
+    historial. En campos de varios valores cada valor se valida por
+    separado contra el catálogo; se rechazan valores vacíos o que
+    contengan `|` y se eliminan repetidos. `split_stored_values` y
+    `join_values` (`domain/metadata/entities.py`) son el punto único de
+    la serialización para el código nuevo.
+  - **Herencia, filtros y NKP (verificados, sin cambios):** los fragmentos
+    heredan `"hilario_medina|torres_landa"` y el índice lo lleva en
+    `meta__campus`; el filtro de recuperación reconoce el documento con
+    cualquiera de sus valores y no mezcla los de otras fuentes; el NKP
+    exporta `source_metadata.value` como lista. En el NKP, el
+    `inherited_metadata` de los chunks sigue siendo texto `a|b` (el
+    contrato v1.0.0 lo define como cadena).
+  - **Verificación:** 33 pruebas nuevas (aplicación, interfaz Qt real,
+    integración con SQLite real: persistencia al cerrar y volver a abrir,
+    herencia e índice; recuperación filtrada con cada valor). Con el código
+    anterior fallan las de interfaz y la de persistencia/agregar.
+    `tests/unit` 1061 pasadas; las 2 fallas de
+    `test_metadata_conversational_field_refresh.py` son preexistentes (se
+    reproducen igual sobre `HEAD`); integración 537 pasadas (sin contar
+    `test_fastembed_image_provider.py`, que descarga un modelo); `ruff`
+    limpio; `mypy` en el baseline de 22. Manual del Usuario (6.1 y 6.4)
+    actualizado en DOCX y PDF.
+
 - **2026-10-08 -- Ronda 96: auditoría de cierre de la Ronda 95
   (identidad de package).** Se revisó, punto por punto, contra los dos
   documentos del hallazgo y contra un paquete exportado real:
@@ -7024,4 +7075,5 @@ entre capas.
        impedir indexar sin metadatos aprobados en el momento mismo de
        indexar, no solo al liberar) -- alcance deliberadamente pospuesto,
        ver "Limitaciones conocidas".
+# RAG-STUDIO
 # RAG-STUDIO

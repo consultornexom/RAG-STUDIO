@@ -47,6 +47,15 @@ from ui.errors import describe_error
 logger = logging.getLogger(__name__)
 
 
+
+# Ronda 98: cómo se muestra el origen de la política en el reporte.
+_POLICY_ORIGIN_LABELS = {
+    "especifica": ", política de su tipo",
+    "default_proyecto": ", política default del proyecto",
+    "interna": ", parámetros internos: no hay política ni default",
+    "forzada": ", forzada para todo el lote",
+}
+
 class IngestionPanel(QWidget):
     def __init__(self, app_context, parent: Optional[QWidget] = None):
         super().__init__(parent)
@@ -116,23 +125,26 @@ class IngestionPanel(QWidget):
         pipeline_group = QGroupBox("Pipeline del proyecto (todas las fuentes)", self)
         pipeline_layout = QVBoxLayout(pipeline_group)
         pipeline_row = QHBoxLayout()
-        # Ronda 3 (punto 13): antes esto era un QLineEdit de texto libre,
-        # totalmente desconectado del document_type_code que ya se
-        # captura al registrar/editar una fuente (ui/sources/panel.py) --
-        # dos cuadros de texto libre para el mismo concepto, sin ninguna
-        # validación cruzada. Un usuario podía escribir "contactos" en
-        # Fuentes y "Contactos" aquí, dejando una política de
-        # fragmentación que nunca se aplica a esas fuentes, sin ningún
-        # aviso. Se reemplaza por un combo editable, poblado con los
-        # document_type_code que ya existen entre las fuentes del
-        # proyecto (ver _refresh_document_type_options) -- sigue
-        # permitiendo escribir un valor nuevo si de verdad se necesita.
-        self._pipeline_document_type_code = QComboBox(pipeline_group)
-        self._pipeline_document_type_code.setEditable(True)
-        self._pipeline_document_type_code.addItem("default")
+        # Ronda 98 (hallazgo real de NEXOM, AGENTE UDL - LOTE01_Bachillerato):
+        # aquí había un selector global "document_type_code" y la política de
+        # ese único tipo se aplicaba a TODAS las fuentes, aunque cada una
+        # tuviera otro tipo documental con su propia política. Se quita: cada
+        # fuente usa la política de su tipo (Fuentes > tipo de documento) y,
+        # si su tipo no tiene política, la "default" del proyecto.
+        self._pipeline_policy_note = QLabel(
+            "Cada fuente se fragmenta con la política de su tipo de documento (definida en Fragmentación); "
+            "si su tipo no tiene política propia, se usa la \"default\" del proyecto.",
+            pipeline_group,
+        )
+        self._pipeline_policy_note.setWordWrap(True)
+        pipeline_layout.addWidget(self._pipeline_policy_note)
+        self._btn_preview_pipeline = QPushButton("Revisar políticas por fuente (sin procesar)", pipeline_group)
+        self._btn_preview_pipeline.setToolTip(
+            "Muestra qué tipo de documento y qué política usará cada fuente, y si se reprocesará u omitirá, "
+            "sin extraer, fragmentar ni indexar nada."
+        )
         self._btn_run_pipeline = QPushButton("Ejecutar pipeline completo", pipeline_group)
-        pipeline_row.addWidget(QLabel("document_type_code:", pipeline_group))
-        pipeline_row.addWidget(self._pipeline_document_type_code)
+        pipeline_row.addWidget(self._btn_preview_pipeline)
         pipeline_row.addWidget(self._btn_run_pipeline)
         pipeline_layout.addLayout(pipeline_row)
         self._pipeline_report = QTextBrowser(pipeline_group)
@@ -165,7 +177,11 @@ class IngestionPanel(QWidget):
         fragmentation_layout = QVBoxLayout(fragmentation_group)
 
         policy_row = QHBoxLayout()
-        # Mismo motivo que self._pipeline_document_type_code arriba.
+        # Ronda 3 (punto 13): combo editable poblado con los
+        # document_type_code que ya existen entre las fuentes del proyecto
+        # (ver _refresh_document_type_options), en vez de texto libre
+        # desconectado de Fuentes. Ronda 98: al elegir una fuente se
+        # preselecciona su propio tipo de documento.
         self._document_type_code = QComboBox(fragmentation_group)
         self._document_type_code.setEditable(True)
         self._document_type_code.addItem("default")
@@ -351,6 +367,7 @@ class IngestionPanel(QWidget):
         self._tabs.addTab(compare_group, "Comparador de modelos")
 
         self._btn_run_pipeline.clicked.connect(self._on_run_pipeline)
+        self._btn_preview_pipeline.clicked.connect(self._on_preview_pipeline)
         self._btn_extract.clicked.connect(self._on_extract)
         self._btn_view_extraction_history.clicked.connect(self._on_view_extraction_history)
         self._btn_save_policy.clicked.connect(self._on_save_policy)
@@ -396,10 +413,26 @@ class IngestionPanel(QWidget):
     def set_active_source(self, source_id: str) -> None:
         self._source_id = source_id or None
         self._reset_views()
+        self._preselect_source_document_type()
         self._update_enabled_state()
         if self._project_id and self._source_id:
             self._refresh_extraction_preview()
             self._refresh_chunk_list()
+
+    def _preselect_source_document_type(self) -> None:
+        """Ronda 98: en Fragmentación, el tipo de documento propuesto es el
+        de la fuente activa -- antes quedaba el último elegido (o "default")
+        y "Fragmentar" podía aplicar la política de otro tipo sin aviso."""
+        if not (self._project_id and self._source_id):
+            return
+        try:
+            tipo = self._context.document_service.get_source(self._project_id, self._source_id).document_type_code
+        except Exception:  # noqa: BLE001 - la fuente pudo eliminarse; se deja el combo como estaba
+            return
+        if tipo:
+            if self._document_type_code.findText(tipo) < 0:
+                self._document_type_code.addItem(tipo)
+            self._document_type_code.setCurrentText(tipo)
 
     def refresh_document_type_options(self) -> None:
         """Punto público equivalente a _refresh_document_type_options,
@@ -417,7 +450,7 @@ class IngestionPanel(QWidget):
 
     def _refresh_document_type_options(self) -> None:
         """Ronda 3 (punto 13 de Validacion_observaciones_RAG_STUDIO.md):
-        antes _pipeline_document_type_code y _document_type_code eran
+        antes los combos de document_type_code eran
         dos QLineEdit de texto libre, sin relación con el
         document_type_code que ya se captura al registrar/editar una
         fuente en ui/sources/panel.py -- un typo aquí dejaba una
@@ -435,7 +468,7 @@ class IngestionPanel(QWidget):
             for source in sources:
                 if source.document_type_code not in codes:
                     codes.append(source.document_type_code)
-        for combo in (self._pipeline_document_type_code, self._document_type_code):
+        for combo in (self._document_type_code,):
             previous = combo.currentText()
             combo.blockSignals(True)
             combo.clear()
@@ -492,7 +525,7 @@ class IngestionPanel(QWidget):
         busy = self._active_job is not None
         can_act = self._ready and not busy
         pipeline_can_act = self._project_ready and not busy
-        for widget in (self._pipeline_document_type_code, self._btn_run_pipeline, self._pipeline_report):
+        for widget in (self._btn_preview_pipeline, self._btn_run_pipeline, self._pipeline_report):
             widget.setEnabled(pipeline_can_act)
         for widget in (
             self._btn_extract, self._btn_save_policy, self._btn_fragment, self._document_type_code,
@@ -552,7 +585,6 @@ class IngestionPanel(QWidget):
         if self._active_job is not None or self._project_id is None:
             return
         project_id = self._project_id
-        document_type_code = self._pipeline_document_type_code.currentText().strip() or "default"
         schema_id = self._active_schema_id(project_id)
 
         self._status_label.setText("Ejecutando el pipeline completo en segundo plano…")
@@ -560,9 +592,10 @@ class IngestionPanel(QWidget):
         self._pending_pipeline_run = None
 
         def _run(handle) -> None:
+            # Ronda 98: sin document_type_code -> cada fuente usa la política
+            # de su propio tipo documental.
             self._pending_pipeline_run = self._context.pipeline_service.run(
-                project_id, document_type_code=document_type_code, schema_id=schema_id,
-                is_cancelled=handle.is_cancelled,
+                project_id, schema_id=schema_id, is_cancelled=handle.is_cancelled,
             )
 
         if not self._submit_job(_run, key=f"pipeline:{project_id}"):
@@ -602,9 +635,43 @@ class IngestionPanel(QWidget):
                 detail += f" — {len(item.warnings)} advertencia(s)"
             if item.error:
                 detail += f" — <b>{html_escape(item.error)}</b>"
+            # Ronda 98: tipo documental, política efectivamente aplicada y
+            # causa del procesamiento u omisión.
+            if item.document_type_code or item.policy_strategy:
+                politica = item.policy_document_type_code or "interna de RAG Studio"
+                origen = _POLICY_ORIGIN_LABELS.get(item.policy_origin or "", item.policy_origin or "")
+                detail += (
+                    f"<br/>&nbsp;&nbsp;tipo: {html_escape(item.document_type_code or '-')} · política: "
+                    f"{html_escape(politica)} ({html_escape(item.policy_strategy or '-')}{origen})"
+                )
+            if item.reason:
+                detail += f"<br/>&nbsp;&nbsp;motivo: {html_escape(item.reason)}"
             parts.append(f"<p>{detail}</p>")
         self._pipeline_report.setHtml("".join(parts))
         self._refresh_gate_status()
+
+    def _on_preview_pipeline(self) -> None:
+        """Ronda 98: vista previa sin efectos (ver PipelineService.plan)."""
+        if self._project_id is None:
+            return
+        try:
+            filas = self._context.pipeline_service.plan(
+                self._project_id, schema_id=self._active_schema_id(self._project_id),
+            )
+        except Exception as exc:  # noqa: BLE001
+            self._report_error(exc)
+            return
+        acciones = {"omitir": "se omitirá (sin cambios)", "reprocesar": "se procesará", "error": "error"}
+        parts = [f"<p><b>Vista previa (no se procesó nada)</b> — {len(filas)} fuente(s).</p>"]
+        for fila in filas:
+            origen = _POLICY_ORIGIN_LABELS.get(fila.get("policy_origin", ""), "")
+            parts.append(
+                f"<p><b>{html_escape(fila['source_title'])}</b> — tipo: "
+                f"{html_escape(fila.get('document_type_code') or '-')} · política: "
+                f"{html_escape(fila.get('policy') or '-')}{origen}<br/>&nbsp;&nbsp;"
+                f"{acciones.get(fila['accion'], fila['accion'])}: {html_escape(fila.get('motivo') or '')}</p>"
+            )
+        self._pipeline_report.setHtml("".join(parts))
 
     # ---------- extracción ----------
     def _refresh_extraction_preview(self) -> None:

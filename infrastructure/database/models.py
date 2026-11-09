@@ -351,6 +351,16 @@ class PipelineRunItemRecord(ProjectBase):
     error: Mapped[str | None] = mapped_column(Text, nullable=True)
     started_at: Mapped[datetime] = mapped_column(UTCDateTime(), nullable=False)
     finished_at: Mapped[datetime | None] = mapped_column(UTCDateTime(), nullable=True)
+    # Ronda 98 (migración 0022): política aplicada, huellas de configuración
+    # y causa de la decisión -- ver domain.pipeline.entities.PipelineRunItem.
+    document_type_code: Mapped[str | None] = mapped_column(String, nullable=True)
+    policy_document_type_code: Mapped[str | None] = mapped_column(String, nullable=True)
+    policy_origin: Mapped[str | None] = mapped_column(String, nullable=True)
+    policy_strategy: Mapped[str | None] = mapped_column(String, nullable=True)
+    policy_hash: Mapped[str | None] = mapped_column(String, nullable=True)
+    metadata_hash: Mapped[str | None] = mapped_column(String, nullable=True)
+    chunks_digest: Mapped[str | None] = mapped_column(String, nullable=True)
+    reason: Mapped[str | None] = mapped_column(Text, nullable=True)
 
 
 class FragmentationPolicyRecord(ProjectBase):

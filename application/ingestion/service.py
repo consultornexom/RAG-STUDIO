@@ -58,6 +58,16 @@ class IngestionService:
             is_cancelled=is_cancelled,
         )
 
+    def resolve_fragmentation_policy(self, project_id: str, document_type_code: str) -> tuple[FragmentationPolicy, str]:
+        """Ronda 98: política que se aplicaría a una fuente de ese tipo y su
+        origen ("especifica", "default_proyecto" o "interna") -- ver
+        FragmentSource.resolve_policy."""
+        return self._fragment.resolve_policy(project_id, document_type_code)
+
+    def resolve_inherited_metadata(self, project_id: str, schema_id: Optional[str], source_id: str) -> dict[str, str]:
+        """Ronda 98: metadatos que heredarían los fragmentos de la fuente."""
+        return self._fragment.resolve_inherited_metadata(project_id, schema_id, source_id)
+
     def set_fragmentation_policy(
         self, project_id: str, document_type_code: str,
         strategy: FragmentationStrategy = FragmentationStrategy.POR_TAMANIO, **kwargs,

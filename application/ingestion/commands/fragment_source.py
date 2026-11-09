@@ -167,19 +167,28 @@ class FragmentSource:
         return chunks
 
     def _resolve_policy(self, project_id: str, document_type_code: str) -> FragmentationPolicy:
+        return self.resolve_policy(project_id, document_type_code)[0]
+
+    def resolve_policy(self, project_id: str, document_type_code: str) -> tuple[FragmentationPolicy, str]:
+        """Política que se aplicaría a una fuente de ese tipo y su origen:
+        "especifica" (la del propio document_type_code), "default_proyecto"
+        (la "default" del proyecto, como respaldo) o "interna" (parámetros
+        por defecto de RAG Studio). Ronda 98: pública para que el pipeline
+        la registre en el reporte y la use en su incrementalidad -- misma
+        regla exacta que usa execute(), sin duplicarla."""
         policy = self._policy_repository.get_policy(project_id, document_type_code)
         if policy is not None:
-            return policy
+            return policy, "especifica" if document_type_code != "default" else "default_proyecto"
         if document_type_code != "default":
             policy = self._policy_repository.get_policy(project_id, "default")
             if policy is not None:
-                return policy
+                return policy, "default_proyecto"
         # Sin **dict de por medio (antes _DEFAULT_POLICY_PARAMS): se
         # apoya directamente en los valores por defecto ya declarados
         # en FragmentationPolicy (domain/ingestion/entities.py), que
         # son exactamente estos mismos -- una sola fuente de verdad,
         # y con tipos verificables por mypy.
-        return FragmentationPolicy(project_id=project_id, document_type_code="default")
+        return FragmentationPolicy(project_id=project_id, document_type_code="default"), "interna"
 
     def _resolve_count_tokens(self) -> CountTokensFn:
         """Ítem 7 de la evaluación de madurez post-8-etapas: resuelve
@@ -328,6 +337,14 @@ class FragmentSource:
     def _resolve_inherited_metadata(
         self, project_id: str, schema_id: Optional[str], source_id: str,
     ) -> dict[str, str]:
+        return self.resolve_inherited_metadata(project_id, schema_id, source_id)
+
+    def resolve_inherited_metadata(
+        self, project_id: str, schema_id: Optional[str], source_id: str,
+    ) -> dict[str, str]:
+        """Metadatos de la fuente que heredarían sus fragmentos (campos con
+        inherited_by_chunks=True). Ronda 98: pública para la huella de
+        incrementalidad del pipeline."""
         if schema_id is None:
             return {}
         fields = self._schema_repository.list_fields(project_id, schema_id)

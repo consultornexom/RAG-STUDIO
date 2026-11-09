@@ -23,12 +23,19 @@ class PipelineService:
         self._runs = pipeline_run_repository
 
     def run(
-        self, project_id: str, document_type_code: str = "default",
+        self, project_id: str, document_type_code: Optional[str] = None,
         schema_id: Optional[str] = None, is_cancelled: Callable[[], bool] = lambda: False,
     ) -> PipelineRun:
+        """Ronda 98: sin `document_type_code`, cada fuente usa la política de
+        su propio tipo documental; con un valor, se fuerza esa política."""
         return self._run_pipeline.execute(
             project_id, document_type_code=document_type_code, schema_id=schema_id, is_cancelled=is_cancelled,
         )
+
+    def plan(self, project_id: str, schema_id: Optional[str] = None) -> list[dict]:
+        """Ronda 98: vista previa sin efectos de qué política usará cada
+        fuente y si se omitirá o reprocesará -- ver RunPipeline.plan."""
+        return self._run_pipeline.plan(project_id, schema_id=schema_id)
 
     def get_run(self, project_id: str, run_id: str) -> Optional[PipelineRun]:
         return self._runs.get(project_id, run_id)

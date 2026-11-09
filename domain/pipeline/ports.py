@@ -27,3 +27,14 @@ class PipelineRunRepository(ABC):
         (incrementalidad/reanudación). None si la fuente nunca se
         proceso con éxito."""
         ...
+
+    @abstractmethod
+    def get_last_processed_item(self, project_id: str, source_id: str) -> Optional[PipelineRunItem]:
+        """Ronda 98: el PipelineRunItem más reciente de esa fuente que NO sea
+        OMITIDO (EXITOSO, FALLIDO o CANCELADO). Si la última vez que se
+        intentó procesar falló o se canceló (por ejemplo, después de
+        re-fragmentar pero antes de indexar), la fuente no puede omitirse
+        aunque su archivo y su configuración coincidan con la última
+        corrida exitosa: el índice podría no corresponder a los fragmentos.
+        None si nunca se intentó procesar."""
+        ...

@@ -65,7 +65,7 @@ def _linajes(db):
 def test_m01_base_vacia_columnas_not_null_unico_e_indice(tmp_path):
     db = _base_0020(tmp_path, [], proyectos=())
     mig.upgrade_project(db)
-    assert _version(db) == "0021"
+    assert _version(db) == mig._project_migrations_head()  # 0021 aplicada (Ronda 98: head es 0022)
     assert _columnas(db, "project")["knowledge_base_id"][3] == 1  # notnull
     assert _columnas(db, "source")["lineage_id"][3] == 1
     indices = {r[0] for r in _leer(db, "SELECT name FROM sqlite_master WHERE type='index'")}
@@ -123,7 +123,7 @@ def test_rollback_integro_ante_fallo(tmp_path, monkeypatch, etapa):
     # Tras corregir la causa, se aplica normalmente.
     monkeypatch.delenv("RAGSTUDIO_0021_FALLO_DE_PRUEBA")
     mig.upgrade_project(db)
-    assert _version(db) == "0021"
+    assert _version(db) == mig._project_migrations_head()  # 0021 aplicada (Ronda 98: head es 0022)
 
 
 def test_ids_locales_y_project_id_no_cambian(tmp_path):

@@ -43,6 +43,7 @@ class SqlAlchemyPipelineRunRepository(PipelineRunRepository):
                     steps_completed=json.dumps(item.steps_completed), chunks_indexed=item.chunks_indexed,
                     warnings=json.dumps(item.warnings), error=item.error,
                     started_at=item.started_at, finished_at=item.finished_at,
+                    **{campo: getattr(item, campo) for campo in _CAMPOS_TRAZA},
                 ))
             session.commit()
 
@@ -75,6 +76,20 @@ class SqlAlchemyPipelineRunRepository(PipelineRunRepository):
                 runs.append(_record_to_run(run_record, item_records))
             return runs
 
+    def get_last_processed_item(self, project_id: str, source_id: str) -> Optional[PipelineRunItem]:
+        """Ronda 98: último item de la fuente que no fue OMITIDO."""
+        with _session_factory_for(self._paths, project_id)() as session:
+            record = session.execute(
+                select(PipelineRunItemRecord)
+                .where(
+                    PipelineRunItemRecord.project_id == project_id,
+                    PipelineRunItemRecord.source_id == source_id,
+                    PipelineRunItemRecord.status != PipelineItemStatus.OMITIDO.value,
+                )
+                .order_by(PipelineRunItemRecord.started_at.desc())
+            ).scalars().first()
+            return _record_to_item(record) if record is not None else None
+
     def get_last_successful_item(self, project_id: str, source_id: str) -> Optional[PipelineRunItem]:
         with _session_factory_for(self._paths, project_id)() as session:
             record = session.execute(
@@ -89,6 +104,13 @@ class SqlAlchemyPipelineRunRepository(PipelineRunRepository):
             if record is None:
                 return None
             return _record_to_item(record)
+
+
+_CAMPOS_TRAZA = (
+    "document_type_code", "policy_document_type_code", "policy_origin", "policy_strategy",
+    "policy_hash", "metadata_hash", "chunks_digest", "reason",
+)
+"""Ronda 98 (migración 0022): campos de trazabilidad de PipelineRunItem."""
 
 
 def _record_to_run(record: PipelineRunRecord, item_records: list[PipelineRunItemRecord]) -> PipelineRun:
@@ -106,4 +128,5 @@ def _record_to_item(record: PipelineRunItemRecord) -> PipelineRunItem:
         steps_completed=json.loads(record.steps_completed), chunks_indexed=record.chunks_indexed,
         warnings=json.loads(record.warnings), error=record.error,
         started_at=record.started_at, finished_at=record.finished_at,
+        **{campo: getattr(record, campo) for campo in _CAMPOS_TRAZA},
     )

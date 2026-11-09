@@ -32,3 +32,13 @@ class InMemoryPipelineRunRepository(PipelineRunRepository):
         if not candidates:
             return None
         return max(candidates, key=lambda item: item.started_at)
+
+    def get_last_processed_item(self, project_id: str, source_id: str) -> Optional[PipelineRunItem]:
+        candidates = [
+            item for run in self._runs if run.project_id == project_id
+            for item in run.items
+            if item.source_id == source_id and item.status != PipelineItemStatus.OMITIDO
+        ]
+        if not candidates:
+            return None
+        return max(candidates, key=lambda item: item.started_at)

@@ -1329,6 +1329,58 @@ conexión a Hugging Face (ver "Limitaciones conocidas").
   este entorno), `ruff` sin hallazgos. Ver
   `Validacion_observaciones_RAG_STUDIO.md`, Ronda 24, puntos 67-70.
 
+- **2026-11-09 -- Ronda 98: hallazgo real de NEXOM (AGENTE UDL -
+  LOTE01_Bachillerato) -- políticas por fuente en el pipeline e
+  incrementalidad por configuración.**
+  - **Problema (confirmado en el código):** la pestaña Pipeline enviaba un
+    único `document_type_code`; `RunPipeline` lo pasaba igual a todas las
+    fuentes y `FragmentSource` resolvía la política con ese valor, sin
+    mirar el tipo de cada fuente. Un lote con `programa_academico`
+    (por_encabezado), `informacion_academica` e `informacion_admisiones`
+    (documento_completo) se fragmentaba entero con una sola política. Y la
+    incrementalidad solo comparaba el hash del archivo: cambiar la
+    política o un metadato heredado no reprocesaba nada.
+  - **Política por fuente (`application/pipeline/commands/run_pipeline.py`):**
+    cada fuente usa la política de SU `document_type_code`; la "default"
+    del proyecto solo si su tipo no tiene política; si no hay ninguna, los
+    parámetros internos. `FragmentSource.resolve_policy` (pública) es el
+    punto único de esa regla. Un `document_type_code` explícito sigue
+    forzando una política para todo el lote (queda marcado "forzada").
+  - **Incrementalidad:** una fuente se omite solo si coinciden con su
+    última corrida exitosa el archivo (`content_hash`), la política
+    aplicable (`policy_hash`), los metadatos que heredan los fragmentos
+    (`metadata_hash`) y los fragmentos guardados (`chunks_digest`, detecta
+    re-fragmentaciones a mano), y si su último intento no quedó fallido o
+    cancelado (antes, un fallo después de re-fragmentar y antes de indexar
+    podía quedar oculto). Cada item registra tipo, política aplicada
+    (origen y estrategia) y `reason`. Las corridas anteriores no tienen
+    huellas: la primera corrida tras actualizar reprocesa una vez, con ese
+    motivo explícito.
+  - **Hallazgo adicional:** el hash se calculaba sobre `location` (ruta
+    externa) aunque la extracción lee la copia en `sources/original/`. Un
+    proyecto llevado a otro equipo (ruta externa inexistente) reprocesaba
+    TODAS sus fuentes en cada corrida, y un cambio en el archivo externo
+    "reprocesaba" sin efecto. Ahora se usa el mismo archivo que se extrae.
+  - **Persistencia:** migración de proyecto **0022** (columnas nullable en
+    `pipeline_run_item`; sin backfill). Las pruebas de 0021 que fijaban
+    `"0021"` como versión final ahora comparan contra el head.
+  - **Interfaz (`ui/ingestion/panel.py`):** se quita el selector global
+    `document_type_code` de Pipeline; nota explicativa, botón "Revisar
+    políticas por fuente (sin procesar)" (`PipelineService.plan`, sin
+    efectos) y reporte con tipo, política, origen y motivo por fuente. En
+    Fragmentación, el selector propone el tipo de la fuente activa.
+  - **Verificación:** 15 pruebas nuevas: escenario LOTE01 de 5 fuentes / 3
+    tipos sobre SQLite y Qdrant reales (estrategias distintas en una corrida,
+    cantidad y contenido de fragmentos, `campus = hilario_medina|torres_landa`
+    heredado, los 5 casos de regresión de incrementalidad, re-fragmentación
+    manual, vista previa y búsqueda filtrada por cada plantel), casos borde
+    con dobles y la interfaz Qt. Con el código anterior fallan 4 de las 5
+    de integración (entre ellas, la política modificada quedaba OMITIDA).
+    `tests/unit` + smoke 1088 pasadas (las 2 fallas preexistentes de
+    `test_metadata_conversational_field_refresh.py`); integración 542
+    pasadas (sin `test_fastembed_image_provider.py`); `ruff` limpio;
+    `mypy` en el baseline de 22. Manual del Usuario 7.1 y 7.3 en DOCX y PDF.
+
 - **2026-11-09 -- Ronda 97: hallazgo real de NEXOM (AGENTE UDL, prioridad
   alta) -- selección múltiple de catálogo en "Valores por fuente".**
   - **Problema:** con un campo `seleccion_multiple` con catálogo y

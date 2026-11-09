@@ -21,6 +21,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QLineEdit,
     QListWidget,
+    QListWidgetItem,
     QMessageBox,
     QPushButton,
     QTabWidget,
@@ -32,9 +33,18 @@ from application.metadata.options import (
     CATALOG_BACKED_TYPE_VALUES,
     FIELD_DATA_TYPE_OPTIONS,
     FIELD_DATA_TYPE_VALUE_HINTS,
+    VALUE_ASSIGNMENT_ADD,
+    VALUE_ASSIGNMENT_REPLACE,
+    stored_values_list,
 )
 from ui.release.gate_status import GateStatusLabel
 from ui.errors import describe_error
+
+# Ronda 97: en "Valores actuales", cada valor de un campo de varios
+# valores es una fila propia; este rol guarda el código concreto de la
+# fila (None en campos de un solo valor), para que "Quitar valor" quite
+# solo ese valor y conserve los demás.
+_ITEM_VALUE_ROLE = Qt.ItemDataRole.UserRole + 1
 
 
 class _FieldDialog(QDialog):
@@ -551,6 +561,27 @@ class MetadataPanel(QWidget):
         form_row.addWidget(self._value_input_catalog)
         values_layout.addLayout(form_row)
 
+        # Ronda 97 (hallazgo real de NEXOM, AGENTE UDL): el selector de
+        # catálogo era de selección única también para campos de varios
+        # valores -- guardar "torres_landa" sustituía a "hilario_medina".
+        # Para esos campos se usa esta lista con casillas: muestra marcadas
+        # las entradas que la fuente ya tiene y "Guardar valor" guarda
+        # exactamente las marcadas.
+        self._value_input_catalog_multi = QListWidget(values_tab)
+        self._value_input_catalog_multi.setVisible(False)
+        self._value_input_catalog_multi.setMaximumHeight(140)
+        self._value_input_catalog_multi.setToolTip(
+            "Marca todas las entradas del catálogo que aplican a esta fuente."
+        )
+        values_layout.addWidget(self._value_input_catalog_multi)
+        self._value_bulk_add_mode = QCheckBox(
+            "Al aplicar a varias fuentes, agregar a los valores que cada fuente ya tiene (no reemplazar)",
+            values_tab,
+        )
+        self._value_bulk_add_mode.setChecked(True)
+        self._value_bulk_add_mode.setVisible(False)
+        values_layout.addWidget(self._value_bulk_add_mode)
+
         # Hallazgo real de validación visual: el campo "Valor" no
         # aclaraba qué formato se esperaba (fecha, número, texto
         # libre...) cuando el campo del esquema no usa catálogo -- el
@@ -874,11 +905,16 @@ class MetadataPanel(QWidget):
         if not hasattr(self, "_value_input_catalog"):
             return  # todavía construyendo la interfaz
         anterior = self._value_input_catalog.currentData()
+        # Ronda 97: también se conservan las casillas marcadas (sin guardar)
+        # de un campo de varios valores.
+        marcadas = self._checked_catalog_codes() if not self._value_input_catalog_multi.isHidden() else None
         self._on_value_field_changed(self._value_field_selector.currentIndex())
         if anterior is not None:
             indice = self._value_input_catalog.findData(anterior)
             if indice >= 0:
                 self._value_input_catalog.setCurrentIndex(indice)
+        if marcadas is not None and not self._value_input_catalog_multi.isHidden():
+            self._set_checked_catalog_codes(marcadas)
 
     def _selected_entry_id(self) -> Optional[str]:
         item = self._catalog_entry_list.currentItem()
@@ -1059,38 +1095,119 @@ class MetadataPanel(QWidget):
         for value in self._context.metadata_service.list_source_metadata_values(self._project_id, source_id):
             field = self._fields_by_id.get(value.field_id)
             label = field.display_name if field else value.field_id
-            text = f"{label} ({value.field_id}): {value.value}"
             campo_no_aplica = (
                 field is not None
                 and field.document_type_code is not None
                 and source_document_type_code is not None
                 and field.document_type_code != source_document_type_code
             )
-            if campo_no_aplica:
-                text += "  [no aplica al tipo de documento actual de esta fuente]"
-            self._current_values_list.addItem(text)
-            # Ronda 6, punto 23: se guarda field_id en el item (rol 1,
-            # mismo que usa _MultiSourceSelectionDialog para source_id)
-            # para que _on_delete_source_value sepa qué campo quitar sin
-            # tener que re-parsear el texto mostrado.
-            self._current_values_list.item(self._current_values_list.count() - 1).setData(
-                Qt.ItemDataRole.UserRole, value.field_id
+            aviso = "  [no aplica al tipo de documento actual de esta fuente]" if campo_no_aplica else ""
+            # Ronda 97: en un campo de varios valores, una fila por valor
+            # (con su etiqueta de catálogo), para verlos todos con claridad
+            # y poder quitar uno solo.
+            if field is not None and field.multiple:
+                codigos = stored_values_list(value.value)
+                etiquetas = self._catalog_labels(field.catalog_id) if field.catalog_id else {}
+                for posicion, codigo in enumerate(codigos, start=1):
+                    mostrado = f"{codigo} — {etiquetas[codigo]}" if codigo in etiquetas else codigo
+                    self._add_current_value_row(
+                        f"{label} ({value.field_id}) [{posicion}/{len(codigos)}]: {mostrado}{aviso}",
+                        value.field_id, codigo,
+                    )
+                continue
+            self._add_current_value_row(f"{label} ({value.field_id}): {value.value}{aviso}", value.field_id, None)
+
+    def _add_current_value_row(self, text: str, field_id: str, item_code: Optional[str]) -> None:
+        # Ronda 6, punto 23: se guarda field_id en el item (rol 1,
+        # mismo que usa _MultiSourceSelectionDialog para source_id)
+        # para que _on_delete_source_value sepa qué campo quitar sin
+        # tener que re-parsear el texto mostrado. Ronda 97: y el código
+        # concreto en _ITEM_VALUE_ROLE si el campo es de varios valores.
+        item = QListWidgetItem(text)
+        item.setData(Qt.ItemDataRole.UserRole, field_id)
+        item.setData(_ITEM_VALUE_ROLE, item_code)
+        self._current_values_list.addItem(item)
+
+    def _catalog_labels(self, catalog_id: str) -> dict[str, str]:
+        if self._project_id is None:
+            return {}
+        try:
+            return {e.value_code: e.label for e in self._context.metadata_service.list_catalog_entries(
+                self._project_id, catalog_id)}
+        except Exception:  # noqa: BLE001 - catálogo borrado entre listar y mostrar: se muestra solo el código
+            return {}
+
+    def _stored_values_for(self, field_id: str) -> list[str]:
+        source_id = self._selected_value_source_id()
+        if self._project_id is None or source_id is None:
+            return []
+        for value in self._context.metadata_service.list_source_metadata_values(self._project_id, source_id):
+            if value.field_id == field_id:
+                return stored_values_list(value.value)
+        return []
+
+    def _checked_catalog_codes(self) -> list[str]:
+        lista = self._value_input_catalog_multi
+        return [
+            lista.item(i).data(Qt.ItemDataRole.UserRole) for i in range(lista.count())
+            if lista.item(i).checkState() == Qt.CheckState.Checked
+        ]
+
+    def _set_checked_catalog_codes(self, codes: list[str]) -> None:
+        lista = self._value_input_catalog_multi
+        for i in range(lista.count()):
+            item = lista.item(i)
+            item.setCheckState(
+                Qt.CheckState.Checked if item.data(Qt.ItemDataRole.UserRole) in codes else Qt.CheckState.Unchecked
             )
+
+    def _is_multi_catalog_field(self, field) -> bool:
+        return field is not None and field.catalog_id is not None and bool(getattr(field, "multiple", False))
 
     def _on_value_field_changed(self, _index: int) -> None:
         field_id = self._selected_value_field_id()
         field = self._fields_by_id.get(field_id) if field_id else None
         is_catalog_backed = field is not None and field.catalog_id is not None
-        self._value_input_catalog.setVisible(is_catalog_backed)
+        is_multi_catalog = self._is_multi_catalog_field(field)
+        self._value_input_catalog.setVisible(is_catalog_backed and not is_multi_catalog)
+        self._value_input_catalog_multi.setVisible(is_multi_catalog)
         self._value_input_text.setVisible(not is_catalog_backed)
-        if is_catalog_backed:
+        self._value_bulk_add_mode.setVisible(bool(field is not None and getattr(field, "multiple", False)))
+        if is_multi_catalog and field is not None:
+            # Ronda 97: lista con casillas; se marcan las entradas que la
+            # fuente ya tiene guardadas, así se ven y se editan juntas.
+            self._value_input_catalog_multi.clear()
+            guardados = self._stored_values_for(field.field_id)
+            if self._project_id is not None:
+                for entry in self._context.metadata_service.list_catalog_entries(self._project_id, field.catalog_id):
+                    item = QListWidgetItem(f"{entry.value_code} — {entry.label}")
+                    item.setData(Qt.ItemDataRole.UserRole, entry.value_code)
+                    item.setFlags(item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
+                    item.setCheckState(
+                        Qt.CheckState.Checked if entry.value_code in guardados else Qt.CheckState.Unchecked
+                    )
+                    self._value_input_catalog_multi.addItem(item)
+            self._value_type_hint.setText(
+                "Campo de varios valores con catálogo -- marca TODAS las entradas que apliquen a esta fuente. "
+                "\"Guardar valor\" guarda exactamente las marcadas (desmarcar una la quita). "
+                "\"Aplicar a varias fuentes…\" usa las marcadas; con la casilla de abajo activada se suman "
+                "a los valores que cada fuente ya tiene."
+            )
+        elif is_catalog_backed and field is not None:
             self._value_input_catalog.clear()
             if self._project_id is not None:
                 for entry in self._context.metadata_service.list_catalog_entries(self._project_id, field.catalog_id):
                     self._value_input_catalog.addItem(f"{entry.value_code} — {entry.label}", entry.value_code)
-            self._value_type_hint.setText(
-                "Este campo usa catálogo -- elige una de las entradas del selector de arriba."
-            )
+            hint = "Este campo usa catálogo -- elige una de las entradas del selector de arriba."
+            if getattr(field.data_type, "value", field.data_type) == "seleccion_multiple":
+                # Ronda 97: tipo "selección múltiple" sin "Permite varios
+                # valores" solo admite un valor; se avisa en vez de dejar
+                # que el usuario descubra la sustitución al guardar.
+                hint += (
+                    " Atención: el campo es de tipo selección múltiple pero no tiene activado "
+                    "\"Permite varios valores\" (Esquema > Editar campo); mientras tanto solo admite uno."
+                )
+            self._value_type_hint.setText(hint)
         elif field is not None:
             data_type_value = getattr(field.data_type, "value", field.data_type)
             hint = FIELD_DATA_TYPE_VALUE_HINTS.get(data_type_value, "Texto libre.")
@@ -1108,7 +1225,10 @@ class MetadataPanel(QWidget):
         texto libre vs. selector de catálogo."""
         field_id = self._selected_value_field_id()
         field = self._fields_by_id.get(field_id) if field_id else None
-        if field is not None and field.catalog_id is not None:
+        raw_value: object
+        if self._is_multi_catalog_field(field):
+            raw_value = self._checked_catalog_codes()
+        elif field is not None and field.catalog_id is not None:
             raw_value = self._value_input_catalog.currentData()
         else:
             text = self._value_input_text.text().strip()
@@ -1124,6 +1244,13 @@ class MetadataPanel(QWidget):
         if source_id is None or field_id is None:
             QMessageBox.warning(self, "Faltan datos", "Elige una fuente y un campo.")
             return
+        if self._is_multi_catalog_field(self._fields_by_id.get(field_id)) and not raw_value:
+            QMessageBox.information(
+                self, "Sin valores marcados",
+                "Marca al menos una entrada del catálogo. Para quitar todos los valores del campo, "
+                "elígelo en \"Valores actuales\" y usa \"Quitar valor\".",
+            )
+            return
         try:
             self._context.metadata_service.set_source_metadata_value(
                 self._project_id, self._schema_id, source_id, field_id, raw_value,
@@ -1133,6 +1260,7 @@ class MetadataPanel(QWidget):
             return
         self._value_input_text.clear()
         self._refresh_current_values()
+        self._on_value_field_changed(self._value_field_selector.currentIndex())
 
     def _on_apply_value_to_multiple_sources(self) -> None:
         # Ronda 5, punto 21 (hallazgo real de usuario, vídeo 2): extiende
@@ -1149,6 +1277,17 @@ class MetadataPanel(QWidget):
         if field_id is None:
             QMessageBox.warning(self, "Faltan datos", "Elige un campo y escribe (o elige) el valor a aplicar.")
             return
+        field = self._fields_by_id.get(field_id)
+        es_multiple = bool(field is not None and getattr(field, "multiple", False))
+        if self._is_multi_catalog_field(field) and not raw_value:
+            QMessageBox.information(self, "Sin valores marcados", "Marca al menos una entrada del catálogo.")
+            return
+        # Ronda 97: en campos de varios valores, por defecto se AGREGA a lo
+        # que cada fuente ya tiene (no se pierde, p. ej., un plantel ya
+        # asignado); desmarcando la casilla se reemplaza.
+        modo = (
+            VALUE_ASSIGNMENT_ADD if es_multiple and self._value_bulk_add_mode.isChecked() else VALUE_ASSIGNMENT_REPLACE
+        )
         sources = self._context.document_service.list_sources(self._project_id)
         if not sources:
             QMessageBox.information(self, "Sin fuentes", "Este proyecto todavía no tiene fuentes registradas.")
@@ -1162,16 +1301,23 @@ class MetadataPanel(QWidget):
             return
         try:
             result = self._context.metadata_service.bulk_set_source_metadata_value(
-                self._project_id, self._schema_id, source_ids, field_id, raw_value,
+                self._project_id, self._schema_id, source_ids, field_id, raw_value, modo,
             )
         except Exception as exc:  # noqa: BLE001 - incluye valor fuera de catálogo, campo obligatorio vacío
             self._report_error(exc)
             return
         self._value_input_text.clear()
         self._refresh_current_values()
+        self._on_value_field_changed(self._value_field_selector.currentIndex())
+        detalle = ""
+        if es_multiple:
+            detalle = (
+                " Los valores se agregaron a los que cada fuente ya tenía."
+                if modo == VALUE_ASSIGNMENT_ADD else " Cada fuente quedó exactamente con los valores indicados."
+            )
         QMessageBox.information(
             self, "Valor aplicado a varias fuentes",
-            f"Actualizadas: {result.updated_count}. Omitidas: {result.skipped_count}.",
+            f"Actualizadas: {result.updated_count}. Omitidas: {result.skipped_count}.{detalle}",
         )
 
     def _on_delete_source_value(self) -> None:
@@ -1191,6 +1337,26 @@ class MetadataPanel(QWidget):
         field_id = item.data(Qt.ItemDataRole.UserRole)
         field = self._fields_by_id.get(field_id)
         label = field.display_name if field else field_id
+        codigo = item.data(_ITEM_VALUE_ROLE)
+        if codigo is not None:
+            # Ronda 97: en un campo de varios valores se quita solo el valor
+            # elegido; los demás se conservan.
+            confirm = QMessageBox.question(
+                self, "Quitar valor",
+                f"¿Quitar \"{codigo}\" de \"{label}\" ({field_id}) en esta fuente? Los demás valores se conservan.",
+            )
+            if confirm != QMessageBox.StandardButton.Yes:
+                return
+            try:
+                self._context.metadata_service.remove_source_metadata_value_item(
+                    self._project_id, self._schema_id, source_id, field_id, codigo,
+                )
+            except Exception as exc:  # noqa: BLE001 - incluye el caso en que el valor ya no estaba asignado
+                self._report_error(exc)
+                return
+            self._refresh_current_values()
+            self._on_value_field_changed(self._value_field_selector.currentIndex())
+            return
         confirm = QMessageBox.question(
             self, "Quitar valor", f"¿Quitar el valor de \"{label}\" ({field_id}) de esta fuente?",
         )
@@ -1202,6 +1368,7 @@ class MetadataPanel(QWidget):
             self._report_error(exc)
             return
         self._refresh_current_values()
+        self._on_value_field_changed(self._value_field_selector.currentIndex())
 
     def _on_view_value_history(self) -> None:
         source_id = self._selected_value_source_id()

@@ -19,7 +19,8 @@ from .commands.delete_catalog import DeleteCatalog
 from .commands.delete_catalog_entry import DeleteCatalogEntry
 from .commands.delete_field_definition import DeleteFieldDefinition
 from .commands.delete_source_metadata_value import DeleteSourceMetadataValue
-from .commands.set_source_metadata_value import SetSourceMetadataValue
+from .commands.remove_source_metadata_value_item import RemoveSourceMetadataValueItem
+from .commands.set_source_metadata_value import SetSourceMetadataValue, ValueAssignmentMode
 from .commands.update_catalog import UpdateCatalog
 from .commands.update_catalog_entry import UpdateCatalogEntry
 from .commands.update_field_definition import UpdateFieldDefinition
@@ -58,6 +59,7 @@ class MetadataService:
             schema_repository, catalog_repository, source_metadata_repository, source_repository
         )
         self._delete_value = DeleteSourceMetadataValue(source_metadata_repository)
+        self._remove_value_item = RemoveSourceMetadataValueItem(schema_repository, source_metadata_repository)
         self._get_schema = GetMetadataSchema(schema_repository)
         self._list_catalogs = ListCatalogs(catalog_repository)
         self._list_entries = ListCatalogEntries(catalog_repository)
@@ -113,25 +115,37 @@ class MetadataService:
         self._delete_entry.execute(project_id, catalog_id, entry_id)
 
     def set_source_metadata_value(
-        self, project_id: str, schema_id: str, source_id: str, field_id: str, raw_value
+        self, project_id: str, schema_id: str, source_id: str, field_id: str, raw_value,
+        mode: object = ValueAssignmentMode.REEMPLAZAR,
     ) -> None:
-        self._set_value.execute(project_id, schema_id, source_id, field_id, raw_value)
+        """Ronda 97: `mode="agregar"` suma los valores a los que ya tiene la
+        fuente (solo campos de varios valores); "reemplazar" (por defecto)
+        deja exactamente los indicados -- ver SetSourceMetadataValue."""
+        self._set_value.execute(project_id, schema_id, source_id, field_id, raw_value, mode)
 
     def bulk_set_source_metadata_value(
-        self, project_id: str, schema_id: str, source_ids: list[str], field_id: str, raw_value
+        self, project_id: str, schema_id: str, source_ids: list[str], field_id: str, raw_value,
+        mode: object = ValueAssignmentMode.REEMPLAZAR,
     ) -> BulkSetSourceMetadataValueResult:
         """Ronda 5, punto 21: asigna el mismo valor de `field_id` a
         varias fuentes de una vez. Un valor/campo inválido aborta todo
         el lote (error de diseño, no de una fuente puntual); una
         fuente inexistente solo se omite -- ver
         BulkSetSourceMetadataValue."""
-        return self._bulk_set_value.execute(project_id, schema_id, source_ids, field_id, raw_value)
+        return self._bulk_set_value.execute(project_id, schema_id, source_ids, field_id, raw_value, mode)
 
     def delete_source_metadata_value(self, project_id: str, source_id: str, field_id: str) -> None:
         """Ronda 6, punto 23: desasocia el valor de `field_id` guardado
         para `source_id`. Lanza SourceMetadataValueNotFoundError si no
         había ningún valor asignado -- ver DeleteSourceMetadataValue."""
         self._delete_value.execute(project_id, source_id, field_id)
+
+    def remove_source_metadata_value_item(
+        self, project_id: str, schema_id: str, source_id: str, field_id: str, item: str,
+    ) -> list[str]:
+        """Ronda 97: quita UN valor de un campo de varios valores y conserva
+        los demás; devuelve los que quedan -- ver RemoveSourceMetadataValueItem."""
+        return self._remove_value_item.execute(project_id, schema_id, source_id, field_id, item)
 
     def get_schema(self, project_id: str):
         return self._get_schema.execute(project_id)

@@ -134,6 +134,20 @@ def test_campo_de_valor_multiple_coincide_con_cualquiera_de_sus_valores():
     assert "s-mixta" in {r.chunk.source_id for r in trace.search_results}
 
 
+def test_documento_de_varios_valores_se_recupera_con_cada_uno_y_no_mezcla_los_demas():
+    """Ronda 97 (hallazgo real de NEXOM, AGENTE UDL): un documento con
+    varios valores en el mismo campo (guardados como lista desde Valores
+    por fuente) debe aparecer al filtrar por CUALQUIERA de ellos, y las
+    fuentes de un solo valor no deben colarse en el filtro del otro."""
+    fx = _escenario()
+    fx.fuente("s-mixta", "derecho_corporativo|gestion_profesional_de_proyectos", ["Calendario compartido de proyectos"])
+    for valor, ajena in [("gestion_profesional_de_proyectos", "s-otro"), ("derecho_corporativo", "s-gpp")]:
+        trace = fx.simulate.execute(P, "objetivo del programa calendario", {"programa_academico": valor}, limit=20)
+        fuentes = {r.chunk.source_id for r in trace.search_results}
+        assert "s-mixta" in fuentes, valor
+        assert ajena not in fuentes, valor
+
+
 def test_sin_los_repositorios_nuevos_el_comportamiento_es_el_de_antes():
     fx = _escenario(con_repos_nuevos=False)
     trace = fx.simulate.execute(P, "¿Cuál es el objetivo de Gestión Profesional de Proyectos?", limit=2)

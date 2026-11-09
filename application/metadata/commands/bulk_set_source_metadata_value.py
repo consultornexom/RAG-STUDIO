@@ -31,6 +31,14 @@ se registra como omitida y se continúa con las demás -- mismo criterio
 de tolerancia que BulkSetDocumentTypeCode. `source_ids` se depura
 (se preservan solo apariciones únicas, en orden) para que un id
 repetido no infle `updated_count` ni se procese dos veces.
+
+Ronda 97 (hallazgo real de NEXOM, AGENTE UDL): `mode` se pasa tal cual a
+SetSourceMetadataValue. Con `mode="agregar"` (solo campos de varios
+valores) cada fuente CONSERVA los valores que ya tenía y se le suman los
+nuevos -- p. ej. aplicar `campus=torres_landa` a varias fuentes sin
+borrar el `hilario_medina` que algunas ya tenían. Con `"reemplazar"` (por
+defecto, comportamiento de siempre) cada fuente queda exactamente con la
+lista indicada.
 """
 from __future__ import annotations
 
@@ -40,7 +48,7 @@ from typing import Union
 from domain.documents.ports import SourceRepository
 from domain.metadata.ports import CatalogRepository, MetadataSchemaRepository, SourceMetadataRepository
 
-from .set_source_metadata_value import SetSourceMetadataValue
+from .set_source_metadata_value import SetSourceMetadataValue, ValueAssignmentMode, parse_mode
 
 
 @dataclass
@@ -75,19 +83,21 @@ class BulkSetSourceMetadataValue:
         source_ids: list[str],
         field_id: str,
         raw_value: Union[str, list[str]],
+        mode: object = ValueAssignmentMode.REEMPLAZAR,
     ) -> BulkSetSourceMetadataValueResult:
         # Deja que FieldDefinitionNotFoundError/InvalidMetadataValueError se
         # propaguen sin capturarlas: son errores de diseño del lote
         # (campo/valor), no de una fuente puntual -- deben abortar toda la
         # operación antes de tocar ninguna fuente, incluso si source_ids
         # viene vacío o ninguna fuente listada sigue existiendo.
-        self._set_value.validate(project_id, schema_id, field_id, raw_value)
+        modo = parse_mode(mode)
+        self._set_value.validate(project_id, schema_id, field_id, raw_value, modo)
 
         result = BulkSetSourceMetadataValueResult()
         for source_id in dict.fromkeys(source_ids):  # depura duplicados, conserva el orden
             if self._source_repository.get(project_id, source_id) is None:
                 result.skipped_source_ids.append(source_id)
                 continue
-            self._set_value.execute(project_id, schema_id, source_id, field_id, raw_value)
+            self._set_value.execute(project_id, schema_id, source_id, field_id, raw_value, modo)
             result.updated_source_ids.append(source_id)
         return result

@@ -2,7 +2,15 @@
 tener que importar domain directamente (ADR-001, sección 4)."""
 from __future__ import annotations
 
-from domain.metadata.entities import CATALOG_BACKED_TYPES, FieldDataType
+from application.metadata.commands.set_source_metadata_value import ValueAssignmentMode
+from domain.metadata.entities import CATALOG_BACKED_TYPES, FieldDataType, split_stored_values
+
+# Ronda 97: la UI lee la lista de valores guardados de un campo de varios
+# valores ("a|b" -> ["a", "b"]) y elige el modo de asignación masiva sin
+# importar domain directamente.
+VALUE_ASSIGNMENT_REPLACE: str = ValueAssignmentMode.REEMPLAZAR.value
+VALUE_ASSIGNMENT_ADD: str = ValueAssignmentMode.AGREGAR.value
+stored_values_list = split_stored_values
 
 FIELD_DATA_TYPE_OPTIONS: list[str] = [t.value for t in FieldDataType]
 CATALOG_BACKED_TYPE_VALUES: frozenset[str] = frozenset(t.value for t in CATALOG_BACKED_TYPES)

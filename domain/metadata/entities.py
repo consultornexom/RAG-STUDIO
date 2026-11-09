@@ -136,10 +136,29 @@ class CatalogEntry(BaseModel):
     parent_entry_id: Optional[str] = None
 
 
+MULTI_VALUE_SEPARATOR = "|"
+"""Separador con el que se guardan los campos de varios valores
+(multiple=True) en SourceMetadataValue.value. Ya lo usaban el filtro de
+recuperación, el exportador NKP y las comprobaciones de catálogo en uso;
+estas dos funciones son el punto único para el código nuevo."""
+
+
+def split_stored_values(value: Optional[str]) -> list[str]:
+    """Lista de valores de un SourceMetadataValue.value: separa por '|',
+    quita espacios y vacíos, conserva el orden y elimina repetidos."""
+    if not value:
+        return []
+    return list(dict.fromkeys(v.strip() for v in value.split(MULTI_VALUE_SEPARATOR) if v.strip()))
+
+
+def join_values(values: "list[str]") -> str:
+    return MULTI_VALUE_SEPARATOR.join(values)
+
+
 class SourceMetadataValue(BaseModel):
     """Valor de un campo para una fuente concreta. Los valores multi-
     valor (multiple=True en su FieldDefinition) se serializan como
-    lista de códigos separados por '|'."""
+    lista de códigos separados por '|' (MULTI_VALUE_SEPARATOR)."""
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     source_id: str

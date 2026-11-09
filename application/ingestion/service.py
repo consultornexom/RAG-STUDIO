@@ -13,6 +13,7 @@ from domain.metadata.ports import MetadataSchemaRepository, SourceMetadataReposi
 from .commands.extract_source_text import ExtractSourceText
 from .commands.fragment_source import FragmentSource
 from .commands.set_fragmentation_policy import SetFragmentationPolicy
+from .queries.get_chunk_detail import ChunkDetail, GetChunkDetail
 from .queries.get_extraction_record import GetExtractionRecord
 from .queries.list_chunks import ListChunks
 from .queries.list_extraction_history import ListExtractionHistory
@@ -40,6 +41,7 @@ class IngestionService:
         self._get_extraction = GetExtractionRecord(extraction_repository)
         self._list_extraction_history = ListExtractionHistory(extraction_repository)
         self._list_chunks = ListChunks(chunk_repository)
+        self._chunk_detail = GetChunkDetail(source_repository, chunk_repository, extraction_repository, schema_repository)
         self._list_policies = ListFragmentationPolicies(policy_repository)
 
     def extract_source_text(
@@ -79,6 +81,12 @@ class IngestionService:
 
     def list_extraction_history(self, project_id: str, source_id: str) -> list[ExtractionRecord]:
         return self._list_extraction_history.execute(project_id, source_id)
+
+    def get_chunk_detail(self, project_id: str, source_id: str, chunk_id: str) -> Optional[ChunkDetail]:
+        """Ronda 99: detalle de solo lectura de un fragmento guardado (texto
+        íntegro, propiedades, metadatos heredados, relaciones y contexto
+        jerárquico derivado) -- ver GetChunkDetail. None si ya no existe."""
+        return self._chunk_detail.execute(project_id, source_id, chunk_id)
 
     def list_chunks(self, project_id: str, source_id: str) -> list[Chunk]:
         return self._list_chunks.execute(project_id, source_id)

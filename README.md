@@ -1329,6 +1329,48 @@ conexión a Hugging Face (ver "Limitaciones conocidas").
   este entorno), `ruff` sin hallazgos. Ver
   `Validacion_observaciones_RAG_STUDIO.md`, Ronda 24, puntos 67-70.
 
+- **2026-11-09 -- Ronda 99: hallazgo real de NEXOM (AGENTE UDL -
+  LOTE01_Bachillerato) -- detalle de fragmentos y diagnóstico del contexto
+  jerárquico.**
+  - **Problema:** Ingesta > Fragmentación solo mostraba número, tokens,
+    sección, páginas y tipo; no había forma de leer el texto ni los
+    metadatos de un fragmento sin scripts.
+  - **Implementación (solo lectura, sin cambios de base de datos):**
+    `GetChunkDetail` (`application/ingestion/queries/get_chunk_detail.py`,
+    `IngestionService.get_chunk_detail`) reúne, leyendo los repositorios
+    existentes, el fragmento guardado, la fuente (posición, nombre, tipo),
+    padre/anterior/siguiente, si se indexa (misma regla de `index_source`)
+    y los metadatos heredados (multivalor separado + representación
+    original). Además, un contexto jerárquico DERIVADO
+    (`domain/ingestion/heading_context.py`): la ruta de encabezados del
+    texto extraído que rige al fragmento (ubicando los fragmentos en orden,
+    para que dos "5.º semestre" iguales no se confundan) y qué encabezados
+    superiores no aparecen en el texto indexado; no se guarda ni se usa en
+    la búsqueda. Interfaz: botón "Ver detalle del fragmento" y doble clic
+    (`ui/ingestion/chunk_detail_dialog.py`), todo en texto plano de solo
+    lectura (nada se interpreta como HTML), copiar texto y navegación
+    anterior/siguiente/padre.
+  - **Análisis (`docs proyecto/Ronda99_Contexto_Jerarquico/`):**
+    `por_encabezado` pierde el nivel y los ancestros: cada fragmento
+    guarda solo su propio título, y los encabezados de área no se indexan
+    (solo encabezado). Los dos "5.º semestre" del caso no llevan su área.
+    Medición densa con el modelo del proyecto: anteponer la ruta separa
+    mejor las áreas pero empeora el ordinal del semestre. Propuesta, sin
+    implementar (requiere autorización): conservar la ruta como dato del
+    fragmento (`section_path`, migración y re-fragmentación) y usarla en
+    BM25 y en la afinidad de sección con ordinales normalizados; para
+    planes de estudio, datos estructurados por tabla.
+  - **Verificación:** 12 pruebas nuevas (integración real: texto exacto,
+    saltos de línea y caracteres especiales, relaciones padre/anterior/
+    siguiente, metadatos multivalor, rutas distintas para los dos "5.º
+    semestre", sin escrituras ni reindexación y pipeline de la Ronda 98
+    omitiendo la fuente después; interfaz Qt: doble clic, texto literal,
+    copiar, navegación). `tests/unit` + smoke 1093 pasadas (las 2 fallas
+    preexistentes de `test_metadata_conversational_field_refresh.py`);
+    integración 549 pasadas (sin `test_fastembed_image_provider.py`);
+    `ruff` limpio; `mypy` en el baseline de 22. Manual del Usuario 7.3 en
+    DOCX y PDF.
+
 - **2026-11-09 -- Ronda 98: hallazgo real de NEXOM (AGENTE UDL -
   LOTE01_Bachillerato) -- políticas por fuente en el pipeline e
   incrementalidad por configuración.**

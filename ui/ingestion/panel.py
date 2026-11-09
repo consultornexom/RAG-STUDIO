@@ -15,7 +15,7 @@ import logging
 from html import escape as html_escape
 from typing import Optional
 
-from PySide6.QtCore import QTimer
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -40,6 +40,7 @@ from application.ingestion.options import FRAGMENTATION_STRATEGY_OPTIONS
 from ui.release.gate_status import GateStatusLabel
 from ui.theme import estado_html
 
+from .chunk_detail_dialog import ChunkDetailDialog
 from .index_logic import index_method_for_source_type
 from .search_highlighting import extract_highlight_terms, highlight_terms
 from ui.errors import describe_error
@@ -213,7 +214,14 @@ class IngestionPanel(QWidget):
         fragmentation_layout.addLayout(buttons_row)
 
         self._chunk_list = QListWidget(fragmentation_group)
+        self._chunk_list.setToolTip("Doble clic en un fragmento para ver su texto completo y sus metadatos.")
         fragmentation_layout.addWidget(self._chunk_list)
+        # Ronda 99 (hallazgo real de NEXOM, AGENTE UDL - LOTE01_Bachillerato):
+        # antes no había forma de leer el texto ni los metadatos de un
+        # fragmento desde la interfaz. Doble clic o este botón abren su
+        # detalle de solo lectura (ver ui/ingestion/chunk_detail_dialog.py).
+        self._btn_chunk_detail = QPushButton("Ver detalle del fragmento", fragmentation_group)
+        fragmentation_layout.addWidget(self._btn_chunk_detail)
         self._tabs.addTab(fragmentation_group, "Fragmentación")
 
         # --- Indexación y búsqueda semántica (Etapa 4 — núcleo RAG) ---
@@ -372,6 +380,8 @@ class IngestionPanel(QWidget):
         self._btn_view_extraction_history.clicked.connect(self._on_view_extraction_history)
         self._btn_save_policy.clicked.connect(self._on_save_policy)
         self._btn_fragment.clicked.connect(self._on_fragment)
+        self._btn_chunk_detail.clicked.connect(self._on_chunk_detail)
+        self._chunk_list.itemDoubleClicked.connect(lambda _item: self._on_chunk_detail())
         self._btn_cancel.clicked.connect(self._on_cancel)
         self._btn_index.clicked.connect(self._on_index)
         self._btn_search.clicked.connect(self._on_search)
@@ -530,6 +540,7 @@ class IngestionPanel(QWidget):
         for widget in (
             self._btn_extract, self._btn_save_policy, self._btn_fragment, self._document_type_code,
             self._strategy, self._target_tokens, self._overlap_tokens, self._min_tokens, self._chunk_list,
+            self._btn_chunk_detail,
             self._btn_index, self._btn_search, self._search_query, self._search_mode,
             self._search_scope_source_only, self._search_only_usable, self._search_results,
             self._search_expand_to_parent,
@@ -740,6 +751,23 @@ class IngestionPanel(QWidget):
             self._chunk_list.addItem(
                 f"[{chunk.chunk_index}] {chunk.token_count} tokens{section}{pages}{tipo}"
             )
+            # Ronda 99: el id del fragmento viaja en el item para abrir su detalle.
+            self._chunk_list.item(self._chunk_list.count() - 1).setData(Qt.ItemDataRole.UserRole, chunk.id)
+
+    def _on_chunk_detail(self) -> Optional[ChunkDetailDialog]:
+        """Ronda 99: abre el detalle de solo lectura del fragmento elegido."""
+        item = self._chunk_list.currentItem()
+        if self._project_id is None or self._source_id is None or item is None:
+            QMessageBox.information(self, "Elige un fragmento", "Selecciona un fragmento de la lista primero.")
+            return None
+        project_id, source_id = self._project_id, self._source_id
+        dialog = ChunkDetailDialog(
+            lambda chunk_id: self._context.ingestion_service.get_chunk_detail(project_id, source_id, chunk_id),
+            item.data(Qt.ItemDataRole.UserRole), self,
+        )
+        self._last_chunk_detail_dialog = dialog
+        dialog.open()
+        return dialog
 
     def _on_save_policy(self) -> None:
         if self._project_id is None:

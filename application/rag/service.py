@@ -185,6 +185,7 @@ class RagService:
         self, project_id: str, query_text: str, limit: int = 5,
         source_id: Optional[str] = None, only_usable_sources: bool = False,
         expand_to_parent: bool = False, max_access_level: Optional[AccessLevel] = None,
+        source_ids: Optional[Collection[str]] = None, use_hierarchy: bool = True,
     ) -> list[SemanticSearchResult]:
         """Búsqueda textual por palabra clave (BM25, ver
         domain.rag.text_search) -- complemento de `search` (semántica):
@@ -199,7 +200,7 @@ class RagService:
         return self._text_search.execute(
             project_id, query_text, limit=limit, source_id=source_id,
             only_usable_sources=only_usable_sources, expand_to_parent=expand_to_parent,
-            max_access_level=max_access_level,
+            max_access_level=max_access_level, source_ids=source_ids, use_hierarchy=use_hierarchy,
         )
 
     def search_hybrid(
@@ -208,6 +209,7 @@ class RagService:
         rerank: bool = False, expand_to_parent: bool = False,
         max_access_level: Optional[AccessLevel] = None,
         source_ids: Optional[Collection[str]] = None,
+        use_hierarchy: bool = True,
     ) -> list[SemanticSearchResult]:
         """Combina `search` y `search_text` con Reciprocal Rank Fusion
         (ver application.rag.queries.hybrid_search para el porqué de
@@ -233,7 +235,7 @@ class RagService:
         return self._hybrid_search.execute(
             project_id, query_text, limit=limit, source_id=source_id,
             only_usable_sources=only_usable_sources, rerank=rerank, expand_to_parent=expand_to_parent,
-            max_access_level=max_access_level, source_ids=source_ids,
+            max_access_level=max_access_level, source_ids=source_ids, use_hierarchy=use_hierarchy,
         )
 
     def query_structured(

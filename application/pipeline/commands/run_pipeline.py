@@ -85,6 +85,9 @@ class _Config:
     policy_hash: str
     metadata_hash: str
     chunks_digest: str
+    policy_hash_sin_version: str = ""
+    """Huella con la regla de la Ronda 98 (sin versión de fragmentador):
+    permite explicar que el único cambio es la versión del fragmentador."""
 
 
 def _sha256_json(data) -> str:
@@ -98,8 +101,18 @@ def _chunks_digest(chunks) -> str:
     return _sha256_json([
         [c.chunk_index, getattr(c.chunk_type, "value", c.chunk_type), c.section_title, c.page_start, c.page_end,
          c.text, sorted((c.inherited_metadata or {}).items())]
+        # Ronda 100: la ruta de encabezados entra solo si existe, para que
+        # los fragmentos sin ruta conserven exactamente la huella de antes.
+        + ([[h.level, h.title] for h in c.section_path] if getattr(c, "section_path", None) else [])
         for c in sorted(chunks, key=lambda c: c.chunk_index)
     ])
+
+
+FRAGMENTER_VERSIONS = {"por_encabezado": "ruta-de-encabezados-v1"}
+"""Ronda 100: versión del fragmentador por estrategia. Si cambia lo que una
+estrategia produce (por_encabezado ahora guarda Chunk.section_path), su
+versión entra en la huella de política y el pipeline reprocesa SOLO las
+fuentes con esa estrategia, sin reconstruir el resto del índice."""
 
 
 def _read_path(source) -> Optional[str]:
@@ -201,6 +214,10 @@ class RunPipeline:
             "strategy": estrategia, "target_tokens": policy.target_tokens,
             "overlap_tokens": policy.overlap_tokens, "min_tokens": policy.min_tokens,
         }
+        version = FRAGMENTER_VERSIONS.get(estrategia)
+        hash_sin_version = _sha256_json(parametros)
+        if version:
+            parametros = {**parametros, "fragmentador": version}
         heredados = self._ingestion.resolve_inherited_metadata(project_id, schema_id, source.id)
         nombre = parametros["document_type_code"] or "interna de RAG Studio"
         return _Config(
@@ -211,7 +228,7 @@ class RunPipeline:
             policy_description=(
                 f"{nombre} ({estrategia}, {policy.target_tokens}/{policy.overlap_tokens}/{policy.min_tokens})"
             ),
-            policy_hash=_sha256_json(parametros),
+            policy_hash=_sha256_json(parametros), policy_hash_sin_version=hash_sin_version,
             metadata_hash=_sha256_json(sorted(heredados.items())),
             chunks_digest=_chunks_digest(self._ingestion.list_chunks(project_id, source.id)),
         )
@@ -237,7 +254,13 @@ class RunPipeline:
                 "RAG Studio); se reprocesa una vez con la política de su tipo documental."
             )
             return motivos
-        if last_success.policy_hash != config.policy_hash:
+        if last_success.policy_hash != config.policy_hash and last_success.policy_hash == config.policy_hash_sin_version:
+            motivos.append(
+                f"Nueva versión del fragmentador {config.policy_strategy} "
+                f"({FRAGMENTER_VERSIONS.get(config.policy_strategy)}): ahora guarda la ruta de encabezados de cada "
+                "fragmento; misma política."
+            )
+        elif last_success.policy_hash != config.policy_hash:
             antes = last_success.policy_document_type_code or "interna de RAG Studio"
             motivos.append(
                 f"Cambió la política de fragmentación aplicable (antes: {antes} / {last_success.policy_strategy}; "

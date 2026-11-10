@@ -21,9 +21,11 @@ from domain.documents.ports import SourceRepository
 from domain.ingestion.entities import Chunk, ChunkType
 from domain.ingestion.ports import ChunkRepository
 from domain.rag.exceptions import SourceFilterUnavailableError
+from domain.rag.hierarchy import lexical_document, lexical_query
 from domain.rag.text_search import bm25_scores
 
 from .._source_usability import is_usable_source, passes_access_level
+from ..commands.index_source import _has_meaningful_content
 from .semantic_search import SemanticSearchResult
 
 
@@ -41,6 +43,7 @@ class TextSearch:
         source_id: Optional[str] = None, only_usable_sources: bool = False,
         expand_to_parent: bool = False, max_access_level: Optional[AccessLevel] = None,
         source_ids: Optional[Collection[str]] = None,
+        use_hierarchy: bool = True,
     ) -> list[SemanticSearchResult]:
         if not query_text.strip():
             raise ValueError("La consulta de búsqueda no puede estar vacía")
@@ -62,6 +65,14 @@ class TextSearch:
         # aparecería como resultado propio, además de -- no en vez de
         # -- los hijos que expand_to_parent ya expone como contexto.
         chunks = [c for c in chunks if c.chunk_type != ChunkType.PADRE]
+        # Ronda 100 (hallazgo real de NEXOM: "la búsqueda recuperó fragmentos
+        # de encabezado"): los fragmentos que solo contienen su encabezado
+        # tampoco compiten aquí -- misma regla que ya aplicaba IndexSource
+        # para la búsqueda semántica (ver index_source._has_meaningful_content).
+        # Antes, la textual (y por ella la híbrida) sí los devolvía; con la
+        # ruta jerárquica, su título ya llega a los fragmentos hijos.
+        if use_hierarchy:
+            chunks = [c for c in chunks if _has_meaningful_content(c)]
         if source_ids is not None:
             # Ronda 89: mismo criterio que SemanticSearch -- se restringe
             # antes de puntuar, no después de elegir el top-k.
@@ -76,7 +87,17 @@ class TextSearch:
         if not chunks:
             return []
 
-        scores = bm25_scores(query_text, [chunk.text for chunk in chunks])
+        # Ronda 100: BM25 puntúa el texto del fragmento MÁS los títulos de
+        # sus encabezados superiores y los ordinales normalizados
+        # ("quinto semestre" = "5.º semestre" = semestre_5) -- ver
+        # domain.rag.hierarchy. Sin ruta ni ordinales, el documento es
+        # exactamente chunk.text (mismo resultado que antes).
+        if use_hierarchy:
+            scores = bm25_scores(
+                lexical_query(query_text), [lexical_document(chunk.text, chunk.section_path) for chunk in chunks],
+            )
+        else:
+            scores = bm25_scores(query_text, [chunk.text for chunk in chunks])
         # BM25 da 0.0 a un fragmento sin ningún término de la consulta
         # -- se descarta en vez de devolverlo como "resultado" sin
         # ninguna coincidencia real (a diferencia de la búsqueda

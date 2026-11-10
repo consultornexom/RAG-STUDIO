@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Collection
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from domain.documents.entities import AccessLevel
 from domain.documents.ports import SourceRepository
@@ -40,6 +40,10 @@ class SemanticSearchResult(BaseModel):
     chunk: Chunk
     score: float
     parent_chunk: Optional[Chunk] = None
+    hierarchy_terms: list[str] = Field(default_factory=list)
+    """Ronda 100: términos de la consulta que coincidieron con la ruta de
+    encabezados del fragmento (`chunk.section_path`) y que la búsqueda
+    híbrida usó como señal jerárquica. Vacío si la ruta no participó."""
 
 
 class SemanticSearch:

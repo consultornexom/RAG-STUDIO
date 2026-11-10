@@ -214,6 +214,14 @@ class ExtractionRecord(BaseModel):
         return len(self.text)
 
 
+class SectionHeading(BaseModel):
+    """Ronda 100: un encabezado de la ruta jerárquica de un fragmento."""
+
+    level: int
+    """Nivel Markdown: 1 para `#`, 2 para `##`, ... 6."""
+    title: str
+
+
 class Chunk(BaseModel):
     """Fragmento resultante de aplicar una FragmentationPolicy al
     texto extraído de una Source."""
@@ -254,6 +262,17 @@ class Chunk(BaseModel):
     inherited_metadata: dict[str, str] = Field(default_factory=dict)
     pipeline_version: str = "1.0"
     created_at: datetime = Field(default_factory=_utcnow)
+    section_path: list[SectionHeading] = Field(default_factory=list)
+    """Ronda 100 (hallazgo real de NEXOM, AGENTE UDL - LOTE01_Bachillerato):
+    ruta de encabezados del documento que rige al fragmento, del más
+    general al propio (p. ej. `# Bachillerato — Plantel Torres Landa` >
+    `## Área Económico-Administrativa…` > `### 5.º semestre`), con su nivel.
+    Es jerarquía DOCUMENTAL: no tiene relación con parent_chunk_id (padre
+    e hijos de fragmentación) ni con los metadatos estructurados
+    (inherited_metadata). `text` no cambia. Solo POR_ENCABEZADO la puebla;
+    vacía en el resto de estrategias y en los fragmentos guardados antes de
+    la Ronda 100 (migración 0023, sin backfill: se completa al volver a
+    fragmentar)."""
 
     @model_validator(mode="after")
     def _text_required_unless_image(self) -> "Chunk":

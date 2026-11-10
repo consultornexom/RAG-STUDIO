@@ -86,25 +86,40 @@ def format_chunk_detail(detail) -> dict[str, str]:
     else:
         metadatos = "Este fragmento no hereda metadatos (ningún campo del esquema tiene \"Heredar a fragmentos\" con valor en la fuente)."
     estado = _ESTADO_CONTEXTO.get(detail.heading_context_status, detail.heading_context_status)
-    contexto = [
-        "Contexto jerárquico (solo para diagnóstico: NO se guarda en el fragmento ni se usa en la búsqueda).",
-        f"Estado: {estado}.",
-    ]
+    stored = getattr(detail, "stored_section_path", []) or []
+    contexto = ["1) RUTA RECONSTRUIDA PARA DIAGNÓSTICO (derivada del texto extraído; no se guarda)", f"Estado: {estado}."]
     if detail.heading_path:
-        contexto.append("")
-        contexto.append("Ruta de encabezados que rige este fragmento:")
         for nivel, titulo in zip(detail.heading_path_levels, detail.heading_path, strict=True):
             contexto.append(f"{'  ' * (nivel - 1)}{'#' * nivel} {titulo}")
-        contexto.append("")
         if detail.heading_context_missing:
-            contexto.append("El texto que se indexa NO contiene estos encabezados superiores:")
+            contexto.append("El TEXTO del fragmento no contiene estos encabezados superiores:")
             contexto.extend(f"    • {t}" for t in detail.heading_context_missing)
-            contexto.append(
-                "Una búsqueda que dependa de ellos (p. ej. el área o el plantel) no puede distinguir este "
-                "fragmento de otro con el mismo título; ese contexto solo existe en la estructura del documento."
-            )
         else:
             contexto.append("El texto del fragmento contiene todos los encabezados de su ruta.")
+    # Ronda 100: ruta almacenada en el fragmento y su uso real en la búsqueda.
+    contexto += ["", "2) RUTA ALMACENADA EN EL FRAGMENTO (Chunk.section_path)"]
+    if stored:
+        for nivel, titulo in zip(detail.stored_section_levels, stored, strict=True):
+            contexto.append(f"{'  ' * (nivel - 1)}{'#' * nivel} {titulo}")
+        if detail.stored_matches_derived is True:
+            contexto.append("Coincide con la ruta reconstruida.")
+        elif detail.stored_matches_derived is False:
+            contexto.append("NO coincide con la ruta reconstruida: la fuente pudo volver a extraerse después de "
+                            "fragmentar; conviene volver a fragmentarla.")
+    else:
+        contexto.append("Sin ruta almacenada: el fragmento se generó antes de la Ronda 100 o con una estrategia sin "
+                        "encabezados. Vuelva a fragmentar la fuente (o ejecute el pipeline) para guardarla.")
+    contexto += ["", "3) INFORMACIÓN JERÁRQUICA QUE USA LA BÚSQUEDA"]
+    if detail.retrieval_hierarchy_active:
+        contexto.append("Señal jerárquica de la búsqueda híbrida: ACTIVA (el fragmento se indexa y tiene ruta).")
+    else:
+        contexto.append("Señal jerárquica de la búsqueda híbrida: inactiva"
+                        + (" (el fragmento no se indexa)." if stored else " (sin ruta almacenada)."))
+    contexto.append("Encabezados superiores que la búsqueda textual agrega al texto: "
+                    + (", ".join(detail.retrieval_extra_terms) or "ninguno"))
+    contexto.append("Ordinales normalizados: " + (", ".join(detail.retrieval_ordinal_terms) or "ninguno"))
+    contexto.append("La búsqueda semántica usa solo el texto del fragmento (la ruta no se agrega al vector).")
+    contexto += ["", "Texto exacto que puntúa la búsqueda textual (BM25):", detail.retrieval_lexical_document]
     return {"texto": c.text, "propiedades": propiedades, "metadatos": metadatos, "contexto": "\n".join(contexto)}
 
 

@@ -308,6 +308,10 @@ class ChunkRecord(ProjectBase):
     Chunk.image_relative_path -- solo poblado para ChunkType.IMAGEN
     (Fase 3 de multimodalidad nativa, RAG 3); NULL para cualquier otro
     tipo de chunk."""
+    section_path: Mapped[str | None] = mapped_column(Text, nullable=True)
+    """Migración 0023 (Ronda 100): ruta de encabezados del fragmento,
+    lista JSON de {"level", "title"}; NULL en fragmentos anteriores o de
+    estrategias sin secciones."""
 
 
 class PipelineRunRecord(ProjectBase):

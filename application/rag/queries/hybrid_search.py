@@ -43,6 +43,7 @@ from typing import Optional
 
 from domain.documents.entities import AccessLevel
 from domain.rag.exceptions import RerankerError, RerankerUnavailableError
+from domain.rag.hierarchy import contextualized_text, hierarchy_rank
 from domain.rag.ports import Reranker
 
 from .semantic_search import SemanticSearch, SemanticSearchResult
@@ -80,8 +81,14 @@ class HybridSearch:
         candidate_limit: int = 40, rerank: bool = False, expand_to_parent: bool = False,
         max_access_level: Optional[AccessLevel] = None,
         source_ids: Optional[Collection[str]] = None,
+        use_hierarchy: bool = True,
     ) -> list[SemanticSearchResult]:
-        """candidate_limit: cuántos resultados se piden a cada método
+        """use_hierarchy (Ronda 100): con False se omite la señal jerárquica
+        (ruta de encabezados y ordinales) en esta búsqueda y en la textual
+        -- para comparar antes/después o descartarla en un proyecto
+        concreto; por defecto participa.
+
+        candidate_limit: cuántos resultados se piden a cada método
         antes de fusionar -- debe ser mayor o igual a `limit` para que
         RRF tenga material real que combinar (fusionar solo el top-5
         de cada lista deja poco margen para que un resultado "segundo
@@ -134,7 +141,7 @@ class HybridSearch:
         text_results = self._text.execute(
             project_id, query_text, limit=candidate_limit, source_id=source_id,
             only_usable_sources=only_usable_sources, expand_to_parent=expand_to_parent,
-            max_access_level=max_access_level, source_ids=source_ids,
+            max_access_level=max_access_level, source_ids=source_ids, use_hierarchy=use_hierarchy,
         )
 
         fused_scores: dict[str, float] = {}
@@ -150,6 +157,22 @@ class HybridSearch:
                 # así que ambas ramas habrían resuelto el mismo padre.
                 result_by_id[result.chunk.id] = result
 
+        # Ronda 100: tercera lista RRF, jerárquica -- los MISMOS candidatos
+        # (nunca agrega fragmentos nuevos ni pasa por encima de filtros),
+        # ordenados por cuántos términos de la consulta aparecen en su ruta
+        # de encabezados (chunk.section_path), con ordinales normalizados.
+        # Solo participan candidatos con alguna coincidencia: sin rutas
+        # guardadas (fragmentos anteriores a la Ronda 100 u otras
+        # estrategias) la lista queda vacía y el resultado es el de siempre.
+        hierarchy_terms: dict[str, list[str]] = {}
+        if use_hierarchy:
+            jerarquia = hierarchy_rank(
+                query_text, [(chunk_id, result_by_id[chunk_id].chunk.section_path) for chunk_id in result_by_id],
+            )
+            for rank, (chunk_id, terminos) in enumerate(jerarquia, start=1):
+                fused_scores[chunk_id] += 1.0 / (_RRF_RANK_CONSTANT + rank)
+                hierarchy_terms[chunk_id] = terminos
+
         ordered = sorted(fused_scores.items(), key=lambda pair: pair[1], reverse=True)
 
         if not rerank:
@@ -157,6 +180,7 @@ class HybridSearch:
                 SemanticSearchResult(
                     chunk=result_by_id[chunk_id].chunk, score=score,
                     parent_chunk=result_by_id[chunk_id].parent_chunk,
+                    hierarchy_terms=hierarchy_terms.get(chunk_id, []),
                 )
                 for chunk_id, score in ordered[:limit]
             ]
@@ -169,7 +193,15 @@ class HybridSearch:
         # que RRF dejó fuera del primer lugar.
         candidates = ordered[:candidate_limit]
         candidate_chunks = [result_by_id[chunk_id].chunk for chunk_id, _ in candidates]
-        rerank_scores = self._reranker.score(query_text, [chunk.text for chunk in candidate_chunks])
+        # Ronda 100: con la señal jerárquica activa, el reranker recibe la
+        # ruta de encabezados antes del texto ("Bachillerato — Plantel X >
+        # Área … > 5.º semestre\n<texto>"). Solo es la entrada del reranker
+        # en esta consulta: no cambia chunk.text ni el vector indexado.
+        textos_rerank = [
+            contextualized_text(chunk.text, chunk.section_path) if use_hierarchy else chunk.text
+            for chunk in candidate_chunks
+        ]
+        rerank_scores = self._reranker.score(query_text, textos_rerank)
         # Auditoría Ronda 21: el contrato de Reranker.score exige un puntaje
         # por candidato en el mismo orden, pero nada impide que un adaptador
         # mal implementado devuelva más o menos -- sin esta verificación,
@@ -186,7 +218,28 @@ class HybridSearch:
         reranked = sorted(
             zip(candidate_chunks, rerank_scores, strict=True), key=lambda pair: pair[1], reverse=True,
         )
+        if use_hierarchy and hierarchy_terms:
+            # Ronda 100: el orden del reranker se fusiona (RRF) con la lista
+            # jerárquica de estos mismos candidatos, para que la señal de la
+            # ruta no se pierda al reordenar; el score devuelto sigue siendo el
+            # del reranker. Medido en evaluacion_recuperacion.py: sin esta
+            # fusión el reranker (modelo en inglés) deshacía la mejora.
+            posicion = {chunk.id: i for i, (chunk, _) in enumerate(reranked, start=1)}
+            jerarquica = {
+                chunk_id: i for i, (chunk_id, _) in enumerate(
+                    hierarchy_rank(query_text, [(c.id, c.section_path) for c in candidate_chunks]), start=1,
+                )
+            }
+            fusion = {
+                chunk_id: 1.0 / (_RRF_RANK_CONSTANT + pos)
+                + (1.0 / (_RRF_RANK_CONSTANT + jerarquica[chunk_id]) if chunk_id in jerarquica else 0.0)
+                for chunk_id, pos in posicion.items()
+            }
+            reranked = sorted(reranked, key=lambda pair: fusion[pair[0].id], reverse=True)
         return [
-            SemanticSearchResult(chunk=chunk, score=score, parent_chunk=result_by_id[chunk.id].parent_chunk)
+            SemanticSearchResult(
+                chunk=chunk, score=score, parent_chunk=result_by_id[chunk.id].parent_chunk,
+                hierarchy_terms=hierarchy_terms.get(chunk.id, []),
+            )
             for chunk, score in reranked[:limit]
         ]

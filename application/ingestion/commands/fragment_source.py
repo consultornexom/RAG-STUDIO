@@ -18,7 +18,8 @@ from __future__ import annotations
 
 from typing import Callable, Optional
 
-from domain.ingestion.entities import Chunk, ChunkType, FragmentationPolicy, FragmentationStrategy
+from domain.ingestion.entities import Chunk, ChunkType, FragmentationPolicy, FragmentationStrategy, SectionHeading
+from domain.ingestion.heading_context import heading_outline, heading_path_at
 from domain.ingestion.exceptions import ExtractionNotFoundError, TokenizerError
 from domain.ingestion.ports import (
     ChunkRepository, ExtractionRepository, FragmentationPolicyRepository, TokenCounter,
@@ -87,6 +88,16 @@ class FragmentSource:
         policy = self._resolve_policy(project_id, document_type_code)
         titled_spans, section_spans = self._split(record.text, policy, count_tokens, record.structured_blocks)
         inherited_metadata = self._resolve_inherited_metadata(project_id, schema_id, source_id)
+        # Ronda 100: ruta de encabezados de cada sección (solo POR_ENCABEZADO,
+        # el único caso con section_spans): se calcula una vez por sección y
+        # la comparten todos sus fragmentos hijos y su padre.
+        section_paths: list[list[SectionHeading]] = []
+        if section_spans is not None:
+            outline = heading_outline(record.text)
+            section_paths = [
+                [SectionHeading(level=h.level, title=h.title) for h in heading_path_at(outline, span.char_start)]
+                for span in section_spans
+            ]
 
         chunks: list[Chunk] = []
         section_indices: list[Optional[int]] = []
@@ -102,6 +113,7 @@ class FragmentSource:
                 page_end=resolve_page(max(span.char_end - 1, span.char_start), record.page_breaks),
                 inherited_metadata=inherited_metadata,
                 structured_content=structured_content,
+                section_path=list(section_paths[section_index]) if section_index is not None and section_paths else [],
             ))
             section_indices.append(section_index)
             if section_index is not None and section_index not in section_titles:
@@ -143,6 +155,7 @@ class FragmentSource:
                     page_start=resolve_page(span.char_start, record.page_breaks),
                     page_end=resolve_page(max(span.char_end - 1, span.char_start), record.page_breaks),
                     inherited_metadata=inherited_metadata,
+                    section_path=list(section_paths[section_index]),
                 )
                 padre_by_section[section_index] = padre
                 padre_chunks.append(padre)

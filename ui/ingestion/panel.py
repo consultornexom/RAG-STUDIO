@@ -988,11 +988,22 @@ class IngestionPanel(QWidget):
                           "solo sirve para ordenar estos resultados entre sí.</i></p>")
         for result in results:
             source_title = self._source_title(result.chunk.project_id, result.chunk.source_id)
-            section = f" — sección: {result.chunk.section_title}" if result.chunk.section_title else ""
+            # Ronda 100: con ruta de encabezados se muestra la ruta completa
+            # (no solo el título propio) y qué términos de la consulta
+            # coincidieron con ella en la señal jerárquica.
+            ruta = " > ".join(h.title for h in result.chunk.section_path)
+            if ruta:
+                section = f" — sección: {ruta}"
+            else:
+                section = f" — sección: {result.chunk.section_title}" if result.chunk.section_title else ""
             preview = result.chunk.text[:140].replace("\n", " ")
             header = html_escape(f"{source_title}{section}")
             highlighted_preview = highlight_terms(html_escape(preview), terms)
-            parts.append(f"<p>[{result.score:.3f}] {header} — {highlighted_preview}…</p>")
+            jerarquia = (
+                f" <i>[jerarquía: {html_escape(', '.join(result.hierarchy_terms))}]</i>"
+                if result.hierarchy_terms else ""
+            )
+            parts.append(f"<p>[{result.score:.3f}] {header}{jerarquia} — {highlighted_preview}…</p>")
             # Pista B.1 del ADR-003: "adjuntar", no "reemplazar" -- el
             # extracto puntual de arriba sigue siendo el que de verdad
             # coincidió con la consulta; esto es contexto adicional,

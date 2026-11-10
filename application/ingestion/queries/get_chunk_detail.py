@@ -26,6 +26,7 @@ from domain.ingestion.entities import Chunk, ChunkType
 from domain.ingestion.heading_context import heading_outline, heading_path_at, missing_from_text
 from domain.ingestion.ports import ChunkRepository, ExtractionRepository
 from domain.metadata.entities import split_stored_values
+from domain.rag.hierarchy import lexical_document, ordinal_terms, path_titles
 from domain.metadata.ports import MetadataSchemaRepository
 
 
@@ -65,6 +66,22 @@ class ChunkDetail(BaseModel):
     """"derivado" | "sin_encabezados" | "sin_extraccion" | "no_localizado" | "no_aplica"."""
     heading_context_missing: list[str] = Field(default_factory=list)
     """Títulos de la ruta que no aparecen en el texto indexado del fragmento."""
+    # --- Ronda 100: ruta ALMACENADA y lo que de verdad usa la búsqueda.
+    stored_section_path: list[str] = Field(default_factory=list)
+    stored_section_levels: list[int] = Field(default_factory=list)
+    stored_matches_derived: Optional[bool] = None
+    """None si no hay ruta almacenada o derivada que comparar."""
+    retrieval_extra_terms: list[str] = Field(default_factory=list)
+    """Títulos de encabezados superiores que la búsqueda textual agrega al
+    texto del fragmento (vacío si no tiene ruta almacenada)."""
+    retrieval_ordinal_terms: list[str] = Field(default_factory=list)
+    """Ordinales normalizados (p. ej. semestre_5) que la búsqueda textual
+    agrega y que la señal jerárquica de la híbrida puede usar."""
+    retrieval_hierarchy_active: bool = False
+    """True si el fragmento se indexa y tiene ruta almacenada: participa en
+    la señal jerárquica de la búsqueda híbrida."""
+    retrieval_lexical_document: str = ""
+    """Texto exacto que puntúa BM25 para este fragmento."""
 
 
 def _indexable(chunk: Chunk) -> tuple[bool, str]:
@@ -120,7 +137,24 @@ class GetChunkDetail:
             indexable=indexable, indexable_reason=motivo,
         )
         self._heading_context(project_id, source_id, chunk, chunks, detail)
+        self._retrieval_context(chunk, detail)
         return detail
+
+    @staticmethod
+    def _retrieval_context(chunk: Chunk, detail: ChunkDetail) -> None:
+        """Ronda 100: ruta almacenada (Chunk.section_path) y uso real en la
+        búsqueda, con las mismas funciones que usa TextSearch/HybridSearch."""
+        detail.stored_section_path = path_titles(chunk.section_path)
+        detail.stored_section_levels = [h.level for h in chunk.section_path]
+        if detail.stored_section_path and detail.heading_path:
+            detail.stored_matches_derived = (
+                detail.stored_section_path == detail.heading_path
+                and detail.stored_section_levels == detail.heading_path_levels
+            )
+        detail.retrieval_extra_terms = detail.stored_section_path[:-1]
+        detail.retrieval_ordinal_terms = ordinal_terms("\n".join([chunk.text, *detail.stored_section_path]))
+        detail.retrieval_hierarchy_active = bool(detail.stored_section_path) and detail.indexable
+        detail.retrieval_lexical_document = lexical_document(chunk.text, chunk.section_path)
 
     def _metadata(self, project_id: str, chunk: Chunk) -> list[InheritedMetadataEntry]:
         campos = {}

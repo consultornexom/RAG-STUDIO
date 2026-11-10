@@ -1329,6 +1329,55 @@ conexión a Hugging Face (ver "Limitaciones conocidas").
   este entorno), `ruff` sin hallazgos. Ver
   `Validacion_observaciones_RAG_STUDIO.md`, Ronda 24, puntos 67-70.
 
+- **2026-11-10 -- Ronda 100: contexto jerárquico de documentos persistido
+  y usado en la recuperación (solicitud NEXOM, AGENTE UDL -
+  LOTE01_Bachillerato).** Detalle, resultados y procedimiento de
+  actualización en `docs proyecto/Ronda100_Contexto_Jerarquico/
+  Resultados_Ronda100.md`.
+  - **Fragmentación:** `por_encabezado` guarda en cada fragmento (hijos y
+    padre) la ruta de encabezados con su nivel: `Chunk.section_path`
+    (`SectionHeading`), migración de proyecto **0023** (`chunk.section_path`
+    JSON, nullable, sin backfill). `chunk.text` no cambia; la ruta no se
+    mezcla con `parent_chunk_id` ni con los metadatos heredados. Cubre
+    niveles omitidos, títulos repetidos y preámbulos sin encabezado.
+  - **Recuperación (`domain/rag/hierarchy.py`):** ordinales normalizados
+    ("5.º", "5to", "quinto", "semestre 5" -> `semestre_5`, solo con unidad de
+    periodo; sin falsos positivos con artículos, apartados o duraciones);
+    BM25 sobre texto + encabezados superiores + ordinales; la textual ya no
+    devuelve fragmentos solo-encabezado; tercera lista RRF jerárquica en la
+    híbrida (mismos candidatos, términos que distinguen, ordinales con
+    doble peso, sin contar el título propio); con reranking, el reranker
+    recibe "ruta\ntexto" y su orden se fusiona con la lista jerárquica.
+    La ruta NO se concatena al texto de los embeddings. Trazabilidad:
+    `SemanticSearchResult.hierarchy_terms`, ruta y `[jerarquía: …]` en el
+    Laboratorio RAG; `use_hierarchy=False` para comparar. Filtros
+    estructurados sin cambios.
+  - **Pipeline:** versión de fragmentador `por_encabezado` en la huella de
+    política (Ronda 98): tras actualizar se reprocesan SOLO las fuentes
+    por_encabezado, con motivo explícito; huella de fragmentos estable para
+    fragmentos sin ruta.
+  - **GUI:** Detalle del fragmento > Contexto jerárquico distingue ruta
+    reconstruida, ruta almacenada (y si coincide) e información usada por
+    la búsqueda (señal activa, encabezados agregados, ordinales, texto BM25).
+  - **Evaluación (corpus SINTÉTICO, no atribuible a AGENTE UDL; modelos
+    reales del proyecto, `evaluacion_recuperacion.py`):** híbrida con filtro
+    de campus, MRR de fragmento 0.57 -> 0.96 y R@3 0.57 -> 1.00; con
+    reranking 0.55 -> 0.96; sin regresiones caso por caso en la híbrida
+    (compartidos, otras estrategias y falso positivo iguales). Regresión
+    menor documentada: en la textual pura la fuente correcta baja de 1 a 2
+    en tres casos (el fragmento correcto pasa de ausente a posición 4).
+    Validación final con los documentos reales: pendiente.
+  - **Runtime/instantáneas/NKP:** contrato de la API sin cambios; las
+    instantáneas anteriores se migran al abrirse (columna NULL) y buscan
+    como antes; hay que publicar una instantánea nueva tras re-fragmentar.
+    El NKP v1.0.0 no transporta la ruta: los paquetes publicados no cambian
+    (re-exportación del candidato Bachillerato byte a byte idéntica).
+  - **Verificación:** 39 pruebas nuevas (30 unitarias de dominio y
+    fragmentación, 8 de integración, 1 de interfaz). `tests/unit` + smoke
+    1124 pasadas (2 fallas preexistentes); integración 557 pasadas (sin
+    `test_fastembed_image_provider.py`); `ruff` limpio; `mypy` en el
+    baseline de 22. Manual del Usuario 7.1, 7.3 y 7.4 en DOCX y PDF.
+
 - **2026-11-09 -- Ronda 99: hallazgo real de NEXOM (AGENTE UDL -
   LOTE01_Bachillerato) -- detalle de fragmentos y diagnóstico del contexto
   jerárquico.**

@@ -79,7 +79,7 @@ def test_doble_clic_abre_el_detalle_con_el_texto_integro_en_texto_plano(panel):
     assert "representación original: hilario_medina|torres_landa" in dialog._metadatos.toPlainText()
     contexto = dialog._contexto.toPlainText()
     assert "## Área Económico-Administrativa y Humanidades" in contexto
-    assert "NO contiene estos encabezados superiores" in contexto
+    assert "no contiene estos encabezados superiores" in contexto
     dialog.copy_text()
     assert QGuiApplication.clipboard().text() == guardado.text
     dialog.close()
@@ -130,3 +130,18 @@ def test_formato_de_fragmento_sin_metadatos_ni_encabezados(panel):
     secciones = format_chunk_detail(detail)
     assert "no hereda metadatos" in secciones["metadatos"]
     assert "no proviene de un encabezado" in secciones["contexto"]
+
+
+def test_ronda100_contexto_reconstruido_almacenado_y_usado(panel):
+    p, *_ = panel
+    p._chunk_list.setCurrentRow(_fila(p, "5.º semestre", 0))
+    dialog = p._on_chunk_detail()
+    contexto = dialog._contexto.toPlainText()
+    assert "1) RUTA RECONSTRUIDA PARA DIAGNÓSTICO" in contexto
+    assert "2) RUTA ALMACENADA EN EL FRAGMENTO (Chunk.section_path)" in contexto
+    assert "Coincide con la ruta reconstruida." in contexto
+    assert "3) INFORMACIÓN JERÁRQUICA QUE USA LA BÚSQUEDA" in contexto
+    assert "Señal jerárquica de la búsqueda híbrida: ACTIVA" in contexto
+    assert "Ordinales normalizados: semestre_5" in contexto
+    assert "la ruta no se agrega al vector" in contexto
+    dialog.close()

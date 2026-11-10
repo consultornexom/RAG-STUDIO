@@ -184,6 +184,10 @@ def _chunk_record_from(chunk: Chunk) -> ChunkRecord:
         inherited_metadata=json.dumps(chunk.inherited_metadata),
         pipeline_version=chunk.pipeline_version, created_at=chunk.created_at,
         image_relative_path=chunk.image_relative_path,
+        section_path=(
+            json.dumps([h.model_dump() for h in chunk.section_path], ensure_ascii=False)
+            if chunk.section_path else None
+        ),
     )
 
 
@@ -200,6 +204,7 @@ def _record_to_chunk(record: ChunkRecord) -> Chunk:
         semantic_summary=record.semantic_summary, inherited_metadata=json.loads(record.inherited_metadata),
         pipeline_version=record.pipeline_version, created_at=record.created_at,
         image_relative_path=record.image_relative_path,
+        section_path=json.loads(record.section_path) if record.section_path else [],
     )
 
 

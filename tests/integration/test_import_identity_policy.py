@@ -319,8 +319,9 @@ def test_paquete_anterior_a_0021_recibe_identidades_al_importar(tmp_path):
     assert service.get_project(package_id).knowledge_base_id == imported.knowledge_base_id
     con = sqlite3.connect(paths.project_db_path(package_id))
     try:
-        # Ronda 98: la copia se lleva al head actual (0022, posterior a 0021).
-        assert con.execute("SELECT version_num FROM alembic_version").fetchone()[0] == "0022"
+        # La copia se lleva al head actual (posterior a 0021).
+        from infrastructure.database.migrations import _project_migrations_head
+        assert con.execute("SELECT version_num FROM alembic_version").fetchone()[0] == _project_migrations_head()
     finally:
         con.close()
 

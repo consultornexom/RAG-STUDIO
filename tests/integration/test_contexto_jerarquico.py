@@ -221,3 +221,57 @@ def test_detalle_muestra_ruta_almacenada_y_uso_en_busqueda(proyecto):
     assert d.retrieval_lexical_document.endswith("semestre_5")
     padre = [c for c in proyecto.chunks("tl") if c.chunk_type == ChunkType.PADRE]
     assert all(c.section_path for c in padre)
+
+
+# ---------- Ronda 101: caso real de validación (LOTE01_Bachillerato) ----------
+
+class _RerankerQuePrefiereSexto:
+    """Reproduce el resultado del cross-encoder real en la validación de NEXOM:
+    puntúa por palabras en común con la consulta, pero da un plus al "6.º
+    semestre", que así queda por encima del "5.º" pedido."""
+
+    model_name = "reranker-de-prueba-6o"
+
+    def score(self, query, passages):
+        palabras = {w for w in query.lower().split() if len(w) > 3}
+        return [len(palabras & set(p.lower().split())) + (3.0 if "6.º semestre" in p else 0.0) for p in passages]
+
+
+def _rag_con_reranker(proyecto):
+    p = proyecto.ctx.paths
+    return RagService(SqlAlchemyChunkRepository(p), WordOverlapFakeEmbeddingProvider(), QdrantLocalVectorStore(p),
+                      SqlAlchemyIndexInfoRepository(p), source_repository=SqlAlchemySourceRepository(p),
+                      reranker=_RerankerQuePrefiereSexto())
+
+
+CONSULTA_REAL = ("¿Qué materias se cursan en quinto semestre del área Físico-Matemática y Químico-Biológicas "
+                 "en el plantel Torres Landa?")
+
+
+def test_ronda101_caso_real_con_reranking_el_quinto_semestre_queda_primero(proyecto):
+    rag = _rag_con_reranker(proyecto)
+    tl = {proyecto.ids["tl"], proyecto.ids["requisitos"]}
+    for filtro in (tl, None):
+        r = rag.search_hybrid(proyecto.pid, CONSULTA_REAL, limit=12, rerank=True, source_ids=filtro)
+        assert proyecto.marca(r, 1) == ["* Clave TL-FM-5"], (filtro is not None, proyecto.marca(r, 3))
+        sexto = next(x for x in r if "TL-FM-6" in x.chunk.text)
+        assert sexto.hierarchy_conflicts == ["semestre_6"]
+        assert r[0].hierarchy_conflicts == []
+    # Sin reranking sigue igual (posición 1).
+    assert proyecto.marca(rag.search_hybrid(proyecto.pid, CONSULTA_REAL, limit=5, source_ids=tl)) == ["* Clave TL-FM-5"]
+
+
+def test_ronda101_sin_semestre_en_la_consulta_se_respeta_el_reranker(proyecto):
+    rag = _rag_con_reranker(proyecto)
+    tl = {proyecto.ids["tl"]}
+    r = rag.search_hybrid(proyecto.pid, "materias del área Físico-Matemática y Químico-Biológicas en Torres Landa",
+                          limit=5, rerank=True, source_ids=tl)
+    assert all(not x.hierarchy_conflicts for x in r)
+    assert proyecto.marca(r, 1) == ["* Clave TL-FM-6"]  # sin ordinal pedido, decide el reranker
+
+
+def test_ronda101_documento_compartido_no_se_afecta(proyecto):
+    rag = _rag_con_reranker(proyecto)
+    r = rag.search_hybrid(proyecto.pid, "requisitos de ingreso acta de nacimiento CURP", limit=5, rerank=True)
+    assert r[0].chunk.source_id == proyecto.ids["requisitos"]
+    assert all(not x.hierarchy_conflicts for x in r)

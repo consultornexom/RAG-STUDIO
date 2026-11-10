@@ -1329,6 +1329,26 @@ conexión a Hugging Face (ver "Limitaciones conocidas").
   este entorno), `ruff` sin hallazgos. Ver
   `Validacion_observaciones_RAG_STUDIO.md`, Ronda 24, puntos 67-70.
 
+- **2026-11-10 -- Ronda 101: hallazgo en la validación real de la Ronda 100
+  (LOTE01_Bachillerato) -- con reranking, "6.º semestre" quedaba sobre el
+  "5.º" pedido.** Causa: la fusión RRF entre el orden del cross-encoder y la
+  lista jerárquica producía un EMPATE exacto (1.º+2.º = 2.º+1.º) que se
+  resolvía con el orden del reranker. Corrección: `ordinal_conflicts`
+  (`domain/rag/hierarchy.py`) -- un fragmento cuya RUTA tiene otro ordinal de
+  la misma unidad que el pedido explícitamente en la consulta queda después
+  de los que no la contradicen -- y desempate por coincidencia jerárquica
+  (`_final_key` en `hybrid_search.py`), en la híbrida con y sin reranking.
+  Sin ordinal en la consulta o sin ruta, no cambia nada. Trazabilidad:
+  `SemanticSearchResult.hierarchy_conflicts` y aviso en el Laboratorio RAG.
+  Caso real como prueba de regresión (`test_contexto_jerarquico.py`, falla
+  con el código de la Ronda 100) y en el corpus de evaluación (B2/B3).
+  Evaluación sintética: híbrida con/sin reranking y con/sin filtro, MRR de
+  fragmento 1.00 en los cuatro (antes 0.94-0.97), sin ningún caso que
+  empeore. `tests/unit` + smoke 1125 pasadas (2 fallas preexistentes);
+  integración 560 pasadas; `ruff` limpio; `mypy` 22. Detalle en
+  `docs proyecto/Ronda100_Contexto_Jerarquico/Resultados_Ronda100.md`.
+  Pendiente: repetir la validación real con reranking activado.
+
 - **2026-11-10 -- Ronda 100: contexto jerárquico de documentos persistido
   y usado en la recuperación (solicitud NEXOM, AGENTE UDL -
   LOTE01_Bachillerato).** Detalle, resultados y procedimiento de

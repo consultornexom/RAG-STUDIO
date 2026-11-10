@@ -1003,6 +1003,11 @@ class IngestionPanel(QWidget):
                 f" <i>[jerarquía: {html_escape(', '.join(result.hierarchy_terms))}]</i>"
                 if result.hierarchy_terms else ""
             )
+            # Ronda 101: ordinal de la ruta que contradice el de la consulta.
+            if result.hierarchy_conflicts:
+                jerarquia += (
+                    f" <i>[no coincide con el ordinal pedido: {html_escape(', '.join(result.hierarchy_conflicts))}]</i>"
+                )
             parts.append(f"<p>[{result.score:.3f}] {header}{jerarquia} — {highlighted_preview}…</p>")
             # Pista B.1 del ADR-003: "adjuntar", no "reemplazar" -- el
             # extracto puntual de arriba sigue siendo el que de verdad

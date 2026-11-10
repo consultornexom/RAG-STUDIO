@@ -154,3 +154,56 @@ La mejora de esta ronda es general y no depende de esa representación.
 ## 8. Pendiente
 
 **Validación funcional con AGENTE UDL - LOTE01_Bachillerato y sus documentos reales.** En particular: los casos A a E con `bachillerato_torres_landa.md` y `bachillerato_hilario_medina.md`, después del paso 4 de la sección 5, y con los casos de prueba de Calidad del proyecto. Los resultados de la sección 3 son sintéticos y **no** deben atribuirse a ese proyecto.
+
+---
+
+# Ronda 101: reranking y señal jerárquica (hallazgo en la validación real)
+
+**Hallazgo de NEXOM con los documentos reales de LOTE01_Bachillerato.**
+- **Consulta:** «¿Qué materias se cursan en quinto semestre del área Físico-Matemática y Químico-Biológicas en el plantel Torres Landa?».
+- **Sin reranking:** el fragmento correcto queda en posición 1.
+- **Con reranking:** queda primero el 6.º semestre de la misma área y el 5.º pasa a la posición 2. El MRR de fragmento baja de 1.00 a 0.50.
+
+**Diagnóstico: era un defecto, no una limitación del modelo.**
+- En la Ronda 100, el orden del cross-encoder se fusionaba con la lista jerárquica sumando 1/(60+posición) de cada lista.
+- En este caso, el 6.º quedaba 1.º en el reranker y 2.º en la jerarquía, y el 5.º al revés: **la suma es idéntica**.
+- El empate se resolvía con el orden del reranker. La señal jerárquica no tenía ningún peso real frente al reranker cuando los dos discrepaban.
+- El corpus sintético ya mostraba el mismo efecto en el caso B con reranking y filtro (posición 2), documentado como no resuelto en la sección 4.
+
+**Corrección** (`domain/rag/hierarchy.py::ordinal_conflicts`, `application/rag/queries/hybrid_search.py::_final_key`):
+1. **Conflicto de ordinal explícito.** Si la consulta pide un ordinal de una unidad (`semestre_5`) y la RUTA del fragmento tiene otro ordinal de la misma unidad (`semestre_6`) y ninguno coincidente, el fragmento contradice la consulta. Queda **después** de los que no la contradicen, en la híbrida con y sin reranking.
+   - Solo mira la ruta de encabezados, nunca el texto libre.
+   - No aplica si la consulta no menciona un ordinal de periodo.
+   - «quinto y sexto semestre» acepta ambos.
+   - «5.º grado» o «artículo 5» no generan conflicto con un semestre.
+2. **Desempate.** A igual score de fusión, gana el de mayor coincidencia jerárquica (área, plantel, semestre). Antes ganaba el orden del reranker.
+3. **Trazabilidad.** `SemanticSearchResult.hierarchy_conflicts` (p. ej. `["semestre_6"]`). El Laboratorio RAG lo muestra como «[no coincide con el ordinal pedido: …]».
+
+**Respuesta a los puntos 1 a 4 de NEXOM:**
+1. **Cómo se combina:** el puntaje del cross-encoder se convierte en posición y se fusiona por RRF con la posición jerárquica; después se aplican la regla de conflicto y el desempate.
+2. **Peso de área, plantel y semestre:**
+   - **Semestre (ordinal explícito):** decide el orden cuando hay contradicción, porque es la única coincidencia verificable sin ambigüedad.
+   - **Área y plantel:** no se convirtieron en regla dura, porque son texto libre y el **plantel ya lo garantiza el filtro estructurado de campus**. Cuentan en la fusión y en el desempate.
+3. **Sin regresiones** en consultas sin semestre ni en otros tipos documentales:
+   - sin ordinal en la consulta, la regla no hace nada y el reranker decide como antes (prueba `test_ronda101_sin_semestre_en_la_consulta_se_respeta_el_reranker`);
+   - los documentos sin ruta (`documento_completo`, `por_tamanio`, `por_articulo`) nunca tienen conflicto.
+4. **Caso real en las pruebas de regresión:**
+   - la consulta exacta de NEXOM está en `tests/integration/test_contexto_jerarquico.py`, con un reranker de prueba que reproduce la preferencia del cross-encoder por el 6.º semestre, con y sin filtro de campus;
+   - también está en el corpus de evaluación (casos B2 y B3).
+   - Con el código de la Ronda 100, esa prueba falla («TL-FM-6» primero).
+
+**Evaluación** (corpus SINTÉTICO, 16 casos con B2 y B3; modelos reales del proyecto). Archivos: `resultados_ronda101_antes.json` (código de la Ronda 100, `3340d37`) y `resultados_ronda101_despues.json`.
+
+| Modo | Filtro campus | Frag R@1 | Frag MRR | Fuente MRR |
+|---|---|---|---|---|
+| semántica | no | 0.44 → 0.44 | 0.63 → 0.63 | 0.78 → 0.78 |
+| semántica | sí | 0.75 → 0.75 | 0.82 → 0.82 | 1.00 → 1.00 |
+| textual | no / sí | 0.69 → 0.69 | 0.80 → 0.80 | 0.88 → 0.88 |
+| híbrida | no | 0.88 → 1.00 | 0.94 → 1.00 | 1.00 → 1.00 |
+| híbrida | sí | 0.94 → 1.00 | 0.97 → 1.00 | 1.00 → 1.00 |
+| híbrida + reranking | no | 0.94 → 1.00 | 0.97 → 1.00 | 1.00 → 1.00 |
+| híbrida + reranking | sí | 0.94 → 1.00 | 0.97 → 1.00 | 1.00 → 1.00 |
+
+Mejoran los casos B2 (con reranking), B (con reranking y filtro), C2 y D3 (sexto semestre, híbrida). Caso por caso, **ningún caso empeora** en ningún modo.
+
+**Pendiente:** repetir la validación con los documentos reales de LOTE01_Bachillerato, con el reranking activado, antes de darlo por aceptado. Los resultados de esta tabla son sintéticos.

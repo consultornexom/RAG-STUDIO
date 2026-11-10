@@ -154,6 +154,30 @@ def hierarchy_match(query: str, section_path: Optional[Sequence]) -> list[str]:
     return sorted(content_terms(query) & contexto)
 
 
+def ordinal_conflicts(query: str, section_path: Optional[Sequence]) -> list[str]:
+    """Ronda 101 (validación real de NEXOM, LOTE01_Bachillerato): ordinales
+    de la RUTA del fragmento que contradicen un ordinal EXPLÍCITO de la
+    consulta en la misma unidad -- p. ej. la consulta pide `semestre_5` y la
+    ruta es de `semestre_6`. Lista vacía si la consulta no menciona ningún
+    ordinal, si la ruta no tiene ordinales de esa unidad o si alguno
+    coincide ("quinto y sexto semestre" acepta ambos). Solo mira la ruta de
+    encabezados, nunca el texto libre del fragmento."""
+    pedidos: dict[str, set[str]] = {}
+    for termino in ordinal_terms(query):
+        unidad, numero = termino.rsplit("_", 1)
+        pedidos.setdefault(unidad, set()).add(numero)
+    if not pedidos:
+        return []
+    en_ruta: dict[str, set[str]] = {}
+    for termino in ordinal_terms("\n".join(path_titles(section_path))):
+        unidad, numero = termino.rsplit("_", 1)
+        en_ruta.setdefault(unidad, set()).add(numero)
+    return sorted(
+        f"{unidad}_{n}" for unidad, numeros in en_ruta.items()
+        if unidad in pedidos and not numeros & pedidos[unidad] for n in numeros
+    )
+
+
 def hierarchy_rank(query: str, items: Iterable[tuple[str, Optional[Sequence]]]) -> list[tuple[str, list[str]]]:
     """Ordena (id, ruta) por los términos de la consulta presentes en la ruta;
     solo los que tienen al menos uno.

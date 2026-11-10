@@ -1,0 +1,1327 @@
+{
+ "etiqueta": "despues (Ronda 101)",
+ "detalle": {
+  "semantica|sin_filtro": [
+   {
+    "caso": "A",
+    "grupo": "area",
+    "pos_fragmento": 2,
+    "pos_fuente": 2,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "B",
+    "grupo": "area",
+    "pos_fragmento": 2,
+    "pos_fuente": 2,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "B2",
+    "grupo": "area",
+    "pos_fragmento": 4,
+    "pos_fuente": 2,
+    "top1": "#### 6.º semestre"
+   },
+   {
+    "caso": "B3",
+    "grupo": "area",
+    "pos_fragmento": 2,
+    "pos_fuente": 2,
+    "top1": "#### 6.º semestre"
+   },
+   {
+    "caso": "C1",
+    "grupo": "plantel",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "C2",
+    "grupo": "plantel",
+    "pos_fragmento": 8,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "D1",
+    "grupo": "ordinal",
+    "pos_fragmento": 2,
+    "pos_fuente": 2,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "D2",
+    "grupo": "ordinal",
+    "pos_fragmento": 2,
+    "pos_fuente": 2,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "D3",
+    "grupo": "ordinal",
+    "pos_fragmento": 7,
+    "pos_fuente": 2,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "D4",
+    "grupo": "ordinal",
+    "pos_fragmento": null,
+    "pos_fuente": 1,
+    "top1": "# Bachillerato — Plantel Torres Landa"
+   },
+   {
+    "caso": "D5",
+    "grupo": "falso_positivo",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "Artículo 5. El alumno podrá solicitar baja temporal hasta po"
+   },
+   {
+    "caso": "E1",
+    "grupo": "compartida",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "# Requisitos de ingreso"
+   },
+   {
+    "caso": "E2",
+    "grupo": "compartida",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "# Áreas de formación"
+   },
+   {
+    "caso": "E3",
+    "grupo": "compartida",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "# Perfil del aspirante"
+   },
+   {
+    "caso": "F1",
+    "grupo": "regresion_estrategias",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "Calendario escolar. Las clases del semestre inician en agost"
+   },
+   {
+    "caso": "F2",
+    "grupo": "regresion_estrategias",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "Artículo 6. La calificación mínima aprobatoria es seis."
+   }
+  ],
+  "semantica|con_filtro": [
+   {
+    "caso": "A",
+    "grupo": "area",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "B",
+    "grupo": "area",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "B2",
+    "grupo": "area",
+    "pos_fragmento": 2,
+    "pos_fuente": 1,
+    "top1": "#### 6.º semestre"
+   },
+   {
+    "caso": "B3",
+    "grupo": "area",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 6.º semestre"
+   },
+   {
+    "caso": "C1",
+    "grupo": "plantel",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "C2",
+    "grupo": "plantel",
+    "pos_fragmento": 5,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "D1",
+    "grupo": "ordinal",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "D2",
+    "grupo": "ordinal",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "D3",
+    "grupo": "ordinal",
+    "pos_fragmento": 4,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "D4",
+    "grupo": "ordinal",
+    "pos_fragmento": 8,
+    "pos_fuente": 1,
+    "top1": "# Bachillerato — Plantel Torres Landa"
+   },
+   {
+    "caso": "D5",
+    "grupo": "falso_positivo",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "Artículo 5. El alumno podrá solicitar baja temporal hasta po"
+   },
+   {
+    "caso": "E1",
+    "grupo": "compartida",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "# Requisitos de ingreso"
+   },
+   {
+    "caso": "E2",
+    "grupo": "compartida",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "# Áreas de formación"
+   },
+   {
+    "caso": "E3",
+    "grupo": "compartida",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "# Perfil del aspirante"
+   },
+   {
+    "caso": "F1",
+    "grupo": "regresion_estrategias",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "Calendario escolar. Las clases del semestre inician en agost"
+   },
+   {
+    "caso": "F2",
+    "grupo": "regresion_estrategias",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "Artículo 6. La calificación mínima aprobatoria es seis."
+   }
+  ],
+  "textual|sin_filtro": [
+   {
+    "caso": "A",
+    "grupo": "area",
+    "pos_fragmento": 4,
+    "pos_fuente": 2,
+    "top1": "# Áreas de formación"
+   },
+   {
+    "caso": "B",
+    "grupo": "area",
+    "pos_fragmento": 4,
+    "pos_fuente": 2,
+    "top1": "# Áreas de formación"
+   },
+   {
+    "caso": "B2",
+    "grupo": "area",
+    "pos_fragmento": 2,
+    "pos_fuente": 2,
+    "top1": "# Áreas de formación"
+   },
+   {
+    "caso": "B3",
+    "grupo": "area",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 6.º semestre"
+   },
+   {
+    "caso": "C1",
+    "grupo": "plantel",
+    "pos_fragmento": 4,
+    "pos_fuente": 2,
+    "top1": "# Áreas de formación"
+   },
+   {
+    "caso": "C2",
+    "grupo": "plantel",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 6.º semestre"
+   },
+   {
+    "caso": "D1",
+    "grupo": "ordinal",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "D2",
+    "grupo": "ordinal",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "D3",
+    "grupo": "ordinal",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 6.º semestre"
+   },
+   {
+    "caso": "D4",
+    "grupo": "ordinal",
+    "pos_fragmento": 2,
+    "pos_fuente": 1,
+    "top1": "# Bachillerato — Plantel Torres Landa"
+   },
+   {
+    "caso": "D5",
+    "grupo": "falso_positivo",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "Artículo 5. El alumno podrá solicitar baja temporal hasta po"
+   },
+   {
+    "caso": "E1",
+    "grupo": "compartida",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "# Requisitos de ingreso"
+   },
+   {
+    "caso": "E2",
+    "grupo": "compartida",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "# Áreas de formación"
+   },
+   {
+    "caso": "E3",
+    "grupo": "compartida",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "# Perfil del aspirante"
+   },
+   {
+    "caso": "F1",
+    "grupo": "regresion_estrategias",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "Calendario escolar. Las clases del semestre inician en agost"
+   },
+   {
+    "caso": "F2",
+    "grupo": "regresion_estrategias",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "Artículo 6. La calificación mínima aprobatoria es seis."
+   }
+  ],
+  "textual|con_filtro": [
+   {
+    "caso": "A",
+    "grupo": "area",
+    "pos_fragmento": 4,
+    "pos_fuente": 2,
+    "top1": "# Áreas de formación"
+   },
+   {
+    "caso": "B",
+    "grupo": "area",
+    "pos_fragmento": 4,
+    "pos_fuente": 2,
+    "top1": "# Áreas de formación"
+   },
+   {
+    "caso": "B2",
+    "grupo": "area",
+    "pos_fragmento": 2,
+    "pos_fuente": 2,
+    "top1": "# Áreas de formación"
+   },
+   {
+    "caso": "B3",
+    "grupo": "area",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 6.º semestre"
+   },
+   {
+    "caso": "C1",
+    "grupo": "plantel",
+    "pos_fragmento": 4,
+    "pos_fuente": 2,
+    "top1": "# Áreas de formación"
+   },
+   {
+    "caso": "C2",
+    "grupo": "plantel",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 6.º semestre"
+   },
+   {
+    "caso": "D1",
+    "grupo": "ordinal",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "D2",
+    "grupo": "ordinal",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "D3",
+    "grupo": "ordinal",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 6.º semestre"
+   },
+   {
+    "caso": "D4",
+    "grupo": "ordinal",
+    "pos_fragmento": 2,
+    "pos_fuente": 1,
+    "top1": "# Bachillerato — Plantel Torres Landa"
+   },
+   {
+    "caso": "D5",
+    "grupo": "falso_positivo",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "Artículo 5. El alumno podrá solicitar baja temporal hasta po"
+   },
+   {
+    "caso": "E1",
+    "grupo": "compartida",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "# Requisitos de ingreso"
+   },
+   {
+    "caso": "E2",
+    "grupo": "compartida",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "# Áreas de formación"
+   },
+   {
+    "caso": "E3",
+    "grupo": "compartida",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "# Perfil del aspirante"
+   },
+   {
+    "caso": "F1",
+    "grupo": "regresion_estrategias",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "Calendario escolar. Las clases del semestre inician en agost"
+   },
+   {
+    "caso": "F2",
+    "grupo": "regresion_estrategias",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "Artículo 6. La calificación mínima aprobatoria es seis."
+   }
+  ],
+  "hibrida|sin_filtro": [
+   {
+    "caso": "A",
+    "grupo": "area",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "B",
+    "grupo": "area",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "B2",
+    "grupo": "area",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "B3",
+    "grupo": "area",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 6.º semestre"
+   },
+   {
+    "caso": "C1",
+    "grupo": "plantel",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "C2",
+    "grupo": "plantel",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 6.º semestre"
+   },
+   {
+    "caso": "D1",
+    "grupo": "ordinal",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "D2",
+    "grupo": "ordinal",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "D3",
+    "grupo": "ordinal",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 6.º semestre"
+   },
+   {
+    "caso": "D4",
+    "grupo": "ordinal",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "### 1er. semestre"
+   },
+   {
+    "caso": "D5",
+    "grupo": "falso_positivo",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "Artículo 5. El alumno podrá solicitar baja temporal hasta po"
+   },
+   {
+    "caso": "E1",
+    "grupo": "compartida",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "# Requisitos de ingreso"
+   },
+   {
+    "caso": "E2",
+    "grupo": "compartida",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "# Áreas de formación"
+   },
+   {
+    "caso": "E3",
+    "grupo": "compartida",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "# Perfil del aspirante"
+   },
+   {
+    "caso": "F1",
+    "grupo": "regresion_estrategias",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "Calendario escolar. Las clases del semestre inician en agost"
+   },
+   {
+    "caso": "F2",
+    "grupo": "regresion_estrategias",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "Artículo 6. La calificación mínima aprobatoria es seis."
+   }
+  ],
+  "hibrida|con_filtro": [
+   {
+    "caso": "A",
+    "grupo": "area",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "B",
+    "grupo": "area",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "B2",
+    "grupo": "area",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "B3",
+    "grupo": "area",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 6.º semestre"
+   },
+   {
+    "caso": "C1",
+    "grupo": "plantel",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "C2",
+    "grupo": "plantel",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 6.º semestre"
+   },
+   {
+    "caso": "D1",
+    "grupo": "ordinal",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "D2",
+    "grupo": "ordinal",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "D3",
+    "grupo": "ordinal",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 6.º semestre"
+   },
+   {
+    "caso": "D4",
+    "grupo": "ordinal",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "### 1er. semestre"
+   },
+   {
+    "caso": "D5",
+    "grupo": "falso_positivo",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "Artículo 5. El alumno podrá solicitar baja temporal hasta po"
+   },
+   {
+    "caso": "E1",
+    "grupo": "compartida",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "# Requisitos de ingreso"
+   },
+   {
+    "caso": "E2",
+    "grupo": "compartida",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "# Áreas de formación"
+   },
+   {
+    "caso": "E3",
+    "grupo": "compartida",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "# Perfil del aspirante"
+   },
+   {
+    "caso": "F1",
+    "grupo": "regresion_estrategias",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "Calendario escolar. Las clases del semestre inician en agost"
+   },
+   {
+    "caso": "F2",
+    "grupo": "regresion_estrategias",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "Artículo 6. La calificación mínima aprobatoria es seis."
+   }
+  ],
+  "hibrida_rerank|sin_filtro": [
+   {
+    "caso": "A",
+    "grupo": "area",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "B",
+    "grupo": "area",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "B2",
+    "grupo": "area",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "B3",
+    "grupo": "area",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 6.º semestre"
+   },
+   {
+    "caso": "C1",
+    "grupo": "plantel",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "C2",
+    "grupo": "plantel",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 6.º semestre"
+   },
+   {
+    "caso": "D1",
+    "grupo": "ordinal",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "D2",
+    "grupo": "ordinal",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "D3",
+    "grupo": "ordinal",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 6.º semestre"
+   },
+   {
+    "caso": "D4",
+    "grupo": "ordinal",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "### 1er. semestre"
+   },
+   {
+    "caso": "D5",
+    "grupo": "falso_positivo",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "Artículo 5. El alumno podrá solicitar baja temporal hasta po"
+   },
+   {
+    "caso": "E1",
+    "grupo": "compartida",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "# Requisitos de ingreso"
+   },
+   {
+    "caso": "E2",
+    "grupo": "compartida",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "# Áreas de formación"
+   },
+   {
+    "caso": "E3",
+    "grupo": "compartida",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "# Perfil del aspirante"
+   },
+   {
+    "caso": "F1",
+    "grupo": "regresion_estrategias",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "Calendario escolar. Las clases del semestre inician en agost"
+   },
+   {
+    "caso": "F2",
+    "grupo": "regresion_estrategias",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "Artículo 6. La calificación mínima aprobatoria es seis."
+   }
+  ],
+  "hibrida_rerank|con_filtro": [
+   {
+    "caso": "A",
+    "grupo": "area",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "B",
+    "grupo": "area",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "B2",
+    "grupo": "area",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "B3",
+    "grupo": "area",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 6.º semestre"
+   },
+   {
+    "caso": "C1",
+    "grupo": "plantel",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "C2",
+    "grupo": "plantel",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 6.º semestre"
+   },
+   {
+    "caso": "D1",
+    "grupo": "ordinal",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "D2",
+    "grupo": "ordinal",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 5.º semestre"
+   },
+   {
+    "caso": "D3",
+    "grupo": "ordinal",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "#### 6.º semestre"
+   },
+   {
+    "caso": "D4",
+    "grupo": "ordinal",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "### 1er. semestre"
+   },
+   {
+    "caso": "D5",
+    "grupo": "falso_positivo",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "Artículo 5. El alumno podrá solicitar baja temporal hasta po"
+   },
+   {
+    "caso": "E1",
+    "grupo": "compartida",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "# Requisitos de ingreso"
+   },
+   {
+    "caso": "E2",
+    "grupo": "compartida",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "# Áreas de formación"
+   },
+   {
+    "caso": "E3",
+    "grupo": "compartida",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "# Perfil del aspirante"
+   },
+   {
+    "caso": "F1",
+    "grupo": "regresion_estrategias",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "Calendario escolar. Las clases del semestre inician en agost"
+   },
+   {
+    "caso": "F2",
+    "grupo": "regresion_estrategias",
+    "pos_fragmento": 1,
+    "pos_fuente": 1,
+    "top1": "Artículo 6. La calificación mínima aprobatoria es seis."
+   }
+  ]
+ },
+ "resumen": {
+  "semantica|sin_filtro": {
+   "global": {
+    "frag_R@1": 0.438,
+    "frag_R@3": 0.75,
+    "frag_MRR": 0.626,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 0.781
+   },
+   "area": {
+    "frag_R@1": 0.0,
+    "frag_R@3": 0.75,
+    "frag_MRR": 0.438,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 0.5
+   },
+   "compartida": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "falso_positivo": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "ordinal": {
+    "frag_R@1": 0.0,
+    "frag_R@3": 0.5,
+    "frag_MRR": 0.286,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 0.625
+   },
+   "plantel": {
+    "frag_R@1": 0.5,
+    "frag_R@3": 0.5,
+    "frag_MRR": 0.562,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "regresion_estrategias": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   }
+  },
+  "semantica|con_filtro": {
+   "global": {
+    "frag_R@1": 0.75,
+    "frag_R@3": 0.812,
+    "frag_MRR": 0.817,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "area": {
+    "frag_R@1": 0.75,
+    "frag_R@3": 1.0,
+    "frag_MRR": 0.875,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "compartida": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "falso_positivo": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "ordinal": {
+    "frag_R@1": 0.5,
+    "frag_R@3": 0.5,
+    "frag_MRR": 0.594,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "plantel": {
+    "frag_R@1": 0.5,
+    "frag_R@3": 0.5,
+    "frag_MRR": 0.6,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "regresion_estrategias": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   }
+  },
+  "textual|sin_filtro": {
+   "global": {
+    "frag_R@1": 0.688,
+    "frag_R@3": 0.812,
+    "frag_MRR": 0.797,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 0.875
+   },
+   "area": {
+    "frag_R@1": 0.25,
+    "frag_R@3": 0.5,
+    "frag_MRR": 0.5,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 0.625
+   },
+   "compartida": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "falso_positivo": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "ordinal": {
+    "frag_R@1": 0.75,
+    "frag_R@3": 1.0,
+    "frag_MRR": 0.875,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "plantel": {
+    "frag_R@1": 0.5,
+    "frag_R@3": 0.5,
+    "frag_MRR": 0.625,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 0.75
+   },
+   "regresion_estrategias": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   }
+  },
+  "textual|con_filtro": {
+   "global": {
+    "frag_R@1": 0.688,
+    "frag_R@3": 0.812,
+    "frag_MRR": 0.797,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 0.875
+   },
+   "area": {
+    "frag_R@1": 0.25,
+    "frag_R@3": 0.5,
+    "frag_MRR": 0.5,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 0.625
+   },
+   "compartida": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "falso_positivo": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "ordinal": {
+    "frag_R@1": 0.75,
+    "frag_R@3": 1.0,
+    "frag_MRR": 0.875,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "plantel": {
+    "frag_R@1": 0.5,
+    "frag_R@3": 0.5,
+    "frag_MRR": 0.625,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 0.75
+   },
+   "regresion_estrategias": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   }
+  },
+  "hibrida|sin_filtro": {
+   "global": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "area": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "compartida": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "falso_positivo": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "ordinal": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "plantel": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "regresion_estrategias": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   }
+  },
+  "hibrida|con_filtro": {
+   "global": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "area": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "compartida": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "falso_positivo": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "ordinal": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "plantel": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "regresion_estrategias": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   }
+  },
+  "hibrida_rerank|sin_filtro": {
+   "global": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "area": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "compartida": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "falso_positivo": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "ordinal": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "plantel": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "regresion_estrategias": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   }
+  },
+  "hibrida_rerank|con_filtro": {
+   "global": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "area": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "compartida": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "falso_positivo": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "ordinal": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "plantel": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   },
+   "regresion_estrategias": {
+    "frag_R@1": 1.0,
+    "frag_R@3": 1.0,
+    "frag_MRR": 1.0,
+    "fuente_R@3": 1.0,
+    "fuente_MRR": 1.0
+   }
+  }
+ }
+}

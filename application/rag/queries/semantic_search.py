@@ -44,6 +44,10 @@ class SemanticSearchResult(BaseModel):
     """Ronda 100: términos de la consulta que coincidieron con la ruta de
     encabezados del fragmento (`chunk.section_path`) y que la búsqueda
     híbrida usó como señal jerárquica. Vacío si la ruta no participó."""
+    hierarchy_conflicts: list[str] = Field(default_factory=list)
+    """Ronda 101: ordinales de la ruta del fragmento que contradicen un ordinal
+    explícito de la consulta (p. ej. pide semestre_5 y la ruta es semestre_6).
+    Un fragmento con conflicto queda después de los que no lo tienen."""
 
 
 class SemanticSearch:

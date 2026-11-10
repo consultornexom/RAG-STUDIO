@@ -4,6 +4,7 @@ import pytest
 
 from domain.rag.hierarchy import (
     content_terms,
+    ordinal_conflicts,
     contextualized_text,
     hierarchy_match,
     hierarchy_rank,
@@ -141,3 +142,21 @@ def test_hijos_subdivididos_y_su_padre_comparten_la_ruta():
 @pytest.mark.parametrize("estrategia", ["por_tamanio", "documento_completo"])
 def test_otras_estrategias_no_guardan_ruta(estrategia):
     assert all(c.section_path == [] for c in _fragmentar("# Título\nTexto con varias palabras.\n", estrategia))
+
+
+
+# ---------- Ronda 101: conflicto de ordinal explícito ----------
+
+RUTA_FM6 = _ruta("Bachillerato — Plantel Torres Landa", "Plan de estudios",
+                 "Área Físico-Matemática y Químico-Biológicas", "6.º semestre")
+
+
+def test_conflicto_solo_con_ordinal_explicito_de_la_misma_unidad():
+    q = "¿Qué materias se cursan en quinto semestre del área Físico-Matemática y Químico-Biológicas?"
+    assert ordinal_conflicts(q, RUTA_FM6) == ["semestre_6"]
+    assert ordinal_conflicts(q, RUTA_FM5) == []
+    assert ordinal_conflicts("materias del área Físico-Matemática", RUTA_FM6) == []  # sin semestre pedido
+    assert ordinal_conflicts("materias de quinto y sexto semestre", RUTA_FM6) == []  # ambos pedidos
+    assert ordinal_conflicts(q, []) == []  # sin ruta (otras estrategias o documentos compartidos)
+    assert ordinal_conflicts("5.º grado", RUTA_FM6) == []  # otra unidad
+    assert ordinal_conflicts("artículo 5 del reglamento", RUTA_FM6) == []  # no es ordinal de periodo

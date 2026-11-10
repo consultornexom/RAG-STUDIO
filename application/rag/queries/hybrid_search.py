@@ -43,7 +43,7 @@ from typing import Optional
 
 from domain.documents.entities import AccessLevel
 from domain.rag.exceptions import RerankerError, RerankerUnavailableError
-from domain.rag.hierarchy import contextualized_text, hierarchy_rank
+from domain.rag.hierarchy import contextualized_text, hierarchy_rank, ordinal_conflicts
 from domain.rag.ports import Reranker
 
 from .semantic_search import SemanticSearch, SemanticSearchResult
@@ -165,6 +165,8 @@ class HybridSearch:
         # guardadas (fragmentos anteriores a la Ronda 100 u otras
         # estrategias) la lista queda vacía y el resultado es el de siempre.
         hierarchy_terms: dict[str, list[str]] = {}
+        hierarchy_weight: dict[str, int] = {}
+        conflicts: dict[str, list[str]] = {}
         if use_hierarchy:
             jerarquia = hierarchy_rank(
                 query_text, [(chunk_id, result_by_id[chunk_id].chunk.section_path) for chunk_id in result_by_id],
@@ -172,8 +174,24 @@ class HybridSearch:
             for rank, (chunk_id, terminos) in enumerate(jerarquia, start=1):
                 fused_scores[chunk_id] += 1.0 / (_RRF_RANK_CONSTANT + rank)
                 hierarchy_terms[chunk_id] = terminos
+                hierarchy_weight[chunk_id] = sum(2 if "_" in t else 1 for t in terminos)
+            # Ronda 101 (validación real de NEXOM): un fragmento cuya ruta
+            # dice "6.º semestre" cuando la consulta pide explícitamente el
+            # quinto contradice la consulta. Ver _final_key.
+            for chunk_id in result_by_id:
+                conflicto = ordinal_conflicts(query_text, result_by_id[chunk_id].chunk.section_path)
+                if conflicto:
+                    conflicts[chunk_id] = conflicto
 
-        ordered = sorted(fused_scores.items(), key=lambda pair: pair[1], reverse=True)
+        def _final_key(chunk_id: str, score: float) -> tuple:
+            """Ronda 101: orden final. 1) primero los candidatos SIN conflicto
+            de ordinal explícito; 2) el score (RRF o reranker+jerarquía); 3) a
+            igual score, el de mayor coincidencia jerárquica. Sin ordinales en
+            la consulta o sin rutas, 1) y 3) no distinguen nada y el orden es
+            el de siempre."""
+            return (0 if chunk_id in conflicts else 1, score, hierarchy_weight.get(chunk_id, 0))
+
+        ordered = sorted(fused_scores.items(), key=lambda pair: _final_key(*pair), reverse=True)
 
         if not rerank:
             return [
@@ -181,6 +199,7 @@ class HybridSearch:
                     chunk=result_by_id[chunk_id].chunk, score=score,
                     parent_chunk=result_by_id[chunk_id].parent_chunk,
                     hierarchy_terms=hierarchy_terms.get(chunk_id, []),
+                    hierarchy_conflicts=conflicts.get(chunk_id, []),
                 )
                 for chunk_id, score in ordered[:limit]
             ]
@@ -235,11 +254,21 @@ class HybridSearch:
                 + (1.0 / (_RRF_RANK_CONSTANT + jerarquica[chunk_id]) if chunk_id in jerarquica else 0.0)
                 for chunk_id, pos in posicion.items()
             }
-            reranked = sorted(reranked, key=lambda pair: fusion[pair[0].id], reverse=True)
+            # Ronda 101 (validación real de NEXOM): antes la fusión dejaba
+            # EMPATES -- reranker 1.º + jerarquía 2.º contra reranker 2.º +
+            # jerarquía 1.º suman lo mismo -- y el desempate quedaba en el
+            # orden del reranker, que en el caso real ponía "6.º semestre"
+            # sobre el "5.º" pedido. Ahora el orden final usa _final_key:
+            # conflicto de ordinal, fusión y, a igual fusión, coincidencia
+            # jerárquica.
+            reranked = sorted(reranked, key=lambda pair: _final_key(pair[0].id, fusion[pair[0].id]), reverse=True)
+        elif use_hierarchy and conflicts:
+            reranked = sorted(reranked, key=lambda pair: _final_key(pair[0].id, pair[1]), reverse=True)
         return [
             SemanticSearchResult(
                 chunk=chunk, score=score, parent_chunk=result_by_id[chunk.id].parent_chunk,
                 hierarchy_terms=hierarchy_terms.get(chunk.id, []),
+                hierarchy_conflicts=conflicts.get(chunk.id, []),
             )
             for chunk, score in reranked[:limit]
         ]

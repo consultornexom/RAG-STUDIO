@@ -49,10 +49,13 @@ class ConversationalService:
         source_repository=None,
         schema_repository=None,
         catalog_repository=None,
+        agent_reranking=None,
     ):
         """source_repository/schema_repository/catalog_repository: ver
         SimulateConversation (Ronda 89) -- detección de variables en la
-        consulta y filtro de metadatos previo a la búsqueda."""
+        consulta y filtro de metadatos previo a la búsqueda.
+        agent_reranking (Ronda 102, C4): ajuste "Reranking en el agente"
+        del proyecto, ver SimulateConversation."""
         self._create_intent = CreateIntent(intent_repository)
         self._set_intent_active = SetIntentActive(intent_repository)
         self._update_intent = UpdateIntent(intent_repository)
@@ -79,7 +82,7 @@ class ConversationalService:
             intent_repository, variable_repository, guardrail_repository, channeling_repository,
             source_metadata_repository, rag_service,
             source_repository=source_repository, schema_repository=schema_repository,
-            catalog_repository=catalog_repository,
+            catalog_repository=catalog_repository, agent_reranking=agent_reranking,
         )
 
     # ---------- intenciones ----------

@@ -1,0 +1,6 @@
+manifest_schema_version,titulo,tipo_fuente,ruta_archivo,area_propietaria,nivel_acceso,idioma,hash_contenido,vigente_desde,vigente_hasta,autoridad_fuente,sustituye_a
+2,bachillerato_hilario_medina.md,markdown,85ddcf06-6d5c-4517-9343-10d655519661.md,,,es,599f3dbf670aaa433a888918e47de03d4fde8a99b61b932bf16e5612582684e6,,,,
+2,bachillerato_torres_landa.md,markdown,f95b9e92-590a-442b-9d82-e1ea5c01a0ac.md,,,es,9962b54b75bfb69e1014a2e66d00bd9643392656f114862005eda96eac24a99f,,,,
+2,areas_formacion.md,markdown,e93b0652-2a97-4dca-93dd-662fee0cd201.md,,,es,0e404d10f767f2da69192779edeeb17aa92edd09a90a7306b03c6d182ff540c8,,,,
+2,cualidades_aspirante.md,markdown,a12ee1ae-050c-4d71-b31d-6d207c54ec57.md,,,es,3087e59c1f452c034c4f7fb2da41119c6805e06f5796cb378f888bd6d053f6f8,,,,
+2,requisitos_ingreso.md,markdown,68a9a8af-530f-45ad-b37d-9f5258047aa4.md,,,es,a426859d9a7fc01165c3027327f6f583c3909eb5bcf7121604c468b1da9f95a7,,,,

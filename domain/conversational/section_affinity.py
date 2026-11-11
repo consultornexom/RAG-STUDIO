@@ -25,6 +25,24 @@ handoff"...): siguen indexados y siguen apareciendo, pero como su título
 no comparte vocabulario con las intenciones de contenido, quedan después
 del apartado solicitado. Si una intención sí habla de ellos (p. ej. una
 intención de canalización cuyo texto mencione "handoff"), suben.
+
+Ronda 102 (hallazgo real de NEXOM, LOTE01_Bachillerato): hasta esta ronda
+la afinidad era la clave PRINCIPAL del orden y el puntaje de la búsqueda
+solo desempataba. Un documento compartido que la búsqueda ponía primero
+(requisitos_ingreso.md) quedaba detrás de secciones de otros documentos
+cuyo título nombraba el tema pero solo remitían al archivo. Desde esta
+ronda:
+- C1 (`combine_with_retrieval`): la afinidad es una lista más en una
+  fusión RRF con el orden de la búsqueda, igual que la señal jerárquica
+  de la Ronda 100. Entre fragmentos con afinidad, un mejor puesto en la
+  búsqueda compensa un peor puesto de afinidad (uno a uno); los que no
+  tienen ninguna afinidad de título siguen detrás de los que sí la
+  tienen, como en la Ronda 91.
+- C2 (`affinity_title`): un fragmento sin título de sección
+  (documento_completo, por_tamanio, preámbulo) usa su primer encabezado
+  Markdown -- sin confundir el encabezado YAML ("---") con un título -- y,
+  si no tiene, el título de la fuente. Antes usaba la primera línea del
+  texto, que en los documentos reales de LOTE01 era "---".
 """
 from __future__ import annotations
 
@@ -110,3 +128,77 @@ class SectionAffinity:
             )
             total += peso * self._especificidad(raiz)
         return total / len(titulo)
+
+
+# ---------- Ronda 102, C2: título para fragmentos sin título de sección ----------
+
+_ENCABEZADO_MD = re.compile(r"^ {0,3}#{1,6}[ \t]+(.+?)[ \t]*#*[ \t]*$")
+
+
+def _sin_encabezado_yaml(lineas: list[str]) -> list[str]:
+    """Quita el bloque YAML inicial ("---" ... "---" o "...") si el texto
+    empieza con él. Sin cierre, no se considera YAML y se deja igual."""
+    inicio = 0
+    while inicio < len(lineas) and not lineas[inicio].strip():
+        inicio += 1
+    if inicio >= len(lineas) or lineas[inicio].strip() != "---":
+        return lineas[inicio:]
+    for fin in range(inicio + 1, len(lineas)):
+        if lineas[fin].strip() in ("---", "..."):
+            return lineas[fin + 1:]
+    return lineas[inicio:]
+
+
+def first_markdown_heading(text: str | None) -> str | None:
+    """Primer encabezado Markdown ATX ("# Título" ... "###### Título") del
+    texto, fuera del encabezado YAML inicial. None si no hay ninguno."""
+    for linea in _sin_encabezado_yaml((text or "").split("\n")):
+        coincidencia = _ENCABEZADO_MD.match(linea)
+        if coincidencia and coincidencia.group(1).strip():
+            return coincidencia.group(1).strip()
+    return None
+
+
+def affinity_title(section_title: str | None, text: str | None, source_title: str | None) -> str:
+    """Título con el que se mide la afinidad de un fragmento: su título de
+    sección (por_encabezado lo guarda); si no tiene, su primer encabezado
+    Markdown; si tampoco, el título de la fuente (sin extensión de
+    archivo). Cadena vacía si no hay nada (afinidad cero)."""
+    if section_title and section_title.strip():
+        return section_title.strip()
+    encabezado = first_markdown_heading(text)
+    if encabezado:
+        return encabezado
+    titulo = (source_title or "").strip()
+    return re.sub(r"\.[A-Za-z0-9]{1,5}$", "", titulo)
+
+
+# ---------- Ronda 102, C1: combinar afinidad y recuperación ----------
+
+RRF_K = 60
+"""Mismo k de la fusión RRF de la búsqueda híbrida (application.rag.
+queries.hybrid_search)."""
+
+
+def combine_with_retrieval(affinities: list[float], k: int = RRF_K) -> list[int]:
+    """Orden final de candidatos que ya vienen ordenados por la búsqueda
+    (posición i -> puesto i+1), combinando por RRF dos listas:
+    - el orden de la búsqueda (todos los candidatos);
+    - el orden por afinidad (solo los candidatos con afinidad > 0; los
+      empatados comparten puesto, valores redondeados a 3 decimales).
+
+    puntaje = 1/(k + puesto_búsqueda) + 1/(k + puesto_afinidad)
+
+    A igual puntaje se conserva el orden de la búsqueda. Devuelve los
+    índices de `affinities` en el orden final."""
+    valores = sorted({round(a, 3) for a in affinities if a > 0}, reverse=True)
+    puesto_afinidad = {valor: n + 1 for n, valor in enumerate(valores)}
+
+    def puntaje(i: int) -> float:
+        total = 1.0 / (k + i + 1)
+        valor = round(affinities[i], 3)
+        if valor in puesto_afinidad:
+            total += 1.0 / (k + puesto_afinidad[valor])
+        return total
+
+    return sorted(range(len(affinities)), key=lambda i: (-puntaje(i), i))

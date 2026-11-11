@@ -51,6 +51,7 @@ from infrastructure.database.release_repositories import (
     SqlAlchemyReleaseRecordRepository,
 )
 from infrastructure.database.repositories import (
+    ProjectAgentRerankingReader,
     SqlAlchemyConfigurationRepository,
     SqlAlchemyProjectRepository,
 )
@@ -278,6 +279,8 @@ def bootstrap(
         channeling_scheme_repository, source_metadata_repository, rag_service,
         source_repository=source_repository, schema_repository=schema_repository,
         catalog_repository=catalog_repository,
+        # Ronda 102 (C4): ajuste "Reranking en el agente" del proyecto.
+        agent_reranking=ProjectAgentRerankingReader(paths),
     )
 
     # Etapa 8, "Complementos": registro global (application.db, no

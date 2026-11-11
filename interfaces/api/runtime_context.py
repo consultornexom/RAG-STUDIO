@@ -42,6 +42,7 @@ from infrastructure.database.metadata_repositories import (
 )
 from infrastructure.database.rag_repositories import SqlAlchemyIndexInfoRepository
 from infrastructure.database.release_repositories import SqlAlchemyProjectSnapshotRepository
+from infrastructure.database.repositories import ProjectAgentRerankingReader
 from infrastructure.embeddings.caching_provider import CachingEmbeddingProvider
 from infrastructure.embeddings.fastembed_image_provider import FastEmbedImageProvider
 from infrastructure.embeddings.fastembed_provider import AVAILABLE_EMBEDDING_PROFILES, make_provider_for_profile
@@ -310,6 +311,9 @@ class RuntimeContext:
             source_repository=source_repository,
             schema_repository=SqlAlchemyMetadataSchemaRepository(paths),
             catalog_repository=SqlAlchemyCatalogRepository(paths),
+            # Ronda 102 (C4): el ajuste "Reranking en el agente" se lee de la
+            # instantánea servida (mismo project.db que el resto).
+            agent_reranking=ProjectAgentRerankingReader(paths),
         )
         # Calentar el proveedor de embeddings ahora (al construir,
         # nunca en la primera solicitud real) -- ADR-002, sección 5,

@@ -1,5 +1,7 @@
 # Ronda 102: diagnóstico de la diferencia entre Búsqueda RAG y el Simulador
 
+> **Actualización:** NEXOM autorizó C1, C2 y C4, que ya están implementadas y validadas con los cinco archivos reales de LOTE01. Ver `Resultados_Ronda102.md`.
+
 **Caso de NEXOM (LOTE01_Bachillerato real, código de la Ronda 101).**
 - **Consulta:** «¿Cuáles son los requisitos para ingresar al Bachillerato de la Universidad de León?».
 - **Búsqueda RAG (híbrida, sin reranking):** `requisitos_ingreso.md` en posición 2.

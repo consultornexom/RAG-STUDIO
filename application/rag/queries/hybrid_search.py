@@ -75,6 +75,11 @@ class HybridSearch:
     def has_reranker(self) -> bool:
         return self._reranker is not None
 
+    @property
+    def reranker_model_name(self) -> Optional[str]:
+        """Ronda 102 (C4): modelo de reranking configurado (None si no hay)."""
+        return self._reranker.model_name if self._reranker is not None else None
+
     def execute(
         self, project_id: str, query_text: str, limit: int = 5,
         source_id: Optional[str] = None, only_usable_sources: bool = False,

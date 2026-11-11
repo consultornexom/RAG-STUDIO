@@ -101,6 +101,14 @@ class Project(BaseModel):
     motor de evaluación continua, y se edita desde el panel de Calidad,
     no desde _ProjectDetailsDialog."""
 
+    agent_reranking: Optional[bool] = None
+    """Ronda 102 (C4, autorizado por NEXOM): "Reranking en el agente" --
+    si el Simulador y el canal de mensajes (POST /messages) reordenan los
+    fragmentos con el modelo de reranking. None = automático (el
+    comportamiento de siempre, Ronda 40: se aplica si la instalación tiene
+    modelo); True = activado; False = desactivado. Parámetro técnico del
+    motor conversacional, se edita desde el Simulador."""
+
     @field_validator("quality_regression_threshold")
     @classmethod
     def _threshold_en_rango(cls, v: Optional[float]) -> Optional[float]:

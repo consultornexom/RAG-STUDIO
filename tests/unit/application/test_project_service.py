@@ -261,3 +261,19 @@ def test_get_allowed_next_statuses_empty_when_archived(service):
     project = service.create_project("Agente")
     service.archive_project(project.id)
     assert service.get_allowed_next_statuses(project.id) == []
+
+
+# ---------- Ronda 102 (C4): "Reranking en el agente" ----------
+
+@pytest.mark.parametrize("valor", [True, False, None])
+def test_update_agent_reranking_guarda_el_ajuste(service, valor):
+    project = service.create_project("Agente")
+    assert project.agent_reranking is None  # predeterminado: automático
+    updated = service.update_agent_reranking(project.id, valor)
+    assert updated.agent_reranking is valor
+    assert service.get_project(project.id).agent_reranking is valor
+
+
+def test_update_agent_reranking_proyecto_inexistente(service):
+    with pytest.raises(ProjectNotFoundError):
+        service.update_agent_reranking("no-existe", True)

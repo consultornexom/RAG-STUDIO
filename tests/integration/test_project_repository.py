@@ -112,3 +112,23 @@ def test_get_upgrades_a_project_db_that_was_stamped_at_an_old_revision(tmp_path)
     # de forma persistente, no solo "en memoria" para esta llamada.
     fetched_again = repo.get(project_id)
     assert fetched_again is not None
+
+
+def test_agent_reranking_round_trip_y_lector_directo(tmp_path):
+    """Ronda 102 (C4, migración 0024): None por defecto (automático), se
+    guarda True/False, y ProjectAgentRerankingReader lo lee del project.db
+    sin tocar application.db (lo usa el canal de mensajes)."""
+    from infrastructure.database.repositories import ProjectAgentRerankingReader
+
+    paths = _paths(tmp_path)
+    repo = SqlAlchemyProjectRepository(paths)
+    project = Project(name="Agente con ajuste")
+    repo.save(project)
+    lector = ProjectAgentRerankingReader(paths)
+    assert repo.get(project.id).agent_reranking is None
+    assert lector(project.id) is None
+    repo.save(Project(**{**project.model_dump(), "agent_reranking": False}))
+    assert repo.get(project.id).agent_reranking is False
+    assert lector(project.id) is False
+    assert lector("no-existe") is None
+    assert not paths.project_db_path("no-existe").exists()

@@ -35,6 +35,7 @@ def _project_to_record(project: Project) -> ProjectRecord:
         updated_at=project.updated_at,
         archived_at=project.archived_at,
         quality_regression_threshold=project.quality_regression_threshold,
+        agent_reranking=project.agent_reranking,
     )
 
 
@@ -55,7 +56,27 @@ def record_to_project(record: ProjectRecord) -> Project:
         updated_at=record.updated_at,
         archived_at=record.archived_at,
         quality_regression_threshold=record.quality_regression_threshold,
+        agent_reranking=record.agent_reranking,
     )
+
+
+class ProjectAgentRerankingReader:
+    """Ronda 102 (C4): lee Project.agent_reranking directamente del
+    project.db de `paths` -- sin tocar application.db, para que el canal
+    de mensajes (interfaces/api/runtime_context.py) lea el ajuste de la
+    INSTANTÁNEA publicada que sirve, no del proyecto en edición. Devuelve
+    None (automático) si el proyecto o su project.db no existen."""
+
+    def __init__(self, paths: InstallationPaths):
+        self._paths = paths
+
+    def __call__(self, project_id: str) -> Optional[bool]:
+        if not self._paths.project_db_path(project_id).exists():
+            return None
+        session_factory = make_session_factory(make_sqlite_engine(ensure_project_db(self._paths, project_id)))
+        with session_factory() as session:
+            record = session.get(ProjectRecord, project_id)
+            return record.agent_reranking if record is not None else None
 
 
 class SqlAlchemyProjectRepository(ProjectRepository):
@@ -125,6 +146,7 @@ class SqlAlchemyProjectRepository(ProjectRepository):
                     "name", "agent_type_hint", "description", "domain",
                     "target_users", "language", "risk_level", "template_id",
                     "created_at", "updated_at", "archived_at", "quality_regression_threshold",
+                    "agent_reranking",
                 ):
                     setattr(existing, field, getattr(project, field))
                 existing.status = project.status.value

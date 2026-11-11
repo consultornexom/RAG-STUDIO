@@ -1329,6 +1329,32 @@ conexión a Hugging Face (ver "Limitaciones conocidas").
   este entorno), `ruff` sin hallazgos. Ver
   `Validacion_observaciones_RAG_STUDIO.md`, Ronda 24, puntos 67-70.
 
+- **2026-11-10 -- Ronda 102: Simulador vs Búsqueda RAG (requisitos de
+  LOTE01_Bachillerato), correcciones C1, C2 y C4 autorizadas por NEXOM.**
+  Validado con los cinco archivos reales (`tests/fixtures/lote01_bachillerato`,
+  íntegros según el manifiesto). Causa en los datos reales: los documentos
+  completos con encabezado YAML tenían «---» como título (afinidad cero) y la
+  afinidad título-intención era la clave principal del orden.
+  - **C1:** la afinidad se combina por RRF, en partes iguales, con el puesto de
+    la búsqueda (`combine_with_retrieval`); ya no entierra el mejor resultado.
+  - **C2:** fragmentos sin título de sección usan su primer encabezado
+    Markdown (saltando el YAML) o el título de la fuente (`affinity_title`).
+  - **C4:** «Reranking en el agente» por proyecto (`Project.agent_reranking`,
+    migración de proyecto **0024**; Automático por defecto = comportamiento
+    anterior), usado por el Simulador y por `POST /messages` (desde la
+    instantánea publicada). El trazado indica si se aplicó y con qué modelo, y
+    el puesto en la búsqueda y la afinidad de cada fragmento.
+  - **Resultados (14 consultas, final top 5, R@1/MRR):** con reranking
+    0.79/0.85 → 1.00/1.00; sin reranking 0.64/0.76 → 0.93/0.95. La consulta
+    de NEXOM queda 1.ª con y sin reranking; planes, ordinales e información
+    general sin cambios (1.º). Recuperación inicial idéntica antes y después.
+  - **Pruebas:** `tests/unit` + smoke 1142 pasadas (2 fallas preexistentes);
+    integración 566 pasadas (incluye `test_ronda102_lote01_simulador.py`, que
+    falla con el código anterior); `ruff` sin hallazgos nuevos.
+  - **Pendientes:** C3, C5, la pérdida en la recuperación inicial al quitar el
+    valor filtrado, y la validación en el proyecto LOTE01 de NEXOM. Detalle en
+    `docs proyecto/Ronda102_Diagnostico_Simulador/Resultados_Ronda102.md`.
+
 - **2026-11-10 -- Ronda 101: hallazgo en la validación real de la Ronda 100
   (LOTE01_Bachillerato) -- con reranking, "6.º semestre" quedaba sobre el
   "5.º" pedido.** Causa: la fusión RRF entre el orden del cross-encoder y la

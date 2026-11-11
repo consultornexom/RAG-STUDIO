@@ -317,6 +317,12 @@ class RagService:
         return self._hybrid_search.has_reranker
 
     @property
+    def reranker_model_name(self) -> Optional[str]:
+        """Ronda 102 (C4): nombre del modelo de reranking configurado, para
+        mostrar en el Simulador cuál intervino. None si no hay ninguno."""
+        return self._hybrid_search.reranker_model_name
+
+    @property
     def has_image_search(self) -> bool:
         """True si este RagService se construyó con un
         image_embedding_provider real -- mismo propósito que

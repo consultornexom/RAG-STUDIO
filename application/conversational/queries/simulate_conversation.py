@@ -33,7 +33,7 @@ from domain.conversational.ports import (
 )
 from domain.conversational.rule_evaluation import select_firing_action
 from domain.documents.entities import AccessLevel
-from domain.conversational.section_affinity import SectionAffinity
+from domain.conversational.section_affinity import SectionAffinity, affinity_title, combine_with_retrieval
 from domain.conversational.variable_extraction import (
     ValueCandidate, alias_forms, extract_variable_values, find_mentions, remove_spans,
 )
@@ -42,13 +42,13 @@ from domain.metadata.ports import CatalogRepository, MetadataSchemaRepository, S
 from domain.rag.structured_query import StructuredFilter, StructuredFilterOperator, StructuredQueryResult
 
 
-def _section_title(chunk) -> str:
-    """Título de la sección del fragmento; si la fragmentación no lo
-    guardó, la primera línea del texto sin marcas de encabezado."""
-    if chunk.section_title:
-        return chunk.section_title
-    primera = (chunk.text or "").strip().split("\n", 1)[0]
-    return primera.lstrip("#").strip()
+def _section_title(chunk, source_title: Optional[str] = None) -> str:
+    """Título con el que se mide la afinidad del fragmento (Ronda 102, C2):
+    su título de sección; si la fragmentación no lo guardó, su primer
+    encabezado Markdown (fuera del encabezado YAML) y, si tampoco hay, el
+    título de la fuente. Antes era la primera línea del texto ("---" en
+    los documentos con encabezado YAML)."""
+    return affinity_title(chunk.section_title, chunk.text, source_title)
 
 
 class IntentScoreView(BaseModel):
@@ -60,6 +60,25 @@ class IntentScoreView(BaseModel):
     positive: float
     negative: float
     priority: int
+
+
+class ResultOrderingView(BaseModel):
+    """Ronda 102: de dónde salió la posición de cada fragmento entregado
+    (mismo orden que SimulationTrace.search_results), para separar la
+    recuperación inicial del reordenamiento conversacional."""
+
+    retrieval_rank: int
+    """Puesto del fragmento en la recuperación inicial (búsqueda híbrida,
+    con o sin reranking, dentro de las fuentes permitidas)."""
+    affinity: float
+    """Afinidad título-intención (0 a 1)."""
+    affinity_title: str
+    """Título con el que se midió la afinidad (ver _section_title)."""
+
+
+RERANKING_AUTOMATICO = "automatico"
+RERANKING_ACTIVADO = "activado"
+RERANKING_DESACTIVADO = "desactivado"
 
 
 class SimulationTrace(BaseModel):
@@ -112,6 +131,23 @@ class SimulationTrace(BaseModel):
     resultados descartados después del top-k; solo vuelve a ese sentido
     si el caso de uso se construye sin repositorio de fuentes."""
     search_results: list[SemanticSearchResult] = Field(default_factory=list)
+    result_ordering: list[ResultOrderingView] = Field(default_factory=list)
+    """Ronda 102: puesto en la recuperación inicial y afinidad de cada
+    fragmento de search_results (vacía si no hubo reordenamiento por
+    afinidad)."""
+    reranking_setting: str = RERANKING_AUTOMATICO
+    """Ronda 102 (C4): ajuste "Reranking en el agente" del proyecto:
+    automatico (predeterminado: se aplica si hay modelo instalado),
+    activado o desactivado."""
+    reranking_applied: bool = False
+    """Ronda 102 (C4): True si la búsqueda de esta consulta usó el
+    modelo de reranking."""
+    reranking_model: Optional[str] = None
+    """Ronda 102 (C4): modelo de reranking que intervino (None si no se
+    aplicó)."""
+    reranking_note: Optional[str] = None
+    """Ronda 102 (C4): aviso cuando el ajuste pide reranking y no hay
+    modelo instalado."""
     abstention_reason: Optional[str] = None
     structured_result: Optional[StructuredQueryResult] = None
     """Pista B.4 del ADR-003 (enrutamiento multi-índice determinista):
@@ -146,13 +182,20 @@ class SimulateConversation:
         source_repository: Optional[SourceRepository] = None,
         schema_repository: Optional[MetadataSchemaRepository] = None,
         catalog_repository: Optional[CatalogRepository] = None,
+        agent_reranking: Optional[Callable[[str], Optional[bool]]] = None,
     ):
         """source_repository/schema_repository/catalog_repository (Ronda
         89, opcionales para no romper a quien construya este caso de uso
         sin ellos): habilitan detectar valores de variables en el texto de
         la consulta usando los catálogos y valores de metadatos del
         proyecto, y filtrar por metadatos ANTES de elegir los mejores
-        fragmentos. Sin ellos, el comportamiento es el de antes."""
+        fragmentos. Sin ellos, el comportamiento es el de antes.
+
+        agent_reranking (Ronda 102, C4): devuelve el ajuste "Reranking en
+        el agente" del proyecto (None = automático, True = activado,
+        False = desactivado). Sin él, automático: el comportamiento de
+        siempre (se aplica si RagService tiene modelo de reranking)."""
+        self._agent_reranking = agent_reranking
         self._sources = source_repository
         self._schemas = schema_repository
         self._catalogs = catalog_repository
@@ -294,6 +337,9 @@ class SimulateConversation:
                 channeling = None
 
         search_results: list[SemanticSearchResult] = []
+        result_ordering: list[ResultOrderingView] = []
+        reranking_setting, use_rerank, reranking_note = self._reranking_decision(project_id)
+        reranking_applied = False
         retrieval_query: Optional[str] = None
         section_ordering = False
         applied_filters: dict[str, str] = {}
@@ -322,10 +368,13 @@ class SimulateConversation:
                 # del documento de diseño de B.4): marcar una intención
                 # como ESTRUCTURADO nunca debe dejarla peor que si
                 # hubiera quedado en SEMANTICO.
-                search_results, applied_filters, excluded_count, retrieval_query = self._search_and_filter(
+                (
+                    search_results, applied_filters, excluded_count, retrieval_query, result_ordering,
+                ) = self._search_and_filter(
                     project_id, query_text, effective, source_id=source_id, limit=limit,
-                    max_access_level=max_access_level, intent=intent, intents=intents,
+                    max_access_level=max_access_level, intent=intent, intents=intents, rerank=use_rerank,
                 )
+                reranking_applied = use_rerank
                 section_ordering = bool(applied_filters) and self._sources is not None
                 if not search_results:
                     final_action = RuleActionType.ABSTENERSE
@@ -370,7 +419,28 @@ class SimulateConversation:
             applied_metadata_filters=applied_filters, excluded_by_metadata_filter=excluded_count,
             search_results=search_results, abstention_reason=abstention_reason,
             structured_result=structured_result, image_results=image_results,
+            result_ordering=result_ordering, reranking_setting=reranking_setting,
+            reranking_applied=reranking_applied,
+            reranking_model=self._rag.reranker_model_name if reranking_applied else None,
+            reranking_note=reranking_note,
         )
+
+    def _reranking_decision(self, project_id: str) -> tuple[str, bool, Optional[str]]:
+        """Ronda 102 (C4): (ajuste, si se aplica reranking, aviso).
+        Automático conserva el comportamiento de siempre (Ronda 40): se
+        aplica si RagService tiene modelo de reranking."""
+        ajuste = self._agent_reranking(project_id) if self._agent_reranking is not None else None
+        disponible = self._rag.has_reranker
+        if ajuste is False:
+            return RERANKING_DESACTIVADO, False, None
+        if ajuste is True:
+            if not disponible:
+                return RERANKING_ACTIVADO, False, (
+                    "El proyecto tiene el reranking del agente activado, pero esta instalación no tiene "
+                    "modelo de reranking: la búsqueda se hizo sin reranking."
+                )
+            return RERANKING_ACTIVADO, True, None
+        return RERANKING_AUTOMATICO, disponible, None
 
     def _query_structured(
         self, project_id: str, provided: dict[str, str], source_id: Optional[str],
@@ -411,7 +481,8 @@ class SimulateConversation:
         source_id: Optional[str], limit: int,
         max_access_level: Optional[AccessLevel] = None,
         intent: Optional[Intent] = None, intents: Optional[list[Intent]] = None,
-    ) -> tuple[list[SemanticSearchResult], dict[str, str], int, Optional[str]]:
+        rerank: Optional[bool] = None,
+    ) -> tuple[list[SemanticSearchResult], dict[str, str], int, Optional[str], list[ResultOrderingView]]:
         # Un motor conversacional real siempre debe forzar
         # only_usable_sources=True (a diferencia del Laboratorio RAG de
         # Etapa 4, donde es opt-in para poder probar con borradores) --
@@ -435,6 +506,10 @@ class SimulateConversation:
         # pruebas de esta misma suite): en ese caso has_reranker es
         # False y el comportamiento no cambia respecto a antes de esta
         # ronda.
+        # Ronda 102 (C4): el ajuste del proyecto decide (ver
+        # _reranking_decision); None conserva el comportamiento de siempre.
+        if rerank is None:
+            rerank = self._rag.has_reranker
         variables = self._variables.list_for_project(project_id)
         active_filters = {
             variable.code: provided[variable.code].strip()
@@ -444,9 +519,9 @@ class SimulateConversation:
         if not active_filters:
             raw_results = self._rag.search_hybrid(
                 project_id, query_text, limit=limit, source_id=source_id, only_usable_sources=True,
-                rerank=self._rag.has_reranker, max_access_level=max_access_level,
+                rerank=rerank, max_access_level=max_access_level,
             )
-            return raw_results, {}, 0, None
+            return raw_results, {}, 0, None, []
 
         # Ronda 89 (hallazgo real de usuario, AGENTE UDL: "revisar si el
         # filtro se aplica antes o después de seleccionar los primeros
@@ -474,22 +549,32 @@ class SimulateConversation:
             pool = max(limit * 4, 20) if intent is not None else limit
             results = self._rag.search_hybrid(
                 project_id, text_for_search, limit=pool, source_id=source_id, only_usable_sources=True,
-                rerank=self._rag.has_reranker, max_access_level=max_access_level, source_ids=allowed,
+                rerank=rerank, max_access_level=max_access_level, source_ids=allowed,
             )
+            ordering: list[ResultOrderingView] = []
             if intent is not None:
                 afinidad = SectionAffinity(
                     intent, intents or [intent], query_text, self._catalog_mention_masker(project_id),
                 )
-                puntajes = [afinidad.score(_section_title(r.chunk)) for r in results]
-                orden = sorted(range(len(results)), key=lambda i: -puntajes[i])
-                results = [results[i] for i in orden][:limit]
-            return results, active_filters, len(all_sources) - len(allowed), retrieval_query
+                titulos_fuente = {source.id: source.title for source in all_sources}
+                titulos = [_section_title(r.chunk, titulos_fuente.get(r.chunk.source_id)) for r in results]
+                puntajes = [afinidad.score(titulo) for titulo in titulos]
+                # Ronda 102 (C1, hallazgo real de NEXOM): la afinidad ya no
+                # es la clave principal; se combina por RRF con el orden de
+                # la búsqueda (ver combine_with_retrieval).
+                orden = combine_with_retrieval(puntajes)[:limit]
+                ordering = [
+                    ResultOrderingView(retrieval_rank=i + 1, affinity=round(puntajes[i], 3), affinity_title=titulos[i])
+                    for i in orden
+                ]
+                results = [results[i] for i in orden]
+            return results, active_filters, len(all_sources) - len(allowed), retrieval_query, ordering
 
         retrieval_query = self._retrieval_query(project_id, query_text, variables, active_filters, None)
         text_for_search = retrieval_query or query_text
         raw_results = self._rag.search_hybrid(
             project_id, text_for_search, limit=limit, source_id=source_id, only_usable_sources=True,
-            rerank=self._rag.has_reranker, max_access_level=max_access_level,
+            rerank=rerank, max_access_level=max_access_level,
         )
         filtered: list[SemanticSearchResult] = []
         excluded = 0
@@ -498,7 +583,7 @@ class SimulateConversation:
                 filtered.append(result)
             else:
                 excluded += 1
-        return filtered, active_filters, excluded, retrieval_query
+        return filtered, active_filters, excluded, retrieval_query, []
 
     def _matches_all_filters(
         self, project_id: str, result: SemanticSearchResult,

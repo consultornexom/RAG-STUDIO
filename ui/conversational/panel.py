@@ -419,6 +419,7 @@ class ConversationalPanel(QWidget):
         self._refresh_variables()
         self._refresh_rules()
         self._refresh_schemes()
+        self._load_agent_reranking()
         self._apply_button_states()
         if self._project_id:
             self._gate_status_label.refresh(self._context.release_service, self._project_id)
@@ -509,7 +510,7 @@ class ConversationalPanel(QWidget):
             widget.setEnabled(ready)
         self._btn_simulate.setEnabled(ready and not busy)
         self._sim_cancel.setEnabled(busy)
-        for widget in (self._sim_query, self._sim_variables, self._sim_source_id):
+        for widget in (self._sim_query, self._sim_variables, self._sim_source_id, self._sim_reranking):
             widget.setEnabled(ready and not busy)
 
     def refresh_metadata_fields(self) -> None:
@@ -1328,6 +1329,27 @@ class ConversationalPanel(QWidget):
         self._sim_source_id.setPlaceholderText("Restringir a una fuente (opcional, ID de fuente)")
         form_layout.addWidget(self._sim_source_id)
 
+        # Ronda 102 (C4, autorizado por NEXOM): el Simulador y el canal de
+        # mensajes aplicaban siempre el reranking si había modelo, aunque
+        # en Búsqueda RAG se desactivara. Ajuste propio del proyecto; el
+        # predeterminado conserva el comportamiento anterior.
+        rerank_row = QHBoxLayout()
+        rerank_row.addWidget(QLabel("Reranking en el agente:", form))
+        self._sim_reranking = QComboBox(form)
+        for etiqueta, valor in (
+            ("Automático (predeterminado): si hay modelo instalado", None),
+            ("Activado", True),
+            ("Desactivado", False),
+        ):
+            self._sim_reranking.addItem(etiqueta, valor)
+        self._sim_reranking.setToolTip(
+            "Se guarda en el proyecto y lo usan el Simulador y el canal de mensajes de la versión publicada. "
+            "Es independiente de la casilla Reranking de Búsqueda RAG (Laboratorio)."
+        )
+        self._sim_reranking.activated.connect(self._on_agent_reranking_changed)
+        rerank_row.addWidget(self._sim_reranking, 1)
+        form_layout.addLayout(rerank_row)
+
         action_row = QHBoxLayout()
         self._btn_simulate = QPushButton("Simular", form)
         self._btn_simulate.clicked.connect(self._on_simulate)
@@ -1348,6 +1370,28 @@ class ConversationalPanel(QWidget):
         self._sim_report.setReadOnly(True)
         layout.addWidget(self._sim_report)
         return tab
+
+    def _load_agent_reranking(self) -> None:
+        """Ronda 102 (C4): muestra el ajuste guardado del proyecto activo."""
+        valor = None
+        if self._project_id:
+            try:
+                valor = self._context.project_service.get_project(self._project_id).agent_reranking
+            except Exception:  # noqa: BLE001 - solo es la vista del ajuste
+                valor = None
+        indice = self._sim_reranking.findData(valor)
+        self._sim_reranking.setCurrentIndex(indice if indice >= 0 else 0)
+
+    def _on_agent_reranking_changed(self, _index: int = 0) -> None:
+        if not self._project_id:
+            return
+        try:
+            self._context.project_service.update_agent_reranking(self._project_id, self._sim_reranking.currentData())
+        except Exception as exc:  # noqa: BLE001 - mismo criterio que el resto del panel
+            self._report_error(exc)
+            self._load_agent_reranking()
+            return
+        self._sim_status.setText(f"Reranking en el agente: {self._sim_reranking.currentText()} (guardado).")
 
     def _on_simulate(self) -> None:
         if self._active_job is not None or not self._project_id:
@@ -1491,14 +1535,27 @@ class ConversationalPanel(QWidget):
                 f"({trace.excluded_by_metadata_filter} fuente(s) descartada(s) por no coincidir)</p>"
             )
         if trace.section_ordering:
-            # Ronda 91: el número entre corchetes de cada fragmento es el
-            # puntaje de la búsqueda; el ORDEN pone primero las secciones
-            # afines a la intención reconocida.
+            # Ronda 91 / Ronda 102 (C1): el ORDEN combina el puesto en la
+            # búsqueda con la afinidad del título con la intención.
             parts.append(
-                "<p><b>Orden de fragmentos:</b> primero las secciones cuyo título coincide con la intención "
-                "reconocida (nombre, descripción y ejemplos); entre secciones igual de afines, el orden de la "
-                "búsqueda. Por eso los puntajes entre corchetes pueden no ir de mayor a menor.</p>"
+                "<p><b>Orden de fragmentos:</b> combina el puesto en la búsqueda con la afinidad del título "
+                "con la intención reconocida (nombre, descripción y ejemplos), en partes iguales (RRF); a igual "
+                "resultado, el orden de la búsqueda. Junto a cada fragmento se indica su puesto en la "
+                "búsqueda y su afinidad. Por eso los puntajes entre corchetes pueden no ir de mayor a menor.</p>"
             )
+        # Ronda 102 (C4): si se aplicó reranking y con qué modelo.
+        ajustes = {"automatico": "automático", "activado": "activado", "desactivado": "desactivado"}
+        if trace.action.value == "responder" or trace.search_results:
+            if trace.reranking_applied:
+                rerank_txt = f"aplicado — modelo {html_escape(trace.reranking_model or '(sin nombre)')}"
+            else:
+                rerank_txt = "no aplicado"
+            parts.append(
+                f"<p><b>Reranking:</b> {rerank_txt} "
+                f"(ajuste del proyecto: {ajustes.get(trace.reranking_setting, trace.reranking_setting)})</p>"
+            )
+        if trace.reranking_note:
+            parts.append(f"<p><i>{html_escape(trace.reranking_note)}</i></p>")
         if trace.retrieval_query:
             parts.append(
                 f"<p><b>Texto usado para buscar:</b> {html_escape(trace.retrieval_query)} "
@@ -1555,13 +1612,23 @@ class ConversationalPanel(QWidget):
                 )
         elif trace.search_results:
             parts.append(f"<p><b>Fuentes y fragmentos ({len(trace.search_results)}):</b></p>")
-            for result in trace.search_results:
+            orden = trace.result_ordering if len(trace.result_ordering) == len(trace.search_results) else []
+            for posicion, result in enumerate(trace.search_results):
                 source_title = (
                     self._source_title(self._project_id, result.chunk.source_id)
                     if self._project_id else result.chunk.source_id
                 )
                 preview = result.chunk.text[:160].replace("\n", " ")
-                parts.append(f"<p>[{result.score:.3f}] {html_escape(source_title)} — {html_escape(preview)}…</p>")
+                detalle = ""
+                if orden:
+                    o = orden[posicion]
+                    detalle = (
+                        f" <small>(búsqueda #{o.retrieval_rank}; afinidad {o.affinity:.2f} con "
+                        f"«{html_escape(o.affinity_title[:60])}»)</small>"
+                    )
+                parts.append(
+                    f"<p>[{result.score:.3f}] {html_escape(source_title)}{detalle} — {html_escape(preview)}…</p>"
+                )
 
         # Fase 3/4 de multimodalidad nativa (RAG 3): tercer canal de
         # evidencia, independiente del if/elif de arriba -- nunca se

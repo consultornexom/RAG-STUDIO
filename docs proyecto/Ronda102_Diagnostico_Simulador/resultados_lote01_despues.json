@@ -1,0 +1,1088 @@
+{
+  "etiqueta": "despues",
+  "min_tokens": 80,
+  "casos": {
+    "con_reranking": {
+      "R1": {
+        "grupo": "requisitos",
+        "consulta": "¿Cuáles son los requisitos para ingresar al Bachillerato de la Universidad de León?",
+        "intencion": "consultar_requisitos_bachillerato",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato"
+        },
+        "texto_busqueda": "¿Cuáles son los requisitos para ingresar Universidad de León?",
+        "lab": [
+          1,
+          1
+        ],
+        "pool": [
+          1,
+          1
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "requisitos_ingreso.md «Requisitos de ingreso — Bachillerato UDL»",
+          "cualidades_aspirante.md «Cualidades del aspirante — Bachillerato UDL»",
+          "areas_formacion.md «Áreas de formación — Bachillerato UDL»",
+          "bachillerato_torres_landa.md «»",
+          "bachillerato_hilario_medina.md «»"
+        ]
+      },
+      "R2": {
+        "grupo": "requisitos",
+        "consulta": "¿Qué documentos necesito para entrar al bachillerato?",
+        "intencion": "consultar_requisitos_bachillerato",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato"
+        },
+        "texto_busqueda": "¿Qué documentos necesito para entrar ?",
+        "lab": [
+          5,
+          5
+        ],
+        "pool": [
+          5,
+          5
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "requisitos_ingreso.md «Requisitos de ingreso — Bachillerato UDL»",
+          "areas_formacion.md «Áreas de formación — Bachillerato UDL»",
+          "bachillerato_hilario_medina.md «»",
+          "cualidades_aspirante.md «Cualidades del aspirante — Bachillerato UDL»",
+          "bachillerato_torres_landa.md «»"
+        ]
+      },
+      "R3": {
+        "grupo": "requisitos",
+        "consulta": "Requisitos de ingreso al bachillerato en el plantel Torres Landa",
+        "intencion": "consultar_requisitos_bachillerato",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato",
+          "plantel": "torres_landa"
+        },
+        "texto_busqueda": "Requisitos de ingreso plantel",
+        "lab": [
+          14,
+          14
+        ],
+        "pool": [
+          2,
+          2
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "requisitos_ingreso.md «Requisitos de ingreso — Bachillerato UDL»",
+          "bachillerato_torres_landa.md «Información compartida aplicable a este plantel»",
+          "bachillerato_torres_landa.md «Reconocimiento oficial y ubicación del plantel»",
+          "bachillerato_torres_landa.md «»",
+          "cualidades_aspirante.md «Cualidades del aspirante — Bachillerato UDL»"
+        ]
+      },
+      "S1": {
+        "grupo": "compartido",
+        "consulta": "¿Qué áreas se ofrecen en el bachillerato?",
+        "intencion": "consultar_areas_programa",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato"
+        },
+        "texto_busqueda": "¿Qué áreas se ofrecen ?",
+        "lab": [
+          3,
+          3
+        ],
+        "pool": [
+          3,
+          3
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "areas_formacion.md «Áreas de formación — Bachillerato UDL»",
+          "bachillerato_torres_landa.md «Información compartida aplicable a este plantel»",
+          "bachillerato_hilario_medina.md «Información compartida aplicable a este plantel»",
+          "bachillerato_torres_landa.md «6.º semestre»",
+          "bachillerato_torres_landa.md «6.º semestre»"
+        ]
+      },
+      "S2": {
+        "grupo": "compartido",
+        "consulta": "¿Qué cualidades debe tener un aspirante al bachillerato?",
+        "intencion": "consultar_cualidades_aspirante",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato"
+        },
+        "texto_busqueda": "¿Qué cualidades debe tener un aspirante ?",
+        "lab": [
+          1,
+          1
+        ],
+        "pool": [
+          1,
+          1
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "cualidades_aspirante.md «Cualidades del aspirante — Bachillerato UDL»",
+          "bachillerato_hilario_medina.md «Información compartida aplicable a este plantel»",
+          "bachillerato_torres_landa.md «Información compartida aplicable a este plantel»",
+          "requisitos_ingreso.md «Requisitos de ingreso — Bachillerato UDL»",
+          "areas_formacion.md «Áreas de formación — Bachillerato UDL»"
+        ]
+      },
+      "G1": {
+        "grupo": "general",
+        "consulta": "Dame información del bachillerato del plantel Torres Landa",
+        "intencion": "consultar_informacion_programa",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato",
+          "plantel": "torres_landa"
+        },
+        "texto_busqueda": "Dame información plantel",
+        "lab": [
+          1,
+          1
+        ],
+        "pool": [
+          1,
+          1
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "bachillerato_torres_landa.md «Información general»",
+          "bachillerato_torres_landa.md «Información compartida aplicable a este plantel»",
+          "bachillerato_torres_landa.md «Reconocimiento oficial y ubicación del plantel»",
+          "bachillerato_torres_landa.md «»",
+          "bachillerato_torres_landa.md «2.º semestre»"
+        ]
+      },
+      "G2": {
+        "grupo": "general",
+        "consulta": "¿Cómo es el programa de bachillerato en Hilario Medina?",
+        "intencion": "consultar_informacion_programa",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato",
+          "plantel": "hilario_medina"
+        },
+        "texto_busqueda": "¿Cómo es el programa ?",
+        "lab": [
+          1,
+          1
+        ],
+        "pool": [
+          1,
+          6
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "bachillerato_hilario_medina.md «Información general»",
+          "bachillerato_hilario_medina.md «Información compartida aplicable a este plantel»",
+          "bachillerato_hilario_medina.md «Procedencia»",
+          "cualidades_aspirante.md «Cualidades del aspirante — Bachillerato UDL»",
+          "requisitos_ingreso.md «Requisitos de ingreso — Bachillerato UDL»"
+        ]
+      },
+      "P1": {
+        "grupo": "plan",
+        "consulta": "¿Qué materias se cursan en quinto semestre del área Económico-Administrativa del bachillerato en el plantel Torres Landa?",
+        "intencion": "consultar_plan_estudios",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato",
+          "plantel": "torres_landa"
+        },
+        "texto_busqueda": "¿Qué materias se cursan en quinto semestre del área Económico-Administrativa plantel ?",
+        "lab": [
+          1,
+          1
+        ],
+        "pool": [
+          1,
+          1
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "bachillerato_torres_landa.md «5.º semestre»",
+          "bachillerato_torres_landa.md «5.º semestre»",
+          "bachillerato_torres_landa.md «Información compartida aplicable a este plantel»",
+          "bachillerato_torres_landa.md «Reconocimiento oficial y ubicación del plantel»",
+          "bachillerato_torres_landa.md «6.º semestre»"
+        ]
+      },
+      "P2": {
+        "grupo": "plan",
+        "consulta": "¿Qué materias se cursan en quinto semestre del área Físico-Matemática y Químico-Biológicas del bachillerato en el plantel Torres Landa?",
+        "intencion": "consultar_plan_estudios",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato",
+          "plantel": "torres_landa"
+        },
+        "texto_busqueda": "¿Qué materias se cursan en quinto semestre del área Físico-Matemática y Químico-Biológicas plantel ?",
+        "lab": [
+          1,
+          1
+        ],
+        "pool": [
+          1,
+          1
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "bachillerato_torres_landa.md «5.º semestre»",
+          "bachillerato_torres_landa.md «5.º semestre»",
+          "bachillerato_torres_landa.md «Información compartida aplicable a este plantel»",
+          "bachillerato_torres_landa.md «Reconocimiento oficial y ubicación del plantel»",
+          "bachillerato_torres_landa.md «6.º semestre»"
+        ]
+      },
+      "P3": {
+        "grupo": "plan",
+        "consulta": "¿Qué materias se cursan en sexto semestre del área Físico-Matemática y Químico-Biológicas del bachillerato en el plantel Hilario Medina?",
+        "intencion": "consultar_plan_estudios",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato",
+          "plantel": "hilario_medina"
+        },
+        "texto_busqueda": "¿Qué materias se cursan en sexto semestre del área Físico-Matemática y Químico-Biológicas plantel ?",
+        "lab": [
+          1,
+          1
+        ],
+        "pool": [
+          1,
+          1
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "bachillerato_hilario_medina.md «6.º semestre»",
+          "bachillerato_hilario_medina.md «6.º semestre»",
+          "bachillerato_hilario_medina.md «Información compartida aplicable a este plantel»",
+          "bachillerato_hilario_medina.md «Reconocimiento oficial y ubicación del plantel»",
+          "bachillerato_hilario_medina.md «5.º semestre»"
+        ]
+      },
+      "P4": {
+        "grupo": "plan",
+        "consulta": "¿Qué materias lleva el primer semestre del bachillerato en Torres Landa?",
+        "intencion": "consultar_plan_estudios",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato",
+          "plantel": "torres_landa"
+        },
+        "texto_busqueda": "¿Qué materias lleva el primer semestre ?",
+        "lab": [
+          1,
+          1
+        ],
+        "pool": [
+          1,
+          1
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "bachillerato_torres_landa.md «1.º semestre»",
+          "bachillerato_torres_landa.md «4.º semestre»",
+          "bachillerato_torres_landa.md «2.º semestre»",
+          "bachillerato_torres_landa.md «3.º semestre»",
+          "bachillerato_torres_landa.md «6.º semestre»"
+        ]
+      },
+      "P5": {
+        "grupo": "ordinal",
+        "consulta": "materias del 5.º semestre del área Económico-Administrativa del bachillerato en Hilario Medina",
+        "intencion": "consultar_plan_estudios",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato",
+          "plantel": "hilario_medina"
+        },
+        "texto_busqueda": "materias del 5.º semestre del área Económico-Administrativa",
+        "lab": [
+          1,
+          1
+        ],
+        "pool": [
+          1,
+          1
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "bachillerato_hilario_medina.md «5.º semestre»",
+          "bachillerato_hilario_medina.md «5.º semestre»",
+          "bachillerato_hilario_medina.md «6.º semestre»",
+          "bachillerato_hilario_medina.md «3.º semestre»",
+          "bachillerato_hilario_medina.md «6.º semestre»"
+        ]
+      },
+      "P6": {
+        "grupo": "ordinal",
+        "consulta": "materias de 6to semestre del área Económico-Administrativa del bachillerato en Torres Landa",
+        "intencion": "consultar_plan_estudios",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato",
+          "plantel": "torres_landa"
+        },
+        "texto_busqueda": "materias de 6to semestre del área Económico-Administrativa",
+        "lab": [
+          1,
+          1
+        ],
+        "pool": [
+          1,
+          1
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "bachillerato_torres_landa.md «6.º semestre»",
+          "bachillerato_torres_landa.md «6.º semestre»",
+          "bachillerato_torres_landa.md «5.º semestre»",
+          "bachillerato_torres_landa.md «3.º semestre»",
+          "bachillerato_torres_landa.md «5.º semestre»"
+        ]
+      },
+      "O1": {
+        "grupo": "general",
+        "consulta": "¿Cuál es el reconocimiento de validez oficial del bachillerato en el plantel Torres Landa?",
+        "intencion": "consultar_informacion_programa",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato",
+          "plantel": "torres_landa"
+        },
+        "texto_busqueda": "¿Cuál es el reconocimiento de validez oficial plantel ?",
+        "lab": [
+          1,
+          1
+        ],
+        "pool": [
+          1,
+          1
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "bachillerato_torres_landa.md «Reconocimiento oficial y ubicación del plantel»",
+          "bachillerato_torres_landa.md «Información compartida aplicable a este plantel»",
+          "bachillerato_torres_landa.md «Información general»",
+          "bachillerato_torres_landa.md «»",
+          "bachillerato_torres_landa.md «Procedencia»"
+        ]
+      }
+    },
+    "sin_reranking": {
+      "R1": {
+        "grupo": "requisitos",
+        "consulta": "¿Cuáles son los requisitos para ingresar al Bachillerato de la Universidad de León?",
+        "intencion": "consultar_requisitos_bachillerato",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato"
+        },
+        "texto_busqueda": "¿Cuáles son los requisitos para ingresar Universidad de León?",
+        "lab": [
+          2,
+          2
+        ],
+        "pool": [
+          2,
+          2
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "requisitos_ingreso.md «Requisitos de ingreso — Bachillerato UDL»",
+          "bachillerato_hilario_medina.md «»",
+          "cualidades_aspirante.md «Cualidades del aspirante — Bachillerato UDL»",
+          "bachillerato_torres_landa.md «»",
+          "areas_formacion.md «Áreas de formación — Bachillerato UDL»"
+        ]
+      },
+      "R2": {
+        "grupo": "requisitos",
+        "consulta": "¿Qué documentos necesito para entrar al bachillerato?",
+        "intencion": "consultar_requisitos_bachillerato",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato"
+        },
+        "texto_busqueda": "¿Qué documentos necesito para entrar ?",
+        "lab": [
+          6,
+          6
+        ],
+        "pool": [
+          13,
+          13
+        ],
+        "final": [
+          3,
+          3
+        ],
+        "final_top5": [
+          "bachillerato_torres_landa.md «»",
+          "bachillerato_hilario_medina.md «»",
+          "requisitos_ingreso.md «Requisitos de ingreso — Bachillerato UDL»",
+          "cualidades_aspirante.md «Cualidades del aspirante — Bachillerato UDL»",
+          "areas_formacion.md «Áreas de formación — Bachillerato UDL»"
+        ]
+      },
+      "R3": {
+        "grupo": "requisitos",
+        "consulta": "Requisitos de ingreso al bachillerato en el plantel Torres Landa",
+        "intencion": "consultar_requisitos_bachillerato",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato",
+          "plantel": "torres_landa"
+        },
+        "texto_busqueda": "Requisitos de ingreso plantel",
+        "lab": [
+          14,
+          14
+        ],
+        "pool": [
+          3,
+          3
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "requisitos_ingreso.md «Requisitos de ingreso — Bachillerato UDL»",
+          "bachillerato_torres_landa.md «Información compartida aplicable a este plantel»",
+          "cualidades_aspirante.md «Cualidades del aspirante — Bachillerato UDL»",
+          "bachillerato_torres_landa.md «Reconocimiento oficial y ubicación del plantel»",
+          "bachillerato_torres_landa.md «»"
+        ]
+      },
+      "S1": {
+        "grupo": "compartido",
+        "consulta": "¿Qué áreas se ofrecen en el bachillerato?",
+        "intencion": "consultar_areas_programa",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato"
+        },
+        "texto_busqueda": "¿Qué áreas se ofrecen ?",
+        "lab": [
+          1,
+          1
+        ],
+        "pool": [
+          3,
+          3
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "areas_formacion.md «Áreas de formación — Bachillerato UDL»",
+          "bachillerato_hilario_medina.md «Información compartida aplicable a este plantel»",
+          "bachillerato_torres_landa.md «Información compartida aplicable a este plantel»",
+          "cualidades_aspirante.md «Cualidades del aspirante — Bachillerato UDL»",
+          "requisitos_ingreso.md «Requisitos de ingreso — Bachillerato UDL»"
+        ]
+      },
+      "S2": {
+        "grupo": "compartido",
+        "consulta": "¿Qué cualidades debe tener un aspirante al bachillerato?",
+        "intencion": "consultar_cualidades_aspirante",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato"
+        },
+        "texto_busqueda": "¿Qué cualidades debe tener un aspirante ?",
+        "lab": [
+          1,
+          1
+        ],
+        "pool": [
+          2,
+          2
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "cualidades_aspirante.md «Cualidades del aspirante — Bachillerato UDL»",
+          "bachillerato_hilario_medina.md «Información compartida aplicable a este plantel»",
+          "bachillerato_torres_landa.md «Información compartida aplicable a este plantel»",
+          "bachillerato_hilario_medina.md «Información general»",
+          "bachillerato_torres_landa.md «Información general»"
+        ]
+      },
+      "G1": {
+        "grupo": "general",
+        "consulta": "Dame información del bachillerato del plantel Torres Landa",
+        "intencion": "consultar_informacion_programa",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato",
+          "plantel": "torres_landa"
+        },
+        "texto_busqueda": "Dame información plantel",
+        "lab": [
+          1,
+          1
+        ],
+        "pool": [
+          1,
+          1
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "bachillerato_torres_landa.md «Información general»",
+          "bachillerato_torres_landa.md «Reconocimiento oficial y ubicación del plantel»",
+          "bachillerato_torres_landa.md «Información compartida aplicable a este plantel»",
+          "bachillerato_torres_landa.md «»",
+          "bachillerato_torres_landa.md «3.º semestre»"
+        ]
+      },
+      "G2": {
+        "grupo": "general",
+        "consulta": "¿Cómo es el programa de bachillerato en Hilario Medina?",
+        "intencion": "consultar_informacion_programa",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato",
+          "plantel": "hilario_medina"
+        },
+        "texto_busqueda": "¿Cómo es el programa ?",
+        "lab": [
+          1,
+          1
+        ],
+        "pool": [
+          1,
+          1
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "bachillerato_hilario_medina.md «Información general»",
+          "bachillerato_hilario_medina.md «Información compartida aplicable a este plantel»",
+          "cualidades_aspirante.md «Cualidades del aspirante — Bachillerato UDL»",
+          "bachillerato_hilario_medina.md «Reconocimiento oficial y ubicación del plantel»",
+          "bachillerato_hilario_medina.md «Procedencia»"
+        ]
+      },
+      "P1": {
+        "grupo": "plan",
+        "consulta": "¿Qué materias se cursan en quinto semestre del área Económico-Administrativa del bachillerato en el plantel Torres Landa?",
+        "intencion": "consultar_plan_estudios",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato",
+          "plantel": "torres_landa"
+        },
+        "texto_busqueda": "¿Qué materias se cursan en quinto semestre del área Económico-Administrativa plantel ?",
+        "lab": [
+          1,
+          1
+        ],
+        "pool": [
+          1,
+          1
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "bachillerato_torres_landa.md «5.º semestre»",
+          "bachillerato_torres_landa.md «5.º semestre»",
+          "bachillerato_torres_landa.md «Información compartida aplicable a este plantel»",
+          "bachillerato_torres_landa.md «Reconocimiento oficial y ubicación del plantel»",
+          "bachillerato_torres_landa.md «6.º semestre»"
+        ]
+      },
+      "P2": {
+        "grupo": "plan",
+        "consulta": "¿Qué materias se cursan en quinto semestre del área Físico-Matemática y Químico-Biológicas del bachillerato en el plantel Torres Landa?",
+        "intencion": "consultar_plan_estudios",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato",
+          "plantel": "torres_landa"
+        },
+        "texto_busqueda": "¿Qué materias se cursan en quinto semestre del área Físico-Matemática y Químico-Biológicas plantel ?",
+        "lab": [
+          1,
+          1
+        ],
+        "pool": [
+          1,
+          1
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "bachillerato_torres_landa.md «5.º semestre»",
+          "bachillerato_torres_landa.md «5.º semestre»",
+          "bachillerato_torres_landa.md «Reconocimiento oficial y ubicación del plantel»",
+          "bachillerato_torres_landa.md «Información compartida aplicable a este plantel»",
+          "bachillerato_torres_landa.md «6.º semestre»"
+        ]
+      },
+      "P3": {
+        "grupo": "plan",
+        "consulta": "¿Qué materias se cursan en sexto semestre del área Físico-Matemática y Químico-Biológicas del bachillerato en el plantel Hilario Medina?",
+        "intencion": "consultar_plan_estudios",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato",
+          "plantel": "hilario_medina"
+        },
+        "texto_busqueda": "¿Qué materias se cursan en sexto semestre del área Físico-Matemática y Químico-Biológicas plantel ?",
+        "lab": [
+          1,
+          1
+        ],
+        "pool": [
+          1,
+          1
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "bachillerato_hilario_medina.md «6.º semestre»",
+          "bachillerato_hilario_medina.md «6.º semestre»",
+          "bachillerato_hilario_medina.md «Reconocimiento oficial y ubicación del plantel»",
+          "bachillerato_hilario_medina.md «Información compartida aplicable a este plantel»",
+          "bachillerato_hilario_medina.md «5.º semestre»"
+        ]
+      },
+      "P4": {
+        "grupo": "plan",
+        "consulta": "¿Qué materias lleva el primer semestre del bachillerato en Torres Landa?",
+        "intencion": "consultar_plan_estudios",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato",
+          "plantel": "torres_landa"
+        },
+        "texto_busqueda": "¿Qué materias lleva el primer semestre ?",
+        "lab": [
+          1,
+          2
+        ],
+        "pool": [
+          1,
+          1
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "bachillerato_torres_landa.md «1.º semestre»",
+          "bachillerato_torres_landa.md «3.º semestre»",
+          "bachillerato_torres_landa.md «4.º semestre»",
+          "bachillerato_torres_landa.md «5.º semestre»",
+          "bachillerato_torres_landa.md «6.º semestre»"
+        ]
+      },
+      "P5": {
+        "grupo": "ordinal",
+        "consulta": "materias del 5.º semestre del área Económico-Administrativa del bachillerato en Hilario Medina",
+        "intencion": "consultar_plan_estudios",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato",
+          "plantel": "hilario_medina"
+        },
+        "texto_busqueda": "materias del 5.º semestre del área Económico-Administrativa",
+        "lab": [
+          1,
+          1
+        ],
+        "pool": [
+          1,
+          1
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "bachillerato_hilario_medina.md «5.º semestre»",
+          "bachillerato_hilario_medina.md «5.º semestre»",
+          "bachillerato_hilario_medina.md «6.º semestre»",
+          "bachillerato_hilario_medina.md «3.º semestre»",
+          "bachillerato_hilario_medina.md «4.º semestre»"
+        ]
+      },
+      "P6": {
+        "grupo": "ordinal",
+        "consulta": "materias de 6to semestre del área Económico-Administrativa del bachillerato en Torres Landa",
+        "intencion": "consultar_plan_estudios",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato",
+          "plantel": "torres_landa"
+        },
+        "texto_busqueda": "materias de 6to semestre del área Económico-Administrativa",
+        "lab": [
+          2,
+          2
+        ],
+        "pool": [
+          1,
+          1
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "bachillerato_torres_landa.md «6.º semestre»",
+          "bachillerato_torres_landa.md «6.º semestre»",
+          "bachillerato_torres_landa.md «5.º semestre»",
+          "bachillerato_torres_landa.md «5.º semestre»",
+          "bachillerato_torres_landa.md «3.º semestre»"
+        ]
+      },
+      "O1": {
+        "grupo": "general",
+        "consulta": "¿Cuál es el reconocimiento de validez oficial del bachillerato en el plantel Torres Landa?",
+        "intencion": "consultar_informacion_programa",
+        "accion": "responder",
+        "filtros": {
+          "nivel_academico": "bachillerato",
+          "plantel": "torres_landa"
+        },
+        "texto_busqueda": "¿Cuál es el reconocimiento de validez oficial plantel ?",
+        "lab": [
+          1,
+          1
+        ],
+        "pool": [
+          1,
+          1
+        ],
+        "final": [
+          1,
+          1
+        ],
+        "final_top5": [
+          "bachillerato_torres_landa.md «Reconocimiento oficial y ubicación del plantel»",
+          "bachillerato_torres_landa.md «Información general»",
+          "bachillerato_torres_landa.md «Información compartida aplicable a este plantel»",
+          "cualidades_aspirante.md «Cualidades del aspirante — Bachillerato UDL»",
+          "bachillerato_torres_landa.md «Procedencia»"
+        ]
+      }
+    }
+  },
+  "metricas": {
+    "con_reranking": {
+      "todos": {
+        "lab": {
+          "R@1": 0.7857142857142857,
+          "R@3": 0.8571428571428571,
+          "R@5": 0.9285714285714286,
+          "MRR": 0.829
+        },
+        "pool": {
+          "R@1": 0.7142857142857143,
+          "R@3": 0.8571428571428571,
+          "R@5": 0.9285714285714286,
+          "MRR": 0.8
+        },
+        "final": {
+          "R@1": 1.0,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 1.0
+        }
+      },
+      "compartido": {
+        "lab": {
+          "R@1": 0.5,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 0.667
+        },
+        "pool": {
+          "R@1": 0.5,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 0.667
+        },
+        "final": {
+          "R@1": 1.0,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 1.0
+        }
+      },
+      "general": {
+        "lab": {
+          "R@1": 1.0,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 1.0
+        },
+        "pool": {
+          "R@1": 0.6666666666666666,
+          "R@3": 0.6666666666666666,
+          "R@5": 0.6666666666666666,
+          "MRR": 0.722
+        },
+        "final": {
+          "R@1": 1.0,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 1.0
+        }
+      },
+      "ordinal": {
+        "lab": {
+          "R@1": 1.0,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 1.0
+        },
+        "pool": {
+          "R@1": 1.0,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 1.0
+        },
+        "final": {
+          "R@1": 1.0,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 1.0
+        }
+      },
+      "plan": {
+        "lab": {
+          "R@1": 1.0,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 1.0
+        },
+        "pool": {
+          "R@1": 1.0,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 1.0
+        },
+        "final": {
+          "R@1": 1.0,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 1.0
+        }
+      },
+      "requisitos": {
+        "lab": {
+          "R@1": 0.3333333333333333,
+          "R@3": 0.3333333333333333,
+          "R@5": 0.6666666666666666,
+          "MRR": 0.424
+        },
+        "pool": {
+          "R@1": 0.3333333333333333,
+          "R@3": 0.6666666666666666,
+          "R@5": 1.0,
+          "MRR": 0.567
+        },
+        "final": {
+          "R@1": 1.0,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 1.0
+        }
+      }
+    },
+    "sin_reranking": {
+      "todos": {
+        "lab": {
+          "R@1": 0.6428571428571429,
+          "R@3": 0.8571428571428571,
+          "R@5": 0.8571428571428571,
+          "MRR": 0.767
+        },
+        "pool": {
+          "R@1": 0.6428571428571429,
+          "R@3": 0.9285714285714286,
+          "R@5": 0.9285714285714286,
+          "MRR": 0.767
+        },
+        "final": {
+          "R@1": 0.9285714285714286,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 0.952
+        }
+      },
+      "compartido": {
+        "lab": {
+          "R@1": 1.0,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 1.0
+        },
+        "pool": {
+          "R@1": 0.0,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 0.417
+        },
+        "final": {
+          "R@1": 1.0,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 1.0
+        }
+      },
+      "general": {
+        "lab": {
+          "R@1": 1.0,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 1.0
+        },
+        "pool": {
+          "R@1": 1.0,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 1.0
+        },
+        "final": {
+          "R@1": 1.0,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 1.0
+        }
+      },
+      "ordinal": {
+        "lab": {
+          "R@1": 0.5,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 0.75
+        },
+        "pool": {
+          "R@1": 1.0,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 1.0
+        },
+        "final": {
+          "R@1": 1.0,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 1.0
+        }
+      },
+      "plan": {
+        "lab": {
+          "R@1": 0.75,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 0.875
+        },
+        "pool": {
+          "R@1": 1.0,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 1.0
+        },
+        "final": {
+          "R@1": 1.0,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 1.0
+        }
+      },
+      "requisitos": {
+        "lab": {
+          "R@1": 0.0,
+          "R@3": 0.3333333333333333,
+          "R@5": 0.3333333333333333,
+          "MRR": 0.246
+        },
+        "pool": {
+          "R@1": 0.0,
+          "R@3": 0.6666666666666666,
+          "R@5": 0.6666666666666666,
+          "MRR": 0.303
+        },
+        "final": {
+          "R@1": 0.6666666666666666,
+          "R@3": 1.0,
+          "R@5": 1.0,
+          "MRR": 0.778
+        }
+      }
+    }
+  }
+}

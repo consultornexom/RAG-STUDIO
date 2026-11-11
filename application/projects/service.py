@@ -24,6 +24,7 @@ from .commands.import_project import ImportProject
 from .commands.update_project_details import UpdateProjectDetails
 from .commands.update_project_name import UpdateProjectName
 from .commands.update_quality_regression_threshold import UpdateQualityRegressionThreshold
+from .commands.update_agent_reranking import UpdateAgentReranking
 from .commands.validate_project_integrity import ValidateProjectIntegrity
 from .queries.compare_projects import CompareProjects
 from .queries.get_project import GetProject
@@ -52,6 +53,7 @@ class ProjectService:
         self._update_name = UpdateProjectName(repository)
         self._update_details = UpdateProjectDetails(repository)
         self._update_quality_regression_threshold = UpdateQualityRegressionThreshold(repository)
+        self._update_agent_reranking = UpdateAgentReranking(repository)
         self._change_status = ChangeProjectStatus(repository)
         # source_repository es opcional solo para no romper a quien ya
         # instancia ProjectService sin él (p. ej. pruebas existentes que
@@ -83,6 +85,11 @@ class ProjectService:
         liberación "Regresión de recuperación". `None` vuelve a usar el
         valor por defecto de la instalación -- ver UpdateQualityRegressionThreshold."""
         return self._update_quality_regression_threshold.execute(project_id, threshold)
+
+    def update_agent_reranking(self, project_id: str, enabled: Optional[bool]) -> Project:
+        """Ronda 102 (C4): "Reranking en el agente" del proyecto. None =
+        automático (predeterminado), True = activado, False = desactivado."""
+        return self._update_agent_reranking.execute(project_id, enabled)
 
     def change_project_status(self, project_id: str, target_status: str) -> Project:
         """Mueve el estado de un proyecto (Ronda 15, punto 48). target_status

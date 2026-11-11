@@ -86,6 +86,9 @@ class ProjectRecord(ProjectBase):
     updated_at: Mapped[datetime] = mapped_column(UTCDateTime(), nullable=False)
     archived_at: Mapped[datetime | None] = mapped_column(UTCDateTime(), nullable=True)
     quality_regression_threshold: Mapped[float | None] = mapped_column(Float, nullable=True)
+    agent_reranking: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
+    """Ronda 102 (migración 0024): ver Project.agent_reranking. NULL =
+    automático (comportamiento anterior); ningún proyecto necesita backfill."""
     """Ronda 53 (Propuesta de evaluación continua reforzada, opción B'
     confirmada por el consultor): caída relativa máxima admitida de
     Recall@3/MRR entre dos corridas "completa" consecutivas antes de que

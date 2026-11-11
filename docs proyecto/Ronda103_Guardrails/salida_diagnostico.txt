@@ -1,0 +1,84 @@
+Precedencia (domain.conversational.rule_evaluation.select_firing_action):
+  ACTUAL      asesor con confianza 0.206: ['aclarar_baja_confianza', 'canalizar_solicitud_asesor'] -> canalizar
+  ACTUAL      asesor con confianza 0.15: ['aclarar_baja_confianza', 'abstenerse_confianza_insuficiente', 'canalizar_solicitud_asesor'] -> canalizar
+  ACTUAL      asesor con confianza 0.60: ['canalizar_solicitud_asesor'] -> canalizar
+  ALTERNATIVA asesor con confianza 0.206: ['aclarar_baja_confianza'] -> aclarar
+  ALTERNATIVA asesor con confianza 0.15: ['aclarar_baja_confianza', 'abstenerse_confianza_insuficiente'] -> abstenerse
+  ALTERNATIVA asesor con confianza 0.60: ['canalizar_solicitud_asesor'] -> canalizar
+[fuera de alcance] ¿Cuál es la mejor pizza de León?
+    consultar_plan_estudios              margen 0.131 (+0.131 −0.005)
+    consultar_requisitos_bachillerato    margen 0.120 (+0.120 −0.007)
+    consultar_informacion_programa       margen 0.106 (+0.106 −0.022)
+  intención consultar_plan_estudios  confianza 0.131
+  ACTUAL      reglas ['aclarar_baja_confianza', 'abstenerse_confianza_insuficiente'] -> abstenerse
+  ALTERNATIVA reglas ['aclarar_baja_confianza', 'abstenerse_confianza_insuficiente'] -> abstenerse
+[fuera de alcance] ¿Qué clima hará mañana en León?
+    consultar_plan_estudios              margen 0.401 (+0.401 −0.065)
+    consultar_areas_programa             margen 0.296 (+0.296 −0.109)
+    consultar_informacion_programa       margen 0.239 (+0.239 −0.109)
+  intención consultar_plan_estudios  confianza 0.401
+  ACTUAL      reglas ['aclarar_baja_confianza'] -> aclarar
+  ALTERNATIVA reglas ['aclarar_baja_confianza'] -> aclarar
+[fuera de alcance] ¿Quién ganó el partido del León ayer?
+    consultar_informacion_programa       margen 0.220 (+0.220 −0.029)
+    consultar_cualidades_aspirante       margen 0.180 (+0.180 −0.000)
+    consultar_areas_programa             margen 0.124 (+0.124 −0.029)
+  intención consultar_informacion_programa  confianza 0.220
+  ACTUAL      reglas ['aclarar_baja_confianza'] -> aclarar
+  ALTERNATIVA reglas ['aclarar_baja_confianza'] -> aclarar
+[fuera de alcance] Recomiéndame una película
+    consultar_areas_programa             margen 0.196 (+0.196 −0.168)
+    solicitar_asesor_admisiones          margen 0.194 (+0.194 −0.035)
+    consultar_cualidades_aspirante       margen 0.168 (+0.168 −0.053)
+  intención consultar_areas_programa  confianza 0.196
+  ACTUAL      reglas ['aclarar_baja_confianza', 'abstenerse_confianza_insuficiente'] -> abstenerse
+  ALTERNATIVA reglas ['aclarar_baja_confianza', 'abstenerse_confianza_insuficiente'] -> abstenerse
+[asesor explícito] Quiero hablar con un asesor de admisiones
+    solicitar_asesor_admisiones          margen 1.000 (+1.000 −0.347)
+    consultar_informacion_programa       margen 0.486 (+0.486 −0.347)
+    consultar_requisitos_bachillerato    margen 0.469 (+0.469 −0.349)
+  intención solicitar_asesor_admisiones  confianza 1.000
+  ACTUAL      reglas ['canalizar_solicitud_asesor'] -> canalizar
+  ALTERNATIVA reglas ['canalizar_solicitud_asesor'] -> canalizar
+[asesor explícito] ¿Me pueden comunicar con alguien de admisiones del bachillerato?
+    solicitar_asesor_admisiones          margen 0.909 (+0.909 −0.253)
+    consultar_informacion_programa       margen 0.445 (+0.445 −0.253)
+    consultar_requisitos_bachillerato    margen 0.417 (+0.417 −0.257)
+  intención solicitar_asesor_admisiones  confianza 0.909
+  ACTUAL      reglas ['canalizar_solicitud_asesor'] -> canalizar
+  ALTERNATIVA reglas ['canalizar_solicitud_asesor'] -> canalizar
+[asesor explícito] Necesito hablar con una persona, no con un bot
+    solicitar_asesor_admisiones          margen 0.603 (+0.603 −0.150)
+    consultar_requisitos_bachillerato    margen 0.292 (+0.292 −0.121)
+    consultar_informacion_programa       margen 0.270 (+0.270 −0.140)
+  intención solicitar_asesor_admisiones  confianza 0.603
+  ACTUAL      reglas ['canalizar_solicitud_asesor'] -> canalizar
+  ALTERNATIVA reglas ['canalizar_solicitud_asesor'] -> canalizar
+[documental] ¿Cuáles son los requisitos para ingresar al Bachillerato de la Universidad de León?
+    consultar_requisitos_bachillerato    margen 0.719 (+0.722 −0.726)
+    solicitar_asesor_admisiones          margen 0.539 (+0.610 −0.681)
+    consultar_plan_estudios              margen 0.095 (+0.388 −0.681)
+  intención consultar_requisitos_bachillerato  confianza 0.722
+  ACTUAL      reglas [] -> responder
+  ALTERNATIVA reglas [] -> responder
+[documental] ¿Qué áreas se ofrecen en el bachillerato?
+    consultar_areas_programa             margen 1.000 (+1.000 −0.401)
+    consultar_plan_estudios              margen 0.470 (+0.470 −0.401)
+    consultar_informacion_programa       margen 0.438 (+0.438 −0.401)
+  intención consultar_areas_programa  confianza 1.000
+  ACTUAL      reglas [] -> responder
+  ALTERNATIVA reglas [] -> responder
+[documental] ¿Qué cualidades debe tener un aspirante al bachillerato?
+    consultar_cualidades_aspirante       margen 1.000 (+1.000 −0.342)
+    consultar_plan_estudios              margen 0.357 (+0.357 −0.342)
+    consultar_requisitos_bachillerato    margen 0.272 (+0.325 −0.377)
+  intención consultar_cualidades_aspirante  confianza 1.000
+  ACTUAL      reglas [] -> responder
+  ALTERNATIVA reglas [] -> responder
+[documental] Dame información del bachillerato del plantel Torres Landa
+    consultar_informacion_programa       margen 0.705 (+0.705 −0.239)
+    consultar_areas_programa             margen 0.504 (+0.504 −0.239)
+    consultar_plan_estudios              margen 0.450 (+0.450 −0.239)
+  intención consultar_informacion_programa  confianza 0.705
+  ACTUAL      reglas [] -> responder
+  ALTERNATIVA reglas [] -> responder

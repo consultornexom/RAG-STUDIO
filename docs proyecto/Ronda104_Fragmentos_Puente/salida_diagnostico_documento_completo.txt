@@ -1,0 +1,23 @@
+== documentos compartidos: documento_completo
+
+[sin reranking] ¿Qué documentos necesito para entrar al bachillerato?
+   intención consultar_requisitos_bachillerato (1.000); texto de búsqueda: '¿Qué documentos necesito para entrar ?'
+   Búsqueda RAG (consulta original): {'PUENTE-HM': 1, 'PUENTE-TL': 3, 'REQUISITOS': 6}
+   semántica: {'PUENTE-HM': 1, 'PUENTE-TL': 2, 'REQUISITOS': 11}   textual (BM25): {'PUENTE-HM': 1, 'PUENTE-TL': 2}   pool: {'PUENTE-HM': 1, 'PUENTE-TL': 2, 'REQUISITOS': 13}
+   FINAL top 5: {'REQUISITOS': 3}
+     1. bachillerato_torres_landa.md     búsqueda #7  afinidad 0.20 «bachillerato_torres_landa»
+     2. bachillerato_hilario_medina.md   búsqueda #9  afinidad 0.20 «bachillerato_hilario_medina»
+     3. requisitos_ingreso.md            búsqueda #13 afinidad 0.40 «Requisitos de ingreso — Bachillerato UDL»
+     4. cualidades_aspirante.md          búsqueda #12 afinidad 0.15 «Cualidades del aspirante — Bachillerato UDL»
+     5. areas_formacion.md               búsqueda #14 afinidad 0.15 «Áreas de formación — Bachillerato UDL»
+
+[sin reranking] ¿Cuáles son los requisitos para ingresar al Bachillerato de la Universidad de León?
+   intención consultar_requisitos_bachillerato (0.722); texto de búsqueda: '¿Cuáles son los requisitos para ingresar Universidad de León?'
+   Búsqueda RAG (consulta original): {'REQUISITOS': 2, 'PUENTE-HM': 6, 'PUENTE-TL': 9}
+   semántica: {'REQUISITOS': 6, 'PUENTE-HM': 17, 'PUENTE-TL': 18}   textual (BM25): {'REQUISITOS': 1, 'PUENTE-HM': 2, 'PUENTE-TL': 3}   pool: {'REQUISITOS': 2, 'PUENTE-HM': 8, 'PUENTE-TL': 9}
+   FINAL top 5: {'REQUISITOS': 1}
+     1. requisitos_ingreso.md            búsqueda #2  afinidad 0.65 «Requisitos de ingreso — Bachillerato UDL»
+     2. bachillerato_hilario_medina.md   búsqueda #5  afinidad 0.20 «bachillerato_hilario_medina»
+     3. cualidades_aspirante.md          búsqueda #4  afinidad 0.15 «Cualidades del aspirante — Bachillerato UDL»
+     4. bachillerato_torres_landa.md     búsqueda #6  afinidad 0.20 «bachillerato_torres_landa»
+     5. areas_formacion.md               búsqueda #7  afinidad 0.15 «Áreas de formación — Bachillerato UDL»

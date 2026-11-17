@@ -1,0 +1,23 @@
+== documentos compartidos: por_encabezado
+
+[sin reranking] ¿Qué documentos necesito para entrar al bachillerato?
+   intención consultar_requisitos_bachillerato (1.000); texto de búsqueda: '¿Qué documentos necesito para entrar ?'
+   Búsqueda RAG (consulta original): {'REQUISITOS': 2, 'PUENTE-HM': 3, 'PUENTE-TL': 4}
+   semántica: {'PUENTE-HM': 1, 'PUENTE-TL': 2, 'REQUISITOS': 3}   textual (BM25): {'PUENTE-HM': 1, 'PUENTE-TL': 2}   pool: {'PUENTE-HM': 1, 'PUENTE-TL': 2, 'REQUISITOS': 5}
+   FINAL top 5: {'PUENTE-HM': 4, 'PUENTE-TL': 5}
+     1. bachillerato_torres_landa.md     búsqueda #9  afinidad 0.20 «bachillerato_torres_landa»
+     2. bachillerato_hilario_medina.md   búsqueda #11 afinidad 0.20 «bachillerato_hilario_medina»
+     3. requisitos_ingreso.md            búsqueda #18 afinidad 0.49 «requisitos_ingreso»
+     4. bachillerato_hilario_medina.md   búsqueda #1  afinidad 0.00 «Información compartida aplicable a este plant»
+     5. bachillerato_torres_landa.md     búsqueda #2  afinidad 0.00 «Información compartida aplicable a este plant»
+
+[sin reranking] ¿Cuáles son los requisitos para ingresar al Bachillerato de la Universidad de León?
+   intención consultar_requisitos_bachillerato (0.722); texto de búsqueda: '¿Cuáles son los requisitos para ingresar Universidad de León?'
+   Búsqueda RAG (consulta original): {'REQUISITOS': 1, 'PUENTE-HM': 8, 'PUENTE-TL': 11}
+   semántica: {'REQUISITOS': 8, 'PUENTE-HM': 19, 'PUENTE-TL': 20}   textual (BM25): {'REQUISITOS': 1, 'PUENTE-HM': 3, 'PUENTE-TL': 4}   pool: {'REQUISITOS': 1, 'PUENTE-HM': 12, 'PUENTE-TL': 13}
+   FINAL top 5: {'REQUISITOS': 4}
+     1. requisitos_ingreso.md            búsqueda #6  afinidad 1.00 «requisitos_ingreso»
+     2. bachillerato_hilario_medina.md   búsqueda #7  afinidad 0.20 «bachillerato_hilario_medina»
+     3. bachillerato_torres_landa.md     búsqueda #9  afinidad 0.20 «bachillerato_torres_landa»
+     4. requisitos_ingreso.md            búsqueda #1  afinidad 0.00 «Contenido»
+     5. requisitos_ingreso.md            búsqueda #2  afinidad 0.00 «Ámbito de aplicación»

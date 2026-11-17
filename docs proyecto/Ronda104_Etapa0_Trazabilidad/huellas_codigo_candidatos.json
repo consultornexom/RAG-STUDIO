@@ -1,0 +1,194 @@
+{
+ "b43ae4f": {
+  "commit": "b43ae4f10cc4d55ca70400ae83f1fd605bcfcfcf",
+  "fecha": "2026-10-15 13:12:50 -0600",
+  "huella_global": "fdd668939ddab11d9dc8732baa11d99184de3d2355a89a321eea8c62da104e6a",
+  "por_carpeta": {
+   "app": "f4234a48ba5853122810fb544191290831130adc80911763e023641223ceb125",
+   "application": "bce0da8d8f14b6226a950b0761be321334b28d413dafb28e9870b4a0c7646c1f",
+   "domain": "0f26a32067239526874f680fb0af0c2c1e0708f71ee9c9bd0a805b854649b56e",
+   "infrastructure": "a96668c9622072d08a26230863394a960f39f0aab0cbabff415866d376b16790",
+   "interfaces": "544cf429cee69180f45ec8b9b99cc072791e0475353fb044eeeae5f37a62a1d3",
+   "migrations": "fbc43afd2c7bd89b160abf79ce66d76c9c15bf962d27aa1c46d106d00c6bff8c",
+   "ui": "dd09180f60e351fe973dd8ee421768dfe8246cc1bcc706e2fca0b26601fb778b",
+   "workers": "b21a614238b8e63b4041d1a0de8f8fb81d5db63c4455eeb3ab8f3b06fbaaa400"
+  },
+  "revision_esquema_maxima": "0021"
+ },
+ "85594c2": {
+  "commit": "85594c20014aef07c5350714b3b1d85430f3b424",
+  "fecha": "2026-11-09 12:56:10 -0600",
+  "huella_global": "e2da3f7add84eba39b990a8c5fa2ff00e0f002ba5b1912f19f1049d83a8055aa",
+  "por_carpeta": {
+   "app": "f4234a48ba5853122810fb544191290831130adc80911763e023641223ceb125",
+   "application": "ce78295074e1ed5e2b45cd8750bd760ed524dbb5298d74b946fbd0cb54d699eb",
+   "domain": "c6f556290ef34ccf41bec072fa540f16fddef318fc22d452ca50767a2107cf9e",
+   "infrastructure": "a96668c9622072d08a26230863394a960f39f0aab0cbabff415866d376b16790",
+   "interfaces": "544cf429cee69180f45ec8b9b99cc072791e0475353fb044eeeae5f37a62a1d3",
+   "migrations": "fbc43afd2c7bd89b160abf79ce66d76c9c15bf962d27aa1c46d106d00c6bff8c",
+   "ui": "5a4c5ef869aa348c2691dd9c4c4745533ac68a511b33abd10ca0b06517dec6c5",
+   "workers": "b21a614238b8e63b4041d1a0de8f8fb81d5db63c4455eeb3ab8f3b06fbaaa400"
+  },
+  "revision_esquema_maxima": "0021"
+ },
+ "e92ed66": {
+  "commit": "e92ed66722ad5c54319afbf2168f374aaad7fcb1",
+  "fecha": "2026-11-09 16:48:52 -0600",
+  "huella_global": "b6c303e86101a1a4fcba28041e24967d4bd69ff947835fc0e5be08369f77d2ef",
+  "por_carpeta": {
+   "app": "f4234a48ba5853122810fb544191290831130adc80911763e023641223ceb125",
+   "application": "1fcf2cfea1d6be6d322281f50b8825da2c97cbdf1ef00f1bf493f14973b1e546",
+   "domain": "100a00a35e5cd322dc90b6351c60a5e2c18852a09205d220c837d52ea6774aaf",
+   "infrastructure": "6c8a57feee26b48cb0f02d58df982c650f1158e2c25556f760bb38d57310c690",
+   "interfaces": "544cf429cee69180f45ec8b9b99cc072791e0475353fb044eeeae5f37a62a1d3",
+   "migrations": "c58205a8a867ab9b79482a9681fa271b509a892bbf8176e94f7de3cd87c14070",
+   "ui": "6cf9a90fb2166b1f196da8c3fd2966aee236cec072873c05e0b7b3d53a4cca75",
+   "workers": "b21a614238b8e63b4041d1a0de8f8fb81d5db63c4455eeb3ab8f3b06fbaaa400"
+  },
+  "revision_esquema_maxima": "0022"
+ },
+ "f8b6f2b": {
+  "commit": "f8b6f2b19c066369a3b6a421061fcba7c97316a7",
+  "fecha": "2026-11-09 17:58:32 -0600",
+  "huella_global": "eeeed87d3f8c20bb91a49742e9a4ba9d51c333e34ad8c6cfd2d3c23bf3ea9d27",
+  "por_carpeta": {
+   "app": "f4234a48ba5853122810fb544191290831130adc80911763e023641223ceb125",
+   "application": "bf79f5edc8690b1ae817df85cfb81a1d3aae94863add72c1d95fed712d609483",
+   "domain": "42356a8d7e5990bd19a35fe3edd2dbe9c9ae125daf7ecb98ef33b29e3ddcbb96",
+   "infrastructure": "6c8a57feee26b48cb0f02d58df982c650f1158e2c25556f760bb38d57310c690",
+   "interfaces": "544cf429cee69180f45ec8b9b99cc072791e0475353fb044eeeae5f37a62a1d3",
+   "migrations": "c58205a8a867ab9b79482a9681fa271b509a892bbf8176e94f7de3cd87c14070",
+   "ui": "9c984e8a0a86e776e17b5ae29a3884d28737961ae7684d3062802cf675318970",
+   "workers": "b21a614238b8e63b4041d1a0de8f8fb81d5db63c4455eeb3ab8f3b06fbaaa400"
+  },
+  "revision_esquema_maxima": "0022"
+ },
+ "3340d37": {
+  "commit": "3340d37e3b1ba138f70380df4a67eb3787ed5b04",
+  "fecha": "2026-11-09 19:14:55 -0600",
+  "huella_global": "7f8baa1e63f3336e198a29f2d640cac6909ebee28b41e6ca533556d9b0f53f38",
+  "por_carpeta": {
+   "app": "f4234a48ba5853122810fb544191290831130adc80911763e023641223ceb125",
+   "application": "cdeb15a7f86d9b088bbc04cdfd7948a1e0718bfd76669f27720f5f517f1fbb28",
+   "domain": "4e8596902ad9b5ebce91a48e9d304a7192030bccaad860b0108c1d3ae6205a23",
+   "infrastructure": "5e937cbedddac609156b68ce3940eee73cac4bf97c87baa1bc42bd48c57df9cd",
+   "interfaces": "544cf429cee69180f45ec8b9b99cc072791e0475353fb044eeeae5f37a62a1d3",
+   "migrations": "5b8f26c1f6e85dac1e3f6bc4415adb711cc4855c4ea18c4f4999e01f409cc47b",
+   "ui": "11c6b45a224eafd7481fa3f3fbc8de2c9267109d793e59510932f88ed5703a47",
+   "workers": "b21a614238b8e63b4041d1a0de8f8fb81d5db63c4455eeb3ab8f3b06fbaaa400"
+  },
+  "revision_esquema_maxima": "0023"
+ },
+ "af7c123": {
+  "commit": "af7c1235b7487b639253ae78907eaeee69c8781b",
+  "fecha": "2026-11-10 17:17:59 -0600",
+  "huella_global": "4828cf198496b72c467df6574fd73b49f6c80ca1af5b9a5c8f40023bcd68de10",
+  "por_carpeta": {
+   "app": "f4234a48ba5853122810fb544191290831130adc80911763e023641223ceb125",
+   "application": "8b837eec7d4d73be9f436fba3088101da7052282d2255ccf016e95f20727782e",
+   "domain": "02ba65e2fcd4968fd86f8ad2adeb3847257ccd7643a8474072e5d7d6cebdfce1",
+   "infrastructure": "5e937cbedddac609156b68ce3940eee73cac4bf97c87baa1bc42bd48c57df9cd",
+   "interfaces": "544cf429cee69180f45ec8b9b99cc072791e0475353fb044eeeae5f37a62a1d3",
+   "migrations": "5b8f26c1f6e85dac1e3f6bc4415adb711cc4855c4ea18c4f4999e01f409cc47b",
+   "ui": "0cbf7e3b614b979a611284cf8e2a3394b753291f8e78312f04abd8d2ce84ad5b",
+   "workers": "b21a614238b8e63b4041d1a0de8f8fb81d5db63c4455eeb3ab8f3b06fbaaa400"
+  },
+  "revision_esquema_maxima": "0023"
+ },
+ "d99be4a": {
+  "commit": "d99be4a134cc386fc398b8a4b8969feb7a12a835",
+  "fecha": "2026-11-10 18:24:54 -0600",
+  "huella_global": "4828cf198496b72c467df6574fd73b49f6c80ca1af5b9a5c8f40023bcd68de10",
+  "por_carpeta": {
+   "app": "f4234a48ba5853122810fb544191290831130adc80911763e023641223ceb125",
+   "application": "8b837eec7d4d73be9f436fba3088101da7052282d2255ccf016e95f20727782e",
+   "domain": "02ba65e2fcd4968fd86f8ad2adeb3847257ccd7643a8474072e5d7d6cebdfce1",
+   "infrastructure": "5e937cbedddac609156b68ce3940eee73cac4bf97c87baa1bc42bd48c57df9cd",
+   "interfaces": "544cf429cee69180f45ec8b9b99cc072791e0475353fb044eeeae5f37a62a1d3",
+   "migrations": "5b8f26c1f6e85dac1e3f6bc4415adb711cc4855c4ea18c4f4999e01f409cc47b",
+   "ui": "0cbf7e3b614b979a611284cf8e2a3394b753291f8e78312f04abd8d2ce84ad5b",
+   "workers": "b21a614238b8e63b4041d1a0de8f8fb81d5db63c4455eeb3ab8f3b06fbaaa400"
+  },
+  "revision_esquema_maxima": "0023"
+ },
+ "3621dd5": {
+  "commit": "3621dd5a8c083b88b43318e16ed7cf4a763b72ef",
+  "fecha": "2026-11-10 19:41:19 -0600",
+  "huella_global": "ed34f2e25845760834243cfe97783d92f18529d8153736770d962ad0766e1d0a",
+  "por_carpeta": {
+   "app": "63760b5273a920924756ab818be7f794da3d7c219a67e0ca1d65e06609ec7737",
+   "application": "e112bf52e7a27469a8f274e65d7ae31ea4a2b5af7d7a07b4293f258eba90fa64",
+   "domain": "3c48d005d42e4b470fdd2c0a242d4bbd2cd5665ffc71aac3057ca5196128f261",
+   "infrastructure": "2cafe2c3bc7f9213ddbd86ce2b69a79fe8a91ce42648a6b10f36df479177487f",
+   "interfaces": "4076ae1d9ea9d68768422b383e919b0d22f79c51c4db865fbe06e9eedacdac88",
+   "migrations": "fe17906682faaae9748ee4cfe4521a011c3b04aa65c091ab6bf48e45527c66ad",
+   "ui": "f7006ab81ca7faa0f8907c288baac692528d8f2ccd5f92d4d46b142933508fbe",
+   "workers": "b21a614238b8e63b4041d1a0de8f8fb81d5db63c4455eeb3ab8f3b06fbaaa400"
+  },
+  "revision_esquema_maxima": "0024"
+ },
+ "a497ac3": {
+  "commit": "a497ac34ee728a69ded086caf9b63e2fcc146684",
+  "fecha": "2026-11-11 16:16:00 -0600",
+  "huella_global": "ed34f2e25845760834243cfe97783d92f18529d8153736770d962ad0766e1d0a",
+  "por_carpeta": {
+   "app": "63760b5273a920924756ab818be7f794da3d7c219a67e0ca1d65e06609ec7737",
+   "application": "e112bf52e7a27469a8f274e65d7ae31ea4a2b5af7d7a07b4293f258eba90fa64",
+   "domain": "3c48d005d42e4b470fdd2c0a242d4bbd2cd5665ffc71aac3057ca5196128f261",
+   "infrastructure": "2cafe2c3bc7f9213ddbd86ce2b69a79fe8a91ce42648a6b10f36df479177487f",
+   "interfaces": "4076ae1d9ea9d68768422b383e919b0d22f79c51c4db865fbe06e9eedacdac88",
+   "migrations": "fe17906682faaae9748ee4cfe4521a011c3b04aa65c091ab6bf48e45527c66ad",
+   "ui": "f7006ab81ca7faa0f8907c288baac692528d8f2ccd5f92d4d46b142933508fbe",
+   "workers": "b21a614238b8e63b4041d1a0de8f8fb81d5db63c4455eeb3ab8f3b06fbaaa400"
+  },
+  "revision_esquema_maxima": "0024"
+ },
+ "b260e6d": {
+  "commit": "b260e6d5313e699d3f75ac3fb06acd3157881005",
+  "fecha": "2026-11-17 12:09:12 -0600",
+  "huella_global": "ed34f2e25845760834243cfe97783d92f18529d8153736770d962ad0766e1d0a",
+  "por_carpeta": {
+   "app": "63760b5273a920924756ab818be7f794da3d7c219a67e0ca1d65e06609ec7737",
+   "application": "e112bf52e7a27469a8f274e65d7ae31ea4a2b5af7d7a07b4293f258eba90fa64",
+   "domain": "3c48d005d42e4b470fdd2c0a242d4bbd2cd5665ffc71aac3057ca5196128f261",
+   "infrastructure": "2cafe2c3bc7f9213ddbd86ce2b69a79fe8a91ce42648a6b10f36df479177487f",
+   "interfaces": "4076ae1d9ea9d68768422b383e919b0d22f79c51c4db865fbe06e9eedacdac88",
+   "migrations": "fe17906682faaae9748ee4cfe4521a011c3b04aa65c091ab6bf48e45527c66ad",
+   "ui": "f7006ab81ca7faa0f8907c288baac692528d8f2ccd5f92d4d46b142933508fbe",
+   "workers": "b21a614238b8e63b4041d1a0de8f8fb81d5db63c4455eeb3ab8f3b06fbaaa400"
+  },
+  "revision_esquema_maxima": "0024"
+ },
+ "1f36a2b": {
+  "commit": "1f36a2b64802b58821690f246b9e9552c677433b",
+  "fecha": "2026-11-17 12:48:59 -0600",
+  "huella_global": "ed34f2e25845760834243cfe97783d92f18529d8153736770d962ad0766e1d0a",
+  "por_carpeta": {
+   "app": "63760b5273a920924756ab818be7f794da3d7c219a67e0ca1d65e06609ec7737",
+   "application": "e112bf52e7a27469a8f274e65d7ae31ea4a2b5af7d7a07b4293f258eba90fa64",
+   "domain": "3c48d005d42e4b470fdd2c0a242d4bbd2cd5665ffc71aac3057ca5196128f261",
+   "infrastructure": "2cafe2c3bc7f9213ddbd86ce2b69a79fe8a91ce42648a6b10f36df479177487f",
+   "interfaces": "4076ae1d9ea9d68768422b383e919b0d22f79c51c4db865fbe06e9eedacdac88",
+   "migrations": "fe17906682faaae9748ee4cfe4521a011c3b04aa65c091ab6bf48e45527c66ad",
+   "ui": "f7006ab81ca7faa0f8907c288baac692528d8f2ccd5f92d4d46b142933508fbe",
+   "workers": "b21a614238b8e63b4041d1a0de8f8fb81d5db63c4455eeb3ab8f3b06fbaaa400"
+  },
+  "revision_esquema_maxima": "0024"
+ },
+ "40be219": {
+  "commit": "40be219542c46d8f8901aca8e99991469bb7edda",
+  "fecha": "2026-11-17 13:56:56 -0600",
+  "huella_global": "f1232d2b6b83aaf7fbd74a0845b9c7a1363e8ce15de725840ceb4c269eda845a",
+  "por_carpeta": {
+   "app": "075d2295a8d1f4c3a38d19a8798bc246f2b1967a4bf79b3b1d2c5d20de0671ac",
+   "application": "799d077270ae172925d7bd9ad6fe90f061e9cd1bf12db27b14b6d8b82c93adb4",
+   "domain": "13fb323bd8abb40b710d15a64fa3c995463782eec242ef33a8648046c73a5dea",
+   "infrastructure": "23b568e9a60997a745d16490e4005fb637a3c7ed29886a6717dd60cff3f58124",
+   "interfaces": "115952c3ea9045bd74db62e6fbd9587005b81cb70c02e810f243c7cb33b6735e",
+   "migrations": "fe17906682faaae9748ee4cfe4521a011c3b04aa65c091ab6bf48e45527c66ad",
+   "ui": "79aacf35779c1edd352c7feb7d6d6adb3db81b12c911af665e301b45da3f19be",
+   "workers": "b21a614238b8e63b4041d1a0de8f8fb81d5db63c4455eeb3ab8f3b06fbaaa400"
+  },
+  "revision_esquema_maxima": "0024"
+ }
+}

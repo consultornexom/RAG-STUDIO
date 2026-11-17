@@ -1329,6 +1329,14 @@ conexión a Hugging Face (ver "Limitaciones conocidas").
   este entorno), `ruff` sin hallazgos. Ver
   `Validacion_observaciones_RAG_STUDIO.md`, Ronda 24, puntos 67-70.
 
+- **2026-11-17 -- Ronda 104b: cierre de la Etapa 0 y disponibilidad de evidencias (solo documentación).**
+  NEXOM validó la Etapa 0 en Windows (commit `40be219`, AGENTE UDL v2, `r102`, `fingerprint_matches = true`,
+  reranking no disponible, `execution` con clave operativa, trace `bccc81c9-…` en `runtime.db`) y la cerró
+  funcionalmente: `Cierre_Etapa0.md`. Diagnóstico de qué evidencias E1–E7 del incidente 493c8033 pueden
+  recuperarse y cuáles faltan, con huellas de código de los commits candidatos:
+  `Disponibilidad_Evidencias_493c8033.md` (en `docs proyecto/Ronda104_Etapa0_Trazabilidad/`). Y, R y el
+  reranking siguen sin autorizar.
+
 - **2026-11-17 -- Ronda 104b, Etapa 0 (autorizada por NEXOM): trazabilidad
   y reproducibilidad de cada ejecución, sin cambiar el comportamiento.**
   - **Qué se registra:**

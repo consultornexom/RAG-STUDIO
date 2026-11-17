@@ -1,0 +1,2410 @@
+{
+ "documento_completo|sin": {
+  "base": {
+   "R1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 2,
+    "destinos": 0,
+    "ms_post": 5.37
+   },
+   "R2": {
+    "pos": 3,
+    "puente_delante": false,
+    "solo_yaml": 2,
+    "destinos": 0,
+    "ms_post": 4.58
+   },
+   "R3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 0,
+    "ms_post": 4.24
+   },
+   "S1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.07
+   },
+   "S2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.16
+   },
+   "G1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 0,
+    "ms_post": 4.38
+   },
+   "G2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 8.83
+   },
+   "P1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.75
+   },
+   "P2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.2
+   },
+   "P3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 7.58
+   },
+   "P4": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 3.97
+   },
+   "P5": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 6.85
+   },
+   "P6": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.0
+   },
+   "O1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 8.32
+   }
+  },
+  "Y": {
+   "R1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 5.82
+   },
+   "R2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.35
+   },
+   "R3": {
+    "pos": 2,
+    "puente_delante": true,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 5.77
+   },
+   "S1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 3.89
+   },
+   "S2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 3.98
+   },
+   "G1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 0,
+    "ms_post": 3.98
+   },
+   "G2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 3.92
+   },
+   "P1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 8.43
+   },
+   "P2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.45
+   },
+   "P3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.11
+   },
+   "P4": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.5
+   },
+   "P5": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.04
+   },
+   "P6": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.32
+   },
+   "O1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 3.98
+   }
+  },
+  "R": {
+   "R1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 2,
+    "destinos": 3,
+    "ms_post": 7.12
+   },
+   "R2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 2,
+    "destinos": 3,
+    "ms_post": 7.38
+   },
+   "R3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.18
+   },
+   "S1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.51
+   },
+   "S2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.1
+   },
+   "G1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.82
+   },
+   "G2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.55
+   },
+   "P1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.15
+   },
+   "P2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.98
+   },
+   "P3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.14
+   },
+   "P4": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 9.26
+   },
+   "P5": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.82
+   },
+   "P6": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.75
+   },
+   "O1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.52
+   }
+  },
+  "YR": {
+   "R1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.01
+   },
+   "R2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.04
+   },
+   "R3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.08
+   },
+   "S1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.13
+   },
+   "S2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.12
+   },
+   "G1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.88
+   },
+   "G2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.66
+   },
+   "P1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.8
+   },
+   "P2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.85
+   },
+   "P3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 14.1
+   },
+   "P4": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.26
+   },
+   "P5": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.47
+   },
+   "P6": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.8
+   },
+   "O1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 8.95
+   }
+  },
+  "YRb": {
+   "R1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 8.06
+   },
+   "R2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.85
+   },
+   "R3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.23
+   },
+   "S1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 12.54
+   },
+   "S2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.36
+   },
+   "G1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.37
+   },
+   "G2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.81
+   },
+   "P1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 12.5
+   },
+   "P2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.35
+   },
+   "P3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.07
+   },
+   "P4": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 9.62
+   },
+   "P5": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.43
+   },
+   "P6": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.22
+   },
+   "O1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.73
+   }
+  },
+  "YR2": {
+   "R1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 8.69
+   },
+   "R2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.1
+   },
+   "R3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.16
+   },
+   "S1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.83
+   },
+   "S2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.34
+   },
+   "G1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.8
+   },
+   "G2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.62
+   },
+   "P1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.87
+   },
+   "P2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.35
+   },
+   "P3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 10.51
+   },
+   "P4": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.25
+   },
+   "P5": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.13
+   },
+   "P6": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.86
+   },
+   "O1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.27
+   }
+  }
+ },
+ "por_encabezado|sin": {
+  "base": {
+   "R1": {
+    "pos": 4,
+    "puente_delante": false,
+    "solo_yaml": 3,
+    "destinos": 0,
+    "ms_post": 5.72
+   },
+   "R2": {
+    "pos": null,
+    "puente_delante": true,
+    "solo_yaml": 3,
+    "destinos": 0,
+    "ms_post": 4.34
+   },
+   "R3": {
+    "pos": 5,
+    "puente_delante": true,
+    "solo_yaml": 2,
+    "destinos": 0,
+    "ms_post": 4.27
+   },
+   "S1": {
+    "pos": 4,
+    "puente_delante": true,
+    "solo_yaml": 1,
+    "destinos": 0,
+    "ms_post": 3.64
+   },
+   "S2": {
+    "pos": 2,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 0,
+    "ms_post": 3.84
+   },
+   "G1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 0,
+    "ms_post": 3.77
+   },
+   "G2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 3.88
+   },
+   "P1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 3.95
+   },
+   "P2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 3.94
+   },
+   "P3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.78
+   },
+   "P4": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 3.76
+   },
+   "P5": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.36
+   },
+   "P6": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.08
+   },
+   "O1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 0,
+    "ms_post": 3.74
+   }
+  },
+  "Y": {
+   "R1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.52
+   },
+   "R2": {
+    "pos": 5,
+    "puente_delante": true,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.33
+   },
+   "R3": {
+    "pos": 3,
+    "puente_delante": true,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 10.48
+   },
+   "S1": {
+    "pos": 3,
+    "puente_delante": true,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 3.78
+   },
+   "S2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 0,
+    "ms_post": 3.73
+   },
+   "G1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 0,
+    "ms_post": 5.58
+   },
+   "G2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.49
+   },
+   "P1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 3.88
+   },
+   "P2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.53
+   },
+   "P3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 3.89
+   },
+   "P4": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 3.71
+   },
+   "P5": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 3.85
+   },
+   "P6": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.19
+   },
+   "O1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 0,
+    "ms_post": 3.91
+   }
+  },
+  "R": {
+   "R1": {
+    "pos": 4,
+    "puente_delante": false,
+    "solo_yaml": 3,
+    "destinos": 2,
+    "ms_post": 7.01
+   },
+   "R2": {
+    "pos": 4,
+    "puente_delante": false,
+    "solo_yaml": 3,
+    "destinos": 3,
+    "ms_post": 6.8
+   },
+   "R3": {
+    "pos": 2,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 3,
+    "ms_post": 15.93
+   },
+   "S1": {
+    "pos": 3,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 3,
+    "ms_post": 6.79
+   },
+   "S2": {
+    "pos": 2,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 3,
+    "ms_post": 5.84
+   },
+   "G1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.11
+   },
+   "G2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.09
+   },
+   "P1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.04
+   },
+   "P2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.2
+   },
+   "P3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.64
+   },
+   "P4": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.74
+   },
+   "P5": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.01
+   },
+   "P6": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.9
+   },
+   "O1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.33
+   }
+  },
+  "YR": {
+   "R1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 2,
+    "ms_post": 6.53
+   },
+   "R2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.52
+   },
+   "R3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 9.0
+   },
+   "S1": {
+    "pos": 2,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.42
+   },
+   "S2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.18
+   },
+   "G1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.74
+   },
+   "G2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.49
+   },
+   "P1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.3
+   },
+   "P2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 8.71
+   },
+   "P3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.62
+   },
+   "P4": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.68
+   },
+   "P5": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.76
+   },
+   "P6": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.82
+   },
+   "O1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.83
+   }
+  },
+  "YRb": {
+   "R1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 18.39
+   },
+   "R2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.42
+   },
+   "R3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.26
+   },
+   "S1": {
+    "pos": 2,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.44
+   },
+   "S2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.97
+   },
+   "G1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.73
+   },
+   "G2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 8.82
+   },
+   "P1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.82
+   },
+   "P2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.19
+   },
+   "P3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.2
+   },
+   "P4": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.49
+   },
+   "P5": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.66
+   },
+   "P6": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.33
+   },
+   "O1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.04
+   }
+  },
+  "YR2": {
+   "R1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 9.77
+   },
+   "R2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 5,
+    "ms_post": 7.6
+   },
+   "R3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 5,
+    "ms_post": 6.71
+   },
+   "S1": {
+    "pos": 3,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 5,
+    "ms_post": 7.16
+   },
+   "S2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 4,
+    "ms_post": 5.93
+   },
+   "G1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 4,
+    "ms_post": 6.05
+   },
+   "G2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 5,
+    "ms_post": 6.11
+   },
+   "P1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 5,
+    "ms_post": 8.35
+   },
+   "P2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 5,
+    "ms_post": 6.58
+   },
+   "P3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 5,
+    "ms_post": 5.99
+   },
+   "P4": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 5,
+    "ms_post": 6.27
+   },
+   "P5": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 5,
+    "ms_post": 11.21
+   },
+   "P6": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 5,
+    "ms_post": 6.43
+   },
+   "O1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 5,
+    "ms_post": 5.85
+   }
+  }
+ },
+ "documento_completo|con": {
+  "base": {
+   "R1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 2,
+    "destinos": 0,
+    "ms_post": 5.99
+   },
+   "R2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 2,
+    "destinos": 0,
+    "ms_post": 4.27
+   },
+   "R3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 0,
+    "ms_post": 4.24
+   },
+   "S1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.13
+   },
+   "S2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.04
+   },
+   "G1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 0,
+    "ms_post": 3.77
+   },
+   "G2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.09
+   },
+   "P1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.18
+   },
+   "P2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.29
+   },
+   "P3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.08
+   },
+   "P4": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 3.97
+   },
+   "P5": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.03
+   },
+   "P6": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 9.96
+   },
+   "O1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 0,
+    "ms_post": 4.27
+   }
+  },
+  "Y": {
+   "R1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 5.01
+   },
+   "R2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.61
+   },
+   "R3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.42
+   },
+   "S1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.48
+   },
+   "S2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.18
+   },
+   "G1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 0,
+    "ms_post": 4.2
+   },
+   "G2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.87
+   },
+   "P1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.56
+   },
+   "P2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.76
+   },
+   "P3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.63
+   },
+   "P4": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.03
+   },
+   "P5": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.37
+   },
+   "P6": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.5
+   },
+   "O1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 0,
+    "ms_post": 4.15
+   }
+  },
+  "R": {
+   "R1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 2,
+    "destinos": 3,
+    "ms_post": 14.84
+   },
+   "R2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 2,
+    "destinos": 3,
+    "ms_post": 7.06
+   },
+   "R3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.26
+   },
+   "S1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.83
+   },
+   "S2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 15.03
+   },
+   "G1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.56
+   },
+   "G2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.88
+   },
+   "P1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.08
+   },
+   "P2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 9.47
+   },
+   "P3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.15
+   },
+   "P4": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.42
+   },
+   "P5": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.0
+   },
+   "P6": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.88
+   },
+   "O1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 15.21
+   }
+  },
+  "YR": {
+   "R1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.05
+   },
+   "R2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.15
+   },
+   "R3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 8.65
+   },
+   "S1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.02
+   },
+   "S2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.74
+   },
+   "G1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.14
+   },
+   "G2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.95
+   },
+   "P1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 9.17
+   },
+   "P2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.03
+   },
+   "P3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.28
+   },
+   "P4": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.63
+   },
+   "P5": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.04
+   },
+   "P6": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.98
+   },
+   "O1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.1
+   }
+  },
+  "YRb": {
+   "R1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.45
+   },
+   "R2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.98
+   },
+   "R3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.52
+   },
+   "S1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.78
+   },
+   "S2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.76
+   },
+   "G1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.71
+   },
+   "G2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.41
+   },
+   "P1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 8.52
+   },
+   "P2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.93
+   },
+   "P3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 11.53
+   },
+   "P4": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.32
+   },
+   "P5": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.41
+   },
+   "P6": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.27
+   },
+   "O1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.07
+   }
+  },
+  "YR2": {
+   "R1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 10.0
+   },
+   "R2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.39
+   },
+   "R3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 10.54
+   },
+   "S1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.78
+   },
+   "S2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.36
+   },
+   "G1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.09
+   },
+   "G2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.78
+   },
+   "P1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.04
+   },
+   "P2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.09
+   },
+   "P3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.27
+   },
+   "P4": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.07
+   },
+   "P5": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 8.88
+   },
+   "P6": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.25
+   },
+   "O1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.41
+   }
+  }
+ },
+ "por_encabezado|con": {
+  "base": {
+   "R1": {
+    "pos": 4,
+    "puente_delante": false,
+    "solo_yaml": 3,
+    "destinos": 0,
+    "ms_post": 5.4
+   },
+   "R2": {
+    "pos": null,
+    "puente_delante": true,
+    "solo_yaml": 3,
+    "destinos": 0,
+    "ms_post": 4.25
+   },
+   "R3": {
+    "pos": 5,
+    "puente_delante": true,
+    "solo_yaml": 2,
+    "destinos": 0,
+    "ms_post": 4.19
+   },
+   "S1": {
+    "pos": 4,
+    "puente_delante": true,
+    "solo_yaml": 1,
+    "destinos": 0,
+    "ms_post": 3.77
+   },
+   "S2": {
+    "pos": 2,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 0,
+    "ms_post": 3.78
+   },
+   "G1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 0,
+    "ms_post": 4.08
+   },
+   "G2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 3.98
+   },
+   "P1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.02
+   },
+   "P2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 3.98
+   },
+   "P3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.02
+   },
+   "P4": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 6.23
+   },
+   "P5": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.14
+   },
+   "P6": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.07
+   },
+   "O1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 0,
+    "ms_post": 4.65
+   }
+  },
+  "Y": {
+   "R1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 0,
+    "ms_post": 5.04
+   },
+   "R2": {
+    "pos": null,
+    "puente_delante": true,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.18
+   },
+   "R3": {
+    "pos": 3,
+    "puente_delante": true,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 5.48
+   },
+   "S1": {
+    "pos": 3,
+    "puente_delante": true,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 3.99
+   },
+   "S2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 0,
+    "ms_post": 3.82
+   },
+   "G1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 0,
+    "ms_post": 3.74
+   },
+   "G2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.25
+   },
+   "P1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.0
+   },
+   "P2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.03
+   },
+   "P3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.81
+   },
+   "P4": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 4.05
+   },
+   "P5": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 3.81
+   },
+   "P6": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 0,
+    "ms_post": 5.85
+   },
+   "O1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 0,
+    "ms_post": 3.83
+   }
+  },
+  "R": {
+   "R1": {
+    "pos": 4,
+    "puente_delante": false,
+    "solo_yaml": 3,
+    "destinos": 2,
+    "ms_post": 6.66
+   },
+   "R2": {
+    "pos": null,
+    "puente_delante": false,
+    "solo_yaml": 3,
+    "destinos": 3,
+    "ms_post": 7.98
+   },
+   "R3": {
+    "pos": 3,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 3,
+    "ms_post": 6.79
+   },
+   "S1": {
+    "pos": 3,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 3,
+    "ms_post": 6.99
+   },
+   "S2": {
+    "pos": 2,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 3,
+    "ms_post": 7.59
+   },
+   "G1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 2,
+    "ms_post": 5.89
+   },
+   "G2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.07
+   },
+   "P1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.66
+   },
+   "P2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.33
+   },
+   "P3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.61
+   },
+   "P4": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.43
+   },
+   "P5": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.4
+   },
+   "P6": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.97
+   },
+   "O1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.53
+   }
+  },
+  "YR": {
+   "R1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 2,
+    "ms_post": 7.06
+   },
+   "R2": {
+    "pos": null,
+    "puente_delante": true,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.87
+   },
+   "R3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.48
+   },
+   "S1": {
+    "pos": 2,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.68
+   },
+   "S2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 3,
+    "ms_post": 6.2
+   },
+   "G1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 2,
+    "ms_post": 6.06
+   },
+   "G2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.67
+   },
+   "P1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.99
+   },
+   "P2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.03
+   },
+   "P3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.23
+   },
+   "P4": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.97
+   },
+   "P5": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.62
+   },
+   "P6": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.47
+   },
+   "O1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 8.01
+   }
+  },
+  "YRb": {
+   "R1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 3,
+    "ms_post": 200.81
+   },
+   "R2": {
+    "pos": null,
+    "puente_delante": true,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.97
+   },
+   "R3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.68
+   },
+   "S1": {
+    "pos": 2,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.18
+   },
+   "S2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 3,
+    "ms_post": 7.14
+   },
+   "G1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 198.02
+   },
+   "G2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.22
+   },
+   "P1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.08
+   },
+   "P2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.85
+   },
+   "P3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.09
+   },
+   "P4": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.02
+   },
+   "P5": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 7.65
+   },
+   "P6": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 6.03
+   },
+   "O1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 3,
+    "ms_post": 5.72
+   }
+  },
+  "YR2": {
+   "R1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 4,
+    "ms_post": 8.65
+   },
+   "R2": {
+    "pos": 2,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 5,
+    "ms_post": 7.27
+   },
+   "R3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 5,
+    "ms_post": 6.65
+   },
+   "S1": {
+    "pos": 3,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 5,
+    "ms_post": 6.62
+   },
+   "S2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 1,
+    "destinos": 5,
+    "ms_post": 7.99
+   },
+   "G1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 4,
+    "ms_post": 5.72
+   },
+   "G2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 5,
+    "ms_post": 6.54
+   },
+   "P1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 5,
+    "ms_post": 9.33
+   },
+   "P2": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 5,
+    "ms_post": 6.3
+   },
+   "P3": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 5,
+    "ms_post": 5.95
+   },
+   "P4": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 5,
+    "ms_post": 5.73
+   },
+   "P5": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 5,
+    "ms_post": 6.04
+   },
+   "P6": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 5,
+    "ms_post": 5.81
+   },
+   "O1": {
+    "pos": 1,
+    "puente_delante": false,
+    "solo_yaml": 0,
+    "destinos": 5,
+    "ms_post": 5.84
+   }
+  }
+ }
+}

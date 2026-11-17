@@ -1,0 +1,20 @@
+{
+ "rss_mb_antes_de_cargar_reranker": 799.6,
+ "carga_reranker_s": 0.34,
+ "rss_mb_despues_de_cargar_reranker": 917.5,
+ "modelo_reranker_mb_en_disco": 91.7,
+ "sin_reranking_ms": {
+  "n": 14,
+  "p50": 39.2,
+  "p95": 53.1,
+  "max": 53.6
+ },
+ "con_reranking_ms": {
+  "n": 14,
+  "p50": 2270.8,
+  "p95": 4189.4,
+  "max": 4198.3
+ },
+ "reranker_40_candidatos_largos_ms": 2585.9,
+ "equipo": "sandbox de consultoría, 2 vCPU, sin GPU"
+}

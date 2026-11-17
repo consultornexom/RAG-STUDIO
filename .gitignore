@@ -24,6 +24,8 @@ modelos_ragstudio/
 
 # --- Paquetes y artefactos de construcción ---
 build/
+# Ronda 104b: identidad de la entrega, se genera con scripts/escribir_build_info.py
+build_info.json
 dist/
 *.agentproj
 

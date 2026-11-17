@@ -45,6 +45,10 @@ datas = [
     (str(REPO_ROOT / "contracts" / "nexom_knowledge_package" / "VENDORIZADO_v1_0_0.json"), "contracts/nexom_knowledge_package"),
 ]
 
+# Ronda 104b: identidad de la entrega (scripts/escribir_build_info.py), si existe.
+if (REPO_ROOT / "build_info.json").exists():
+    datas.append((str(REPO_ROOT / "build_info.json"), "."))
+
 hiddenimports = [
     "alembic",
     "sqlalchemy.dialects.sqlite",

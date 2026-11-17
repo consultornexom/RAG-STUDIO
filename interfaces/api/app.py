@@ -175,8 +175,10 @@ from .runtime_config import LEGACY_API_KEY_VARS, load_runtime_config
 from .runtime_context import (
     EmbeddingProviderFactory, ImageEmbeddingProviderFactory, RuntimeContext, SnapshotNotFoundError,
 )
+from application.conversational.queries.simulate_conversation import RETRIEVAL_PIPELINE
+from infrastructure.build_info import current_code_identity
 from .schemas import (
-    ErrorInfo, ErrorResponse, HealthResponse, IssueWidgetTokenRequest, MessageRequest, MessageResponse, MetricsResponse,
+    ErrorInfo, ErrorResponse, ExecutionCode, HealthDetailsResponse, HealthResponse, IssueWidgetTokenRequest, MessageRequest, MessageResponse, MetricsResponse,
     QualityResponse, RetrievalFeedbackRequest, RetrievalFeedbackResponse, WidgetTokenResponse,
     WidgetTokenSummary,
 )
@@ -363,6 +365,31 @@ def create_app(
             snapshot_project_id=pinned[0] if pinned else None,
             snapshot_version=pinned[1] if pinned else None,
             embedding_profile=embedding_profile,
+            # Ronda 104b (Etapa 0): solo datos no sensibles en el endpoint
+            # público; el commit y las huellas van en /health/details.
+            code_version=current_code_identity().version,
+            retrieval_pipeline=RETRIEVAL_PIPELINE,
+        )
+
+    @app.get("/health/details", response_model=HealthDetailsResponse, dependencies=[Depends(_require_api_key)])
+    def health_details() -> HealthDetailsResponse:
+        """Ronda 104b (Etapa 0): detalles internos del despliegue para
+        reproducir trazas -- protegido con la clave operativa."""
+        identidad = current_code_identity()
+        bases = runtime_context.loaded_execution_bases()
+        reranking = bases[0].get("reranking", {}) if bases else {}
+        return HealthDetailsResponse(
+            code=ExecutionCode(**identidad.to_dict()), retrieval_pipeline=RETRIEVAL_PIPELINE,
+            snapshot_mode="fija" if runtime_context.pinned_identity() else "registro",
+            embedding_profile=embedding_profile,
+            reranking_model_available=reranking.get("model_available") if bases else None,
+            reranking_available_model=reranking.get("available_model"),
+            pinned_snapshot=runtime_context.pinned_snapshot_description(),
+            loaded_snapshots=[
+                {"snapshot": base.get("snapshot"), "index": base.get("index"), "reranking": base.get("reranking")}
+                for base in bases
+            ],
+            package_fingerprints=identidad.package_dict(),
         )
 
     @app.get(
@@ -490,6 +517,7 @@ def create_app(
         project_id: str, request: MessageRequest, response: Response,
         max_access_level: Optional[AccessLevel] = Depends(_require_message_auth),
         x_trace_id: Optional[str] = Header(default=None, alias="X-Trace-Id"),
+        x_api_key: Optional[str] = Header(default=None),
     ) -> MessageResponse:
         # max_access_level (Pista B.3 del ADR-003): _require_message_auth
         # ya no solo autentica -- también resuelve el techo de acceso de
@@ -550,6 +578,7 @@ def create_app(
 
         handler = HandleIncomingMessage(
             loaded.conversational_service, log_repository, channeling_dispatcher=channeling_dispatcher,
+            execution_base=loaded.execution_base,
         )
         # loaded.lock (auditoría Ronda 10, hallazgo A2): serializa el
         # manejo de mensajes contra ESTA instantánea -- QdrantLocalVectorStore
@@ -596,7 +625,12 @@ def create_app(
             handled.trace.matched_intent_name, handled.log_entry.latency_ms, handled.log_entry.id,
             handled.log_entry.conversation_id, trace_id,
         )
-        return MessageResponse.from_handled_message(handled)
+        # Ronda 104b (Etapa 0): los datos de ejecución siempre se guardan en
+        # runtime.db, pero en la respuesta solo viajan para la credencial
+        # operativa (o sin clave configurada, modo local de pruebas) -- nunca
+        # para un token de widget, que llega desde navegadores públicos.
+        operador = api_key is None or (x_api_key is not None and secrets.compare_digest(x_api_key, api_key))
+        return MessageResponse.from_handled_message(handled, include_execution=operador)
 
     @app.post(
         "/projects/{project_id}/messages/{log_id}/feedback", response_model=RetrievalFeedbackResponse,

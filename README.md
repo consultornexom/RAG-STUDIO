@@ -1329,6 +1329,30 @@ conexión a Hugging Face (ver "Limitaciones conocidas").
   este entorno), `ruff` sin hallazgos. Ver
   `Validacion_observaciones_RAG_STUDIO.md`, Ronda 24, puntos 67-70.
 
+- **2026-11-17 -- Ronda 104b, Etapa 0 (autorizada por NEXOM): trazabilidad
+  y reproducibilidad de cada ejecución, sin cambiar el comportamiento.**
+  - **Qué se registra:**
+    - identidad del código: versión, commit vía `build_info.json` o `git`, y huella por carpeta (`infrastructure/build_info.py`, `scripts/escribir_build_info.py`);
+    - instantánea: versión, huella declarada y calculada al cargar;
+    - índice;
+    - procedimiento de recuperación (`r102`);
+    - reranking efectivo: ajuste, disponibilidad, aplicación y modelo;
+    - texto exacto de búsqueda, filtros y fragmentos en orden.
+  - **Dónde:**
+    - `runtime.db`: `conversation_log.execution` y `chunk_ids`, columnas aditivas;
+    - `POST /messages`: campo `execution`, solo con `X-API-Key`;
+    - `GET /health`: `code_version` y `retrieval_pipeline`;
+    - `GET /health/details`: protegido;
+    - Simulador: bloque «Ejecución».
+  - **Correcciones:**
+    - el Runtime de RAG Studio **no** tiene modelo de reranking y nunca lo aplica, aunque el ajuste de la Ronda 102 diga «Activado»;
+    - Manual 8.5 y `Resultados_Ronda102.md` corregidos.
+  - **Pruebas:**
+    - mismo orden en las 28 consultas de LOTE01 (14 con y 14 sin reranking) antes y después;
+    - integración: 572 pasadas;
+    - `tests/unit` + smoke sin fallas nuevas.
+  - **Detalle y procedimiento E1–E7:** `docs proyecto/Ronda104_Etapa0_Trazabilidad/`.
+
 - **2026-11-10 -- Ronda 102: Simulador vs Búsqueda RAG (requisitos de
   LOTE01_Bachillerato), correcciones C1, C2 y C4 autorizadas por NEXOM.**
   Validado con los cinco archivos reales (`tests/fixtures/lote01_bachillerato`,

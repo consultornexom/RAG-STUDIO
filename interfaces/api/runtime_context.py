@@ -42,11 +42,15 @@ from infrastructure.database.metadata_repositories import (
 )
 from infrastructure.database.rag_repositories import SqlAlchemyIndexInfoRepository
 from infrastructure.database.release_repositories import SqlAlchemyProjectSnapshotRepository
+from infrastructure.build_info import current_code_identity
 from infrastructure.database.repositories import ProjectAgentRerankingReader
 from infrastructure.embeddings.caching_provider import CachingEmbeddingProvider
 from infrastructure.embeddings.fastembed_image_provider import FastEmbedImageProvider
 from infrastructure.embeddings.fastembed_provider import AVAILABLE_EMBEDDING_PROFILES, make_provider_for_profile
 from infrastructure.filesystem.paths import InstallationPaths, SnapshotInstallationPaths
+from infrastructure.filesystem.snapshot_identity import (
+    SnapshotIdentityError, content_fingerprint, read_snapshot_identity,
+)
 from infrastructure.vectorstores.qdrant_local_store import QdrantLocalVectorStore
 
 EmbeddingProviderFactory = Callable[[str, Path], EmbeddingProvider]
@@ -102,6 +106,11 @@ class LoadedSnapshot:
     colisión sin serializar entre proyectos/versiones distintos, que
     no comparten directorio de índice -- `RuntimeContext._build` crea
     un lock nuevo por cada instantánea que carga."""
+    execution_base: Optional[dict] = None
+    """Ronda 104b (Etapa 0): parte fija de los datos de ejecución de esta
+    instantánea en este proceso -- código, instantánea (huella declarada y
+    calculada al cargar), índice y disponibilidad del reranker. Ver
+    application/runtime/execution_info.py."""
 
 
 class RuntimeContext:
@@ -260,6 +269,9 @@ class RuntimeContext:
             return loaded
 
     def _build(self, project_id: str, snapshot: ProjectSnapshot) -> LoadedSnapshot:
+        # Ronda 104b (Etapa 0): la huella se calcula ANTES de abrir nada
+        # (abrir project.db puede aplicarle migraciones y cambiarla).
+        snapshot_block = describe_snapshot(snapshot)
         paths = SnapshotInstallationPaths(project_id, snapshot.snapshot_dir, self._installation_paths.base_dir)
 
         source_repository = SqlAlchemySourceRepository(paths)
@@ -322,6 +334,75 @@ class RuntimeContext:
         # modelo a RAM.
         rag_service.embed_query("calentamiento del proveedor de embeddings")
 
+        info = rag_service.get_index_info(project_id)
+        execution_base = {
+            "code": current_code_identity().to_dict(),
+            "snapshot": snapshot_block,
+            "index": {
+                "embedding_provider": info.embedding_provider if info else None,
+                "embedding_model": info.embedding_model if info else None,
+                "dimensions": info.dimensions if info else None,
+                "points_count": info.points_count if info else None,
+                "updated_at": info.updated_at.isoformat() if info else None,
+                "query_embedding_profile": self._embedding_profile,
+                "query_embedding_model": getattr(embedding_provider, "model_name", None),
+            },
+            "reranking": {
+                "model_available": rag_service.has_reranker,
+                "available_model": rag_service.reranker_model_name,
+            },
+        }
         return LoadedSnapshot(
             snapshot=snapshot, conversational_service=conversational_service, lock=threading.Lock(),
+            execution_base=execution_base,
         )
+
+    def loaded_execution_bases(self) -> list[dict]:
+        """Ronda 104b (Etapa 0): datos fijos de las instantáneas cargadas,
+        para /health/details."""
+        with self._lock:
+            return [loaded.execution_base for loaded in self._loaded.values() if loaded.execution_base]
+
+    def pinned_snapshot_description(self) -> Optional[dict]:
+        """Ronda 104b (Etapa 0): identidad declarada de la instantánea fija
+        (sin cargarla ni calcular su huella), para /health/details."""
+        if self._pinned_snapshot_dir is None:
+            return None
+        try:
+            identidad = read_snapshot_identity(self._pinned_snapshot_dir)
+        except (SnapshotIdentityError, OSError):
+            identidad = None
+        return {
+            "project_id": self._pinned_project_id, "version": self._pinned_snapshot_version,
+            "identity_file": identidad is not None,
+            "declared_fingerprint": identidad.content_fingerprint if identidad else None,
+            "published_at": identidad.published_at if identidad else None,
+        }
+
+
+def describe_snapshot(snapshot: ProjectSnapshot) -> dict:
+    """Ronda 104b (Etapa 0): identidad de una instantánea para los datos de
+    ejecución: huella declarada al publicar (snapshot_identity.json) y huella
+    calculada al cargarla en este proceso. Si no coinciden, la instantánea
+    cambió desde su publicación (p. ej. la abrió antes un proceso que le
+    aplicó migraciones). Nunca incluye la ruta del servidor."""
+    identidad = None
+    error = None
+    try:
+        identidad = read_snapshot_identity(snapshot.snapshot_dir)
+    except (SnapshotIdentityError, OSError) as exc:
+        error = type(exc).__name__
+    try:
+        al_cargar: Optional[str] = content_fingerprint(snapshot.snapshot_dir)
+    except OSError:
+        al_cargar = None
+    declarada = identidad.content_fingerprint if identidad else None
+    return {
+        "project_id": snapshot.project_id, "version": snapshot.version,
+        "identity_file": identidad is not None, "identity_error": error,
+        "declared_fingerprint": declarada,
+        "published_at": identidad.published_at if identidad else None,
+        "fingerprint_at_load": al_cargar,
+        "fingerprint_matches": (declarada == al_cargar) if declarada and al_cargar else None,
+    }
+

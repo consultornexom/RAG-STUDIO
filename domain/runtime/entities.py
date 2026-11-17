@@ -105,6 +105,13 @@ class ConversationLogEntry(BaseModel):
     error_detail: Optional[str] = None
     """Tipo y mensaje de la excepción y cadena de llamadas (módulo:función:
     línea), sin valores de variables ni secretos."""
+    chunk_ids: Optional[list[str]] = None
+    """Ronda 104b (Etapa 0): fragmentos entregados, EN EL ORDEN de la
+    respuesta (`source_ids` no conserva orden). None en filas anteriores."""
+    execution: Optional[dict] = None
+    """Ronda 104b (Etapa 0): datos de ejecución del turno (ver
+    application/runtime/execution_info.py). None en filas anteriores o si
+    quien construyó el motor no los proporcionó."""
 
     @property
     def failed(self) -> bool:

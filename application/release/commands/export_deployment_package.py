@@ -937,6 +937,45 @@ Campo ADITIVO, presente solo si el proyecto tiene fuentes de tipo Imagen indexad
 - **Limitación conocida, no un descuido**: esta versión del servicio no expone ningún endpoint HTTP para descargar el archivo de imagen a partir de `image_relative_path` -- solo se entrega la referencia. Si su agente corre en un proceso o una red separada de la instalación de RAG STUDIO, sin acceso compartido al sistema de archivos de la instantánea publicada, hoy no podrá resolver esta ruta a un archivo real; consideren esto antes de construir una integración que dependa de mostrar la imagen misma (no solo su referencia) al usuario final.
 - Igual que en `sources`, el control de acceso de la Pista B.3 del ADR-003 (sección 3, párrafo de "Control de acceso") ya se aplicó del lado del servidor antes de que un elemento llegue a `image_results`.
 
+## 7ter. `execution`: datos de ejecución para diagnóstico (Ronda 104b)
+
+Campo ADITIVO, presente **solo** cuando la solicitud usa la clave operativa
+(`X-API-Key`); con un token de widget (`X-Widget-Token`) llega `null`. Una
+integración que lo ignore sigue funcionando igual. Contiene, sin
+credenciales, rutas ni secretos:
+
+```json
+"execution": {{
+  "format_version": 1,
+  "code": {{"version": "0.1.0", "commit": "…", "commit_source": "build_info|git|null",
+            "dirty": false, "fingerprint": "…", "unknown": []}},
+  "snapshot": {{"project_id": "…", "version": 2, "declared_fingerprint": "sha256:…",
+                "fingerprint_at_load": "sha256:…", "fingerprint_matches": true}},
+  "index": {{"embedding_model": "…", "dimensions": 384, "points_count": 120,
+             "query_embedding_profile": "simetrico"}},
+  "retrieval_pipeline": "r102",
+  "reranking": {{"setting": "automatico", "model_available": false, "applied": false, "model": null}},
+  "search_text": "¿Qué documentos necesito para entrar ?",
+  "applied_filters": {{"nivel_academico": "bachillerato"}},
+  "results": [{{"position": 1, "chunk_id": "…", "source_id": "…", "score": 0.031,
+               "retrieval_rank": 4, "affinity": 0.4}}],
+  "unknown": []
+}}
+```
+
+- `unknown` enumera lo que el servicio no pudo determinar (p. ej. `code.commit`
+  si el código se instaló sin `.git` ni `build_info.json`): nunca se inventa.
+- `snapshot.fingerprint_matches = false` indica que la instantánea cambió
+  desde su publicación (por ejemplo, la abrió antes un proceso que le aplicó
+  migraciones).
+- Con la clave operativa, cada elemento de `sources` trae además
+  `retrieval_rank` y `affinity`.
+- Lo mismo queda guardado en `runtime.db` (`conversation_log.execution` y
+  `conversation_log.chunk_ids`, en orden), localizable por `trace_id`.
+- `GET /health` (público) informa `code_version` y `retrieval_pipeline`;
+  `GET /health/details` (con `X-API-Key`) informa commit, huella del código,
+  identidad de la instantánea servida, índice y disponibilidad del reranker.
+
 ## 8. Preguntas frecuentes
 
 - **¿Podemos ignorar `conversation_id` y llevar nuestro propio manejo de

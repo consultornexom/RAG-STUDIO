@@ -29,6 +29,7 @@ Autorización de NEXOM: C1, C2 y C4. C3 y C5 quedan documentadas como pendientes
 - **C4 (reranking en el agente).**
   - **Ajuste:** `Project.agent_reranking` (migración de proyecto **0024**, columna nullable, sin backfill). Valores: `None` = Automático (predeterminado, el comportamiento anterior), `True` = Activado, `False` = Desactivado.
   - **Dónde se edita:** selector «Reranking en el agente» en el Simulador.
+  - **Corrección (2026-11-17, Ronda 104b):** lo que sigue sobre el canal de mensajes era incorrecto: el Runtime de RAG Studio se construye sin modelo de reranking, de modo que en `POST /messages` el reranking nunca se aplica, sea cual sea el ajuste (con «Activado» lo avisa en `execution.reranking.note`). Ver el Manual 8.5 y `docs proyecto/Ronda104_Etapa0_Trazabilidad/`.
   - **Quién lo usa:**
     - el Simulador;
     - el canal de mensajes `POST /messages`, que lo lee de la instantánea publicada mediante `ProjectAgentRerankingReader`. Un cambio llega al canal al publicar una versión nueva.

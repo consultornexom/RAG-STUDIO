@@ -54,3 +54,21 @@ def test_el_reporte_indica_reranking_y_orden(qapp, app_context):
     texto = panel._sim_report.toPlainText()
     assert "Reranking: aplicado — modelo Xenova/ms-marco-MiniLM-L-6-v2 (ajuste del proyecto: automático)" in texto
     assert "búsqueda #2; afinidad 0.86 con «Requisitos de ingreso»" in texto
+
+
+def test_ronda104b_el_reporte_incluye_los_datos_de_ejecucion(qapp, app_context):
+    """Etapa 0: código, procedimiento, reranking efectivo (disponible,
+    ajuste, aplicado) y texto exacto de búsqueda."""
+    panel = ConversationalPanel(app_context)
+    chunk = Chunk(project_id="p", source_id="s", chunk_index=0, text="texto", token_count=1)
+    panel._pending_trace = SimulationTrace(
+        query_text="q", action=RuleActionType.RESPONDER, search_results=[SemanticSearchResult(chunk=chunk, score=0.1)],
+        reranking_setting="desactivado", reranking_applied=False, reranking_available=True,
+        reranking_available_model="Xenova/ms-marco-MiniLM-L-6-v2", search_text="texto exacto",
+    )
+    panel._refresh_simulation_report()
+    texto = panel._sim_report.toPlainText()
+    assert "Procedimiento de recuperación: r102" in texto
+    assert "Reranking: modelo disponible (Xenova/ms-marco-MiniLM-L-6-v2); ajuste desactivado; no aplicado" in texto
+    assert "Texto exacto de búsqueda: «texto exacto»" in texto
+    assert "RAG Studio " in texto and "huella del código" in texto

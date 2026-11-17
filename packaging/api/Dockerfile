@@ -24,7 +24,9 @@ RUN apt-get update \
 # Solo el código que interfaces/api/ necesita -- ui/ y plugins/
 # deliberadamente NO se copian: este contenedor nunca abre una
 # interfaz gráfica ni carga complementos de la app de escritorio.
-COPY pyproject.toml ./
+# Ronda 104b: build_info.json (si se generó con scripts/escribir_build_info.py)
+# permite que el Runtime informe su commit sin .git.
+COPY pyproject.toml build_info.json* ./
 COPY app ./app
 COPY application ./application
 COPY domain ./domain

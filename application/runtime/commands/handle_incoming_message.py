@@ -51,6 +51,7 @@ from typing import NoReturn, Optional
 
 from pydantic import BaseModel
 
+from application.runtime.execution_info import execution_record, failure_execution_record
 from application.conversational.queries.simulate_conversation import SimulationTrace
 from application.conversational.service import ConversationalService
 from domain.documents.entities import AccessLevel
@@ -87,7 +88,13 @@ class HandleIncomingMessage:
     def __init__(
         self, conversational_service: ConversationalService, log_repository: ConversationLogRepository,
         channeling_dispatcher: Optional[ChannelingDispatcher] = None,
+        execution_base: Optional[dict] = None,
     ):
+        """execution_base (Ronda 104b, Etapa 0): parte fija de los datos de
+        ejecución (código, instantánea, índice) que se guarda con cada
+        turno -- ver application/runtime/execution_info.py. Sin ella se
+        registra igual el resto, marcando lo fijo como desconocido."""
+        self._execution_base = execution_base
         self._conversational_service = conversational_service
         self._log_repository = log_repository
         self._channeling_dispatcher = channeling_dispatcher
@@ -151,6 +158,9 @@ class HandleIncomingMessage:
             matched_intent=trace.matched_intent_name, confidence=trace.confidence,
             action=trace.action.value, response_text=response_text, source_ids=source_ids,
             latency_ms=latency_ms, trace_id=resolved_trace_id,
+            # Ronda 104b (Etapa 0): orden exacto entregado y datos de ejecución.
+            chunk_ids=[result.chunk.id for result in trace.search_results],
+            execution=execution_record(self._execution_base, trace),
         )
         try:
             self._log_repository.save(log_entry)
@@ -220,6 +230,7 @@ class HandleIncomingMessage:
             message=message, action=FAILED_ACTION, latency_ms=latency_ms, trace_id=trace_id,
             error_category=diagnosis.category.value, error_stage=diagnosis.stage.value,
             error_code=diagnosis.code, error_summary=diagnosis.summary, error_detail=diagnosis.technical_detail,
+            execution=failure_execution_record(self._execution_base),
         )
         try:
             self._log_repository.save(entry)

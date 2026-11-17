@@ -50,6 +50,7 @@ from infrastructure.database.release_repositories import (
     SqlAlchemyProjectSnapshotRepository,
     SqlAlchemyReleaseRecordRepository,
 )
+from infrastructure.build_info import current_code_identity
 from infrastructure.database.repositories import (
     ProjectAgentRerankingReader,
     SqlAlchemyConfigurationRepository,
@@ -120,6 +121,9 @@ class AppContext:
     # RAG-INC-01b: exportador CORE del NEXOM Knowledge Package (solo caso de
     # uso; sin interfaz de usuario en este incremento).
     knowledge_package_export: Optional[ExportKnowledgePackage] = None
+    # Ronda 104b (Etapa 0): identidad del código (versión, commit, huella)
+    # para el reporte del Simulador.
+    code_identity: Optional[dict] = None
 
 
 def bootstrap(
@@ -414,6 +418,7 @@ def bootstrap(
         jobs=jobs,
         diagnostics=diagnostics,
         logger=logger,
+        code_identity=current_code_identity().to_dict(),
         knowledge_package_export=ExportKnowledgePackage(
             project_snapshot_repository, NexomKnowledgePackageExporter(),
         ),

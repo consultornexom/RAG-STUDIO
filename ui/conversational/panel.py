@@ -1647,4 +1647,29 @@ class ConversationalPanel(QWidget):
                     f"{html_escape(result.chunk.image_relative_path or '(sin ruta)')}</p>"
                 )
 
+        parts.append(self._execution_footer(trace))
         self._sim_report.setHtml("".join(parts))
+
+    def _execution_footer(self, trace) -> str:
+        """Ronda 104b (Etapa 0): con qué código y procedimiento se produjo
+        este resultado, el texto exacto de búsqueda y el reranking efectivo,
+        para comparar con el Runtime (POST /messages devuelve lo mismo en
+        `execution` con la credencial operativa)."""
+        codigo = getattr(self._context, "code_identity", None) or {}
+        commit = codigo.get("commit")
+        commit_txt = (commit[:12] + (" con cambios sin commit" if codigo.get("dirty") else "")) if commit \
+            else "desconocido"
+        huella = codigo.get("fingerprint")
+        filas = [
+            f"RAG Studio {html_escape(codigo.get('version') or 'versión desconocida')} — commit "
+            f"{html_escape(commit_txt)} — huella del código {html_escape(huella[:12] if huella else 'desconocida')}",
+            f"Procedimiento de recuperación: {html_escape(trace.retrieval_pipeline)}",
+            "Reranking: modelo " + (
+                f"disponible ({html_escape(trace.reranking_available_model or 'sin nombre')})"
+                if trace.reranking_available else "no disponible"
+            ) + f"; ajuste {html_escape(trace.reranking_setting)}; "
+            + ("aplicado" if trace.reranking_applied else "no aplicado"),
+        ]
+        if trace.search_text is not None:
+            filas.append(f"Texto exacto de búsqueda: «{html_escape(trace.search_text)}»")
+        return "<hr><p><small><b>Ejecución</b><br>" + "<br>".join(filas) + "</small></p>"

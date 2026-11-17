@@ -77,6 +77,17 @@ class SourceSnippet(BaseModel):
         "aditivo: un agente que hoy solo lee 'text'/'score' sigue funcionando exactamente "
         "igual si lo ignora.",
     )
+    retrieval_rank: Optional[int] = Field(
+        default=None,
+        description="Ronda 104b (Etapa 0, diagnóstico): puesto del fragmento en la recuperación inicial, "
+        "antes del reordenamiento conversacional. Solo con la credencial operativa (X-API-Key); null "
+        "con token de widget. Campo aditivo.",
+    )
+    affinity: Optional[float] = Field(
+        default=None,
+        description="Ronda 104b (Etapa 0, diagnóstico): afinidad título-intención usada al ordenar "
+        "(null si no hubo reordenamiento por afinidad). Solo con la credencial operativa. Campo aditivo.",
+    )
 
 
 class ImageResultSnippet(BaseModel):
@@ -161,6 +172,85 @@ class ErrorResponse(BaseModel):
     error: ErrorInfo
 
 
+class ExecutionCode(BaseModel):
+    version: Optional[str] = None
+    commit: Optional[str] = None
+    commit_source: Optional[str] = Field(default=None, description='"build_info", "git" o null (desconocido).')
+    dirty: Optional[bool] = None
+    fingerprint: Optional[str] = Field(
+        default=None, description="Huella SHA-256 del código (ver infrastructure/build_info.py).",
+    )
+    fingerprint_source: Optional[str] = None
+    packages: list[str] = Field(default_factory=list)
+    build_generated_at: Optional[str] = None
+    unknown: list[str] = Field(default_factory=list)
+
+
+class ExecutionSnapshot(BaseModel):
+    project_id: Optional[str] = None
+    version: Optional[int] = None
+    identity_file: bool = False
+    identity_error: Optional[str] = None
+    declared_fingerprint: Optional[str] = Field(
+        default=None, description="content_fingerprint de snapshot_identity.json (al publicar).",
+    )
+    published_at: Optional[str] = None
+    fingerprint_at_load: Optional[str] = Field(
+        default=None, description="Huella calculada al cargar la instantánea en este proceso.",
+    )
+    fingerprint_matches: Optional[bool] = None
+
+
+class ExecutionIndex(BaseModel):
+    embedding_provider: Optional[str] = None
+    embedding_model: Optional[str] = None
+    dimensions: Optional[int] = None
+    points_count: Optional[int] = None
+    updated_at: Optional[str] = None
+    query_embedding_profile: Optional[str] = None
+    query_embedding_model: Optional[str] = None
+
+
+class ExecutionReranking(BaseModel):
+    setting: str = Field(description='Ajuste del proyecto: "automatico", "activado" o "desactivado".')
+    model_available: bool
+    available_model: Optional[str] = None
+    applied: bool
+    model: Optional[str] = None
+    note: Optional[str] = None
+
+
+class ExecutionResult(BaseModel):
+    position: int
+    chunk_id: str
+    source_id: str
+    score: float
+    retrieval_rank: Optional[int] = None
+    affinity: Optional[float] = None
+
+
+class ExecutionInfo(BaseModel):
+    """Ronda 104b (Etapa 0, autorizada por NEXOM): con qué código,
+    instantánea, índice, procedimiento y configuración efectiva de reranking
+    se produjo esta respuesta. Mismo contenido que runtime.db
+    (conversation_log.execution). Sin credenciales, rutas ni secretos."""
+
+    format_version: int = 1
+    code: Optional[ExecutionCode] = None
+    snapshot: Optional[ExecutionSnapshot] = None
+    index: Optional[ExecutionIndex] = None
+    retrieval_pipeline: Optional[str] = None
+    reranking: Optional[ExecutionReranking] = None
+    search_text: Optional[str] = None
+    applied_filters: dict[str, str] = Field(default_factory=dict)
+    excluded_sources: int = 0
+    affinity_ordering: bool = False
+    results: list[ExecutionResult] = Field(default_factory=list)
+    unknown: list[str] = Field(
+        default_factory=list, description="Datos que no se pudieron determinar (nunca se inventan).",
+    )
+
+
 class MessageResponse(BaseModel):
     action: str
     response_text: Optional[str]
@@ -208,10 +298,22 @@ class MessageResponse(BaseModel):
         "imagen relevante -- estos tres casos no se distinguen aquí. Campo aditivo: un agente "
         "que hoy solo lee 'sources' sigue funcionando exactamente igual si lo ignora.",
     )
+    execution: Optional[ExecutionInfo] = Field(
+        default=None,
+        description="Ronda 104b (Etapa 0): datos de ejecución para diagnóstico y reproducción -- código "
+        "(versión, commit, huella), instantánea (versión y huellas), índice, procedimiento de "
+        "recuperación, reranking efectivo (ajuste, disponibilidad, aplicación, modelo), texto de "
+        "búsqueda, filtros y fragmentos en orden. Solo con la credencial operativa (X-API-Key); null "
+        "con token de widget. Campo aditivo.",
+    )
 
     @classmethod
-    def from_handled_message(cls, handled: HandledMessage) -> "MessageResponse":
+    def from_handled_message(cls, handled: HandledMessage, include_execution: bool = False) -> "MessageResponse":
+        """include_execution (Ronda 104b): agrega `execution` y los campos de
+        diagnóstico de `sources` -- solo para la credencial operativa."""
         trace = handled.trace
+        execution = handled.log_entry.execution if include_execution else None
+        detalle = {r["chunk_id"]: r for r in (execution or {}).get("results", [])}
         return cls(
             action=trace.action.value,
             response_text=handled.log_entry.response_text,
@@ -226,9 +328,12 @@ class MessageResponse(BaseModel):
                     text=result.chunk.text, score=result.score,
                     page_start=result.chunk.page_start, page_end=result.chunk.page_end,
                     section_title=result.chunk.section_title,
+                    retrieval_rank=detalle.get(result.chunk.id, {}).get("retrieval_rank"),
+                    affinity=detalle.get(result.chunk.id, {}).get("affinity"),
                 )
                 for result in trace.search_results
             ],
+            execution=ExecutionInfo(**execution) if execution else None,
             snapshot_version=handled.log_entry.snapshot_version,
             log_id=handled.log_entry.id,
             conversation_id=handled.log_entry.conversation_id,
@@ -268,6 +373,30 @@ class HealthResponse(BaseModel):
     posterior. Permite comprobar tras el arranque que la versión servida es
     la esperada. Nunca incluye rutas del servidor."""
     embedding_profile: Optional[str] = None
+    code_version: Optional[str] = None
+    """Ronda 104b (Etapa 0, aditivo): versión de RAG Studio. El commit y la
+    huella del código están en GET /health/details (protegido)."""
+    retrieval_pipeline: Optional[str] = None
+    """Ronda 104b (Etapa 0, aditivo): procedimiento de recuperación del
+    motor (ver RETRIEVAL_PIPELINE en simulate_conversation.py)."""
+
+
+class HealthDetailsResponse(BaseModel):
+    """Ronda 104b (Etapa 0): GET /health/details, protegido con la clave
+    operativa. Detalles internos del despliegue para reproducir trazas: no
+    se exponen en /health (público). Sin rutas ni secretos."""
+
+    code: ExecutionCode
+    retrieval_pipeline: str
+    snapshot_mode: str
+    embedding_profile: Optional[str] = None
+    reranking_model_available: Optional[bool] = Field(
+        default=None, description="null si todavía no se cargó ninguna instantánea en este proceso.",
+    )
+    reranking_available_model: Optional[str] = None
+    pinned_snapshot: Optional[dict] = None
+    loaded_snapshots: list[dict] = Field(default_factory=list)
+    package_fingerprints: dict[str, str] = Field(default_factory=dict)
 
 
 class MetricsResponse(BaseModel):

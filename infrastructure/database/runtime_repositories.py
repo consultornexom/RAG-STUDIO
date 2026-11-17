@@ -75,11 +75,18 @@ class ConversationLogRecord(RuntimeBase):
     error_code: Mapped[str | None] = mapped_column(String, nullable=True)
     error_summary: Mapped[str | None] = mapped_column(Text, nullable=True)
     error_detail: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # Ronda 104b (Etapa 0): fragmentos entregados EN ORDEN y datos de
+    # ejecución (código, instantánea, índice, procedimiento, reranking,
+    # texto de búsqueda, filtros). JSON; NULL en filas anteriores.
+    chunk_ids: Mapped[str | None] = mapped_column(Text, nullable=True)
+    execution: Mapped[str | None] = mapped_column(Text, nullable=True)
 
 
 _DIAGNOSTIC_COLUMNS = (
     ("trace_id", "VARCHAR"), ("error_category", "VARCHAR"), ("error_stage", "VARCHAR"),
     ("error_code", "VARCHAR"), ("error_summary", "TEXT"), ("error_detail", "TEXT"),
+    # Ronda 104b (Etapa 0), mismo criterio aditivo.
+    ("chunk_ids", "TEXT"), ("execution", "TEXT"),
 )
 
 
@@ -145,6 +152,8 @@ class SqlAlchemyConversationLogRepository(ConversationLogRepository):
                 error_category=entry.error_category, error_stage=entry.error_stage,
                 error_code=entry.error_code, error_summary=entry.error_summary,
                 error_detail=entry.error_detail,
+                chunk_ids=json.dumps(entry.chunk_ids) if entry.chunk_ids is not None else None,
+                execution=json.dumps(entry.execution, ensure_ascii=False) if entry.execution is not None else None,
             ))
             session.commit()
 
@@ -271,6 +280,8 @@ def _record_to_entry(record: ConversationLogRecord) -> ConversationLogEntry:
         error_category=record.error_category, error_stage=record.error_stage,
         error_code=record.error_code, error_summary=record.error_summary,
         error_detail=record.error_detail,
+        chunk_ids=json.loads(record.chunk_ids) if record.chunk_ids else None,
+        execution=json.loads(record.execution) if record.execution else None,
     )
     if record.conversation_id is not None:
         kwargs["conversation_id"] = record.conversation_id

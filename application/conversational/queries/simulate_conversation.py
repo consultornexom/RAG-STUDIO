@@ -76,6 +76,16 @@ class ResultOrderingView(BaseModel):
     """Título con el que se midió la afinidad (ver _section_title)."""
 
 
+RETRIEVAL_PIPELINE = "r102"
+"""Ronda 104b (Etapa 0): identificador del procedimiento de recuperación del
+motor conversacional. Cambia cada vez que una ronda altera cómo se ordenan
+los fragmentos, para que un trace diga con qué procedimiento se produjo:
+- "r102": búsqueda híbrida (RRF semántica + BM25 + señal jerárquica de la
+  Ronda 100, conflicto de ordinal de la Ronda 101), reranking según el ajuste
+  del proyecto (Ronda 102, C4), filtro de metadatos previo y afinidad
+  título-intención combinada por RRF con el puesto de la búsqueda (C1) con
+  títulos de C2."""
+
 RERANKING_AUTOMATICO = "automatico"
 RERANKING_ACTIVADO = "activado"
 RERANKING_DESACTIVADO = "desactivado"
@@ -145,6 +155,15 @@ class SimulationTrace(BaseModel):
     reranking_model: Optional[str] = None
     """Ronda 102 (C4): modelo de reranking que intervino (None si no se
     aplicó)."""
+    reranking_available: bool = False
+    """Ronda 104b (Etapa 0): si este motor tenía modelo de reranking
+    disponible (el Runtime de RAG Studio hoy no lo tiene)."""
+    reranking_available_model: Optional[str] = None
+    retrieval_pipeline: str = RETRIEVAL_PIPELINE
+    """Ronda 104b (Etapa 0): ver RETRIEVAL_PIPELINE."""
+    search_text: Optional[str] = None
+    """Ronda 104b (Etapa 0): texto EXACTO con el que se buscó (la consulta
+    o, con filtros, retrieval_query). None si no hubo búsqueda de texto."""
     reranking_note: Optional[str] = None
     """Ronda 102 (C4): aviso cuando el ajuste pide reranking y no hay
     modelo instalado."""
@@ -261,6 +280,9 @@ class SimulateConversation:
                 query_text=query_text, provided_variables=provided, action=RuleActionType.ABSTENERSE,
                 abstention_reason="Ninguna intención activa coincide con esta consulta -- el documento "
                 "maestro exige abstenerse (o canalizar) antes que responder con una intención adivinada.",
+                reranking_setting=self._reranking_decision(project_id)[0],
+                reranking_available=self._rag.has_reranker,
+                reranking_available_model=self._rag.reranker_model_name,
             )
 
         intent, confidence = match.intent, match.confidence
@@ -340,6 +362,7 @@ class SimulateConversation:
         result_ordering: list[ResultOrderingView] = []
         reranking_setting, use_rerank, reranking_note = self._reranking_decision(project_id)
         reranking_applied = False
+        search_text: Optional[str] = None
         retrieval_query: Optional[str] = None
         section_ordering = False
         applied_filters: dict[str, str] = {}
@@ -375,6 +398,7 @@ class SimulateConversation:
                     max_access_level=max_access_level, intent=intent, intents=intents, rerank=use_rerank,
                 )
                 reranking_applied = use_rerank
+                search_text = retrieval_query or query_text
                 section_ordering = bool(applied_filters) and self._sources is not None
                 if not search_results:
                     final_action = RuleActionType.ABSTENERSE
@@ -422,7 +446,8 @@ class SimulateConversation:
             result_ordering=result_ordering, reranking_setting=reranking_setting,
             reranking_applied=reranking_applied,
             reranking_model=self._rag.reranker_model_name if reranking_applied else None,
-            reranking_note=reranking_note,
+            reranking_note=reranking_note, reranking_available=self._rag.has_reranker,
+            reranking_available_model=self._rag.reranker_model_name, search_text=search_text,
         )
 
     def _reranking_decision(self, project_id: str) -> tuple[str, bool, Optional[str]]:

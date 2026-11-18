@@ -1,0 +1,22 @@
+modelo de embeddings: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2; reranker: Xenova/ms-marco-MiniLM-L-6-v2
+
+Consulta [texto_busqueda_simulador]: '¿Qué documentos necesito para entrar ?'
+   coseno 0.453  reranker -10.649  palabras  104  REQ_contenido_ctx
+   coseno 0.416  reranker  -3.595  palabras   50  PUENTE_TL
+   coseno 0.383  reranker -10.702  palabras   99  REQ_contenido
+   coseno 0.356  reranker  -8.908  palabras  154  REQ_sin_yaml
+   coseno 0.349  reranker  -3.174  palabras   34  PUENTE_TL_sin_refs
+   coseno 0.329  reranker -11.370  palabras   19  INFO_GENERAL_TL
+   coseno 0.280  reranker  -8.677  palabras  189  REQ_completo
+   coseno 0.256  reranker  -6.880  palabras   31  PROCEDENCIA_TL
+
+Consulta [consulta_original]: '¿Qué documentos necesito para entrar al bachillerato?'
+   coseno 0.432  reranker  -1.016  palabras  104  REQ_contenido_ctx
+   coseno 0.361  reranker  -2.001  palabras   99  REQ_contenido
+   coseno 0.357  reranker  -4.360  palabras   19  INFO_GENERAL_TL
+   coseno 0.324  reranker  -5.679  palabras   50  PUENTE_TL
+   coseno 0.303  reranker  +1.796  palabras  189  REQ_completo
+   coseno 0.285  reranker  +0.735  palabras  154  REQ_sin_yaml
+   coseno 0.260  reranker  -5.741  palabras   34  PUENTE_TL_sin_refs
+   coseno 0.237  reranker  +2.090  palabras   31  PROCEDENCIA_TL
+

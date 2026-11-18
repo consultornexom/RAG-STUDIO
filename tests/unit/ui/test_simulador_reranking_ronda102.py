@@ -68,7 +68,27 @@ def test_ronda104b_el_reporte_incluye_los_datos_de_ejecucion(qapp, app_context):
     )
     panel._refresh_simulation_report()
     texto = panel._sim_report.toPlainText()
-    assert "Procedimiento de recuperación: r102" in texto
-    assert "Reranking: modelo disponible (Xenova/ms-marco-MiniLM-L-6-v2); ajuste desactivado; no aplicado" in texto
+    assert "Procedimiento de recuperación: r105b" in texto
+    assert ("Reranking: ajuste desactivado; no aplicado; modelo cargado (Xenova/ms-marco-MiniLM-L-6-v2) "
+            "(no requerido)") in texto
+    assert "Configuración efectiva en el Runtime: sin reranking — igual a la de esta simulación." in texto
     assert "Texto exacto de búsqueda: «texto exacto»" in texto
     assert "RAG Studio " in texto and "huella del código" in texto
+
+
+def test_ronda105b_el_selector_muestra_la_configuracion_efectiva(qapp, app_context):
+    project = app_context.project_service.create_project("Proyecto efectiva")
+    panel = ConversationalPanel(app_context)
+    panel.set_active_project(project.id)
+    assert panel._sim_reranking.currentText().startswith("Automático (predeterminado): sin reranking")
+    assert "SIN reranking" in panel._sim_reranking_effective.text()
+    panel._sim_reranking.setCurrentIndex(panel._sim_reranking.findData(True))
+    import ui.conversational.panel as modulo
+    original = modulo.QMessageBox.information
+    modulo.QMessageBox.information = staticmethod(lambda *a, **k: None)
+    try:
+        panel._on_agent_reranking_changed()
+    finally:
+        modulo.QMessageBox.information = original
+    assert "CON reranking" in panel._sim_reranking_effective.text()
+    assert app_context.project_service.get_project(project.id).agent_reranking is True

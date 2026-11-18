@@ -29,7 +29,7 @@ def test_registro_con_reordenamiento_conserva_orden_y_puestos():
     assert [(x["position"], x["chunk_id"], x["retrieval_rank"], x["affinity"]) for x in reg["results"]] == [
         (1, "b", 3, 0.4), (2, "a", 1, 0.0)]
     assert reg["search_text"] == "q sin valor" and reg["applied_filters"] == {"nivel": "bachillerato"}
-    assert reg["retrieval_pipeline"] == "r102"
+    assert reg["retrieval_pipeline"] == "r105b"
     assert reg["reranking"]["applied"] is False and reg["reranking"]["model_available"] is False
     assert set(reg["unknown"]) == {"code.commit", "code.dirty", "snapshot.declared_fingerprint"}
 

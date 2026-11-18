@@ -25,11 +25,31 @@ AQUI = Path(__file__).resolve().parent
 RAIZ_DOCS = AQUI.parents[1]
 
 
-def comparar(a: Path, b: Path) -> int:
+def _canonico(registro):
+    """Ronda 105b: fragmentos con el MISMO texto en fuentes distintas (p. ej.
+    la sección «Información compartida…» de dos planes) empatan y, en esta
+    construcción en memoria con ids aleatorios, su orden relativo y sus
+    puntajes RRF pueden alternar entre ejecuciones del MISMO código. Se
+    comparan como grupo: posiciones consecutivas con la misma huella de
+    texto se reducen a (huella, fuentes ordenadas), sin puntaje."""
+    if not registro:
+        return registro
+    grupos, i, fr = [], 0, registro["fragmentos"]
+    while i < len(fr):
+        j = i
+        while j + 1 < len(fr) and fr[j + 1][1] == fr[i][1]:
+            j += 1
+        grupos.append(fr[i] if i == j else [sorted(f[0] for f in fr[i:j + 1]), fr[i][1]])
+        i = j + 1
+    return {**registro, "fragmentos": grupos}
+
+
+def comparar(a: Path, b: Path, canonico: bool = True) -> int:
     x, y = json.loads(a.read_text()), json.loads(b.read_text())
     diferencias = []
     for clave in sorted(set(x) | set(y)):
-        if x.get(clave) != y.get(clave):
+        vx, vy = (_canonico(x.get(clave)), _canonico(y.get(clave))) if canonico else (x.get(clave), y.get(clave))
+        if vx != vy:
             diferencias.append(clave)
     print(f"{len(set(x) & set(y))} consultas comparadas; diferencias: {diferencias or 'ninguna'}")
     return 1 if diferencias else 0

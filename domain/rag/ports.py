@@ -148,6 +148,18 @@ class Reranker(ABC):
         primera vez)."""
         ...
 
+    def ensure_ready(self) -> None:
+        """Ronda 105b (P1): carga el modelo AHORA y lanza RerankerError si no
+        puede (sin esperar al primer score). Por defecto no hace nada: un
+        reranker sin carga diferida ya está listo."""
+        return None
+
+    @property
+    def is_loaded(self) -> bool:
+        """Ronda 105b (P1): True si el modelo está cargado y verificado (no
+        solo configurado). Por defecto True (sin carga diferida)."""
+        return True
+
 
 class ImageEmbeddingProvider(ABC):
     """Convierte imágenes en vectores, en el mismo espacio semántico que

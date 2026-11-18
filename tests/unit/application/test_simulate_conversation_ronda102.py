@@ -40,7 +40,9 @@ CONSULTA = "cual es el objetivo del programa Gestión Profesional de Proyectos"
 
 
 @pytest.mark.parametrize("ajuste, con_modelo, aplicado, etiqueta", [
-    (None, True, True, "automatico"),
+    # Ronda 105b (P1, alternativa B estricta): Automático = sin reranking
+    # aunque haya modelo (antes lo aplicaba en el Simulador).
+    (None, True, False, "automatico"),
     (None, False, False, "automatico"),
     (True, True, True, "activado"),
     (False, True, False, "desactivado"),
@@ -55,15 +57,37 @@ def test_reranking_del_agente_segun_ajuste_del_proyecto(ajuste, con_modelo, apli
     assert trace.reranking_applied is aplicado
     assert trace.reranking_model == ("modelo-x" if aplicado else None)
     assert trace.reranking_note is None
+    assert trace.runtime_effective_reranking == ("con_reranking" if aplicado else "sin_reranking")
+    assert trace.reranking_model_status == ("cargado" if aplicado else "no_requerido")
 
 
-def test_reranking_activado_sin_modelo_se_avisa_y_no_falla():
+def test_reranking_activado_sin_modelo_falla_de_forma_explicita():
+    """Ronda 105b (P1, B estricta): antes se respondía sin reranking con un
+    aviso; ahora la consulta falla con un error explícito."""
+    from domain.rag.exceptions import RerankingRequiredUnavailableError
+
     fx = _escenario()
     recibidos = _con_simulador(fx, reranker=None, ajuste=True)
-    trace = fx.simulate.execute(P, CONSULTA)
-    assert recibidos == [False]
-    assert trace.reranking_applied is False and trace.reranking_setting == "activado"
-    assert "no tiene modelo de reranking" in trace.reranking_note
+    with pytest.raises(RerankingRequiredUnavailableError, match="Activado"):
+        fx.simulate.execute(P, CONSULTA)
+    assert recibidos == []
+
+
+def test_reranking_activado_con_modelo_que_no_carga_falla_de_forma_explicita():
+    from domain.rag.exceptions import RerankerError, RerankingRequiredUnavailableError
+
+    class NoCarga(FakeReranker):
+        def ensure_ready(self):
+            raise RerankerError("sin red para descargar el modelo")
+
+        @property
+        def is_loaded(self):
+            return False
+
+    fx = _escenario()
+    _con_simulador(fx, reranker=NoCarga("modelo-x"), ajuste=True)
+    with pytest.raises(RerankingRequiredUnavailableError, match="no se pudo cargar"):
+        fx.simulate.execute(P, CONSULTA)
 
 
 def test_sin_ajuste_configurado_el_comportamiento_es_el_de_antes():

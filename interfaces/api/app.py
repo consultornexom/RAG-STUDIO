@@ -245,6 +245,7 @@ def create_app(
     channeling_dispatcher: Optional[ChannelingDispatcher] = None,
     pinned_snapshot_dir: Optional[str | Path] = None, pinned_snapshot_version: Optional[int] = None,
     rate_limit_per_minute: Optional[int] = None, pinned_project_id: Optional[str] = None,
+    reranker_factory=None,
 ) -> FastAPI:
     installation_dir = Path(installation_dir)
     runtime_context = RuntimeContext(
@@ -252,7 +253,7 @@ def create_app(
         embedding_provider_factory=embedding_provider_factory,
         image_embedding_provider_factory=image_embedding_provider_factory,
         pinned_snapshot_dir=pinned_snapshot_dir, pinned_snapshot_version=pinned_snapshot_version,
-        pinned_project_id=pinned_project_id,
+        pinned_project_id=pinned_project_id, reranker_factory=reranker_factory,
     )
     resolved_runtime_db_path = (
         runtime_db_path if runtime_db_path is not None else InstallationPaths(installation_dir).runtime_db_path()

@@ -1,0 +1,93 @@
+{
+ "codigo": "/tmp/antes105",
+ "agentproj": "restauracion_v2_01c3ccc3-473c-48e8-af94-53dc2b0de74e.agentproj",
+ "metricas": {
+  "veredicto_global": "rojo",
+  "recall_at_3": 1.0,
+  "casos": 7
+ },
+ "casos": {
+  "TEST-BACH-001|¿Cuáles son los requisitos para entrar al bachillerato?": {
+   "veredicto": "verde",
+   "accion": "responder",
+   "intencion": "consultar_requisitos_bachillerato",
+   "discrepancias": [],
+   "error": null,
+   "rango_fuente_esperada": 1,
+   "simulador_fragmentos": [
+    "6473f8b76538"
+   ],
+   "simulador_reranking_aplicado": true
+  },
+  "TEST-BACH-002|¿Qué áreas se ofrecen en el bachillerato?": {
+   "veredicto": "verde",
+   "accion": "responder",
+   "intencion": "consultar_areas_programa",
+   "discrepancias": [],
+   "error": null,
+   "rango_fuente_esperada": 1,
+   "simulador_fragmentos": [
+    "6473f8b76538"
+   ],
+   "simulador_reranking_aplicado": true
+  },
+  "TEST-BACH-003|¿Qué cualidades debe tener un aspirante?": {
+   "veredicto": "verde",
+   "accion": "responder",
+   "intencion": "consultar_cualidades_aspirante",
+   "discrepancias": [],
+   "error": null,
+   "rango_fuente_esperada": 1,
+   "simulador_fragmentos": [
+    "b367c93a2116"
+   ],
+   "simulador_reranking_aplicado": true
+  },
+  "TEST-BACH-004|Dame información del bachillerato": {
+   "veredicto": "verde",
+   "accion": "responder",
+   "intencion": "consultar_informacion_programa",
+   "discrepancias": [],
+   "error": null,
+   "rango_fuente_esperada": 1,
+   "simulador_fragmentos": [
+    "b367c93a2116"
+   ],
+   "simulador_reranking_aplicado": true
+  },
+  "TEST-BACH-005|¿Cuáles son los requisitos para entrar al bachillerato?": {
+   "veredicto": "verde",
+   "accion": "aclarar",
+   "intencion": "consultar_requisitos_bachillerato",
+   "discrepancias": [],
+   "error": null,
+   "rango_fuente_esperada": null,
+   "simulador_fragmentos": [],
+   "simulador_reranking_aplicado": false
+  },
+  "TEST-BACH-006|¿Cuáles son los requisitos para entrar a una maestría?": {
+   "veredicto": "rojo",
+   "accion": "aclarar",
+   "intencion": "consultar_requisitos_bachillerato",
+   "discrepancias": [
+    "Acción esperada: abstenerse -- se obtuvo: aclarar"
+   ],
+   "error": null,
+   "rango_fuente_esperada": null,
+   "simulador_fragmentos": [],
+   "simulador_reranking_aplicado": false
+  },
+  "TEST-BACH-007|¿Cuál es el clima de mañana en León?": {
+   "veredicto": "amarillo",
+   "accion": "aclarar",
+   "intencion": "consultar_areas_programa",
+   "discrepancias": [
+    "Acción esperada: abstenerse -- se obtuvo: aclarar"
+   ],
+   "error": null,
+   "rango_fuente_esperada": null,
+   "simulador_fragmentos": [],
+   "simulador_reranking_aplicado": false
+  }
+ }
+}

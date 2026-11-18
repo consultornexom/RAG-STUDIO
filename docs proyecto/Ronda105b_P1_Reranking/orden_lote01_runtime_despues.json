@@ -1,0 +1,450 @@
+{
+ "sin|R1": {
+  "accion": "responder",
+  "intencion": "consultar_requisitos_bachillerato",
+  "confianza": 0.722309,
+  "fragmentos": [
+   [
+    "requisitos_ingreso.md",
+    "8b942c8790601474",
+    0.031545
+   ],
+   [
+    "bachillerato_hilario_medina.md",
+    "649e41605b48bf9c",
+    0.030331
+   ],
+   [
+    "cualidades_aspirante.md",
+    "8830ce1bc1c65a21",
+    0.031498
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "e610e174dcc1eeed",
+    0.029877
+   ],
+   [
+    "areas_formacion.md",
+    "cdd359c9ab1265c7",
+    0.029851
+   ]
+  ]
+ },
+ "sin|R2": {
+  "accion": "responder",
+  "intencion": "consultar_requisitos_bachillerato",
+  "confianza": 1.0,
+  "fragmentos": [
+   [
+    "bachillerato_torres_landa.md",
+    "e610e174dcc1eeed",
+    0.015385
+   ],
+   [
+    "bachillerato_hilario_medina.md",
+    "649e41605b48bf9c",
+    0.014925
+   ],
+   [
+    "requisitos_ingreso.md",
+    "8b942c8790601474",
+    0.014085
+   ],
+   [
+    "cualidades_aspirante.md",
+    "8830ce1bc1c65a21",
+    0.014286
+   ],
+   [
+    "areas_formacion.md",
+    "cdd359c9ab1265c7",
+    0.013889
+   ]
+  ]
+ },
+ "sin|R3": {
+  "accion": "responder",
+  "intencion": "consultar_requisitos_bachillerato",
+  "confianza": 0.397778,
+  "fragmentos": [
+   [
+    "requisitos_ingreso.md",
+    "8b942c8790601474",
+    0.031754
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "de2b728e917e51d7",
+    0.032787
+   ],
+   [
+    "cualidades_aspirante.md",
+    "8830ce1bc1c65a21",
+    0.032002
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "fb363f35271dde91",
+    0.029418
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "e610e174dcc1eeed",
+    0.030536
+   ]
+  ]
+ },
+ "sin|S1": {
+  "accion": "responder",
+  "intencion": "consultar_areas_programa",
+  "confianza": 1.0,
+  "fragmentos": [
+   [
+    "areas_formacion.md",
+    "cdd359c9ab1265c7",
+    0.031025
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "de2b728e917e51d7",
+    0.032522
+   ],
+   [
+    "bachillerato_hilario_medina.md",
+    "de2b728e917e51d7",
+    0.032522
+   ],
+   [
+    "cualidades_aspirante.md",
+    "8830ce1bc1c65a21",
+    0.028665
+   ],
+   [
+    "requisitos_ingreso.md",
+    "8b942c8790601474",
+    0.027826
+   ]
+  ]
+ },
+ "sin|S2": {
+  "accion": "responder",
+  "intencion": "consultar_cualidades_aspirante",
+  "confianza": 0.999724,
+  "fragmentos": [
+   [
+    "cualidades_aspirante.md",
+    "8830ce1bc1c65a21",
+    0.032266
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "de2b728e917e51d7",
+    0.032266
+   ],
+   [
+    "bachillerato_hilario_medina.md",
+    "de2b728e917e51d7",
+    0.032258
+   ],
+   [
+    "bachillerato_hilario_medina.md",
+    "46ebfee0079da2b1",
+    0.015625
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "1f17e8128d4adee7",
+    0.015385
+   ]
+  ]
+ },
+ "sin|G1": {
+  "accion": "responder",
+  "intencion": "consultar_informacion_programa",
+  "confianza": 0.705172,
+  "fragmentos": [
+   [
+    "bachillerato_torres_landa.md",
+    "1f17e8128d4adee7",
+    0.031778
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "fb363f35271dde91",
+    0.031319
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "de2b728e917e51d7",
+    0.031054
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "e610e174dcc1eeed",
+    0.031025
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "574f0b8087fe17d2",
+    0.03009
+   ]
+  ]
+ },
+ "sin|G2": {
+  "accion": "responder",
+  "intencion": "consultar_informacion_programa",
+  "confianza": 1.0,
+  "fragmentos": [
+   [
+    "bachillerato_hilario_medina.md",
+    "46ebfee0079da2b1",
+    0.032522
+   ],
+   [
+    "bachillerato_hilario_medina.md",
+    "de2b728e917e51d7",
+    0.015152
+   ],
+   [
+    "cualidades_aspirante.md",
+    "8830ce1bc1c65a21",
+    0.03125
+   ],
+   [
+    "bachillerato_hilario_medina.md",
+    "448b9e4b2b62ae15",
+    0.030366
+   ],
+   [
+    "bachillerato_hilario_medina.md",
+    "6b44a34230729c4a",
+    0.029462
+   ]
+  ]
+ },
+ "sin|P1": {
+  "accion": "responder",
+  "intencion": "consultar_plan_estudios",
+  "confianza": 0.768458,
+  "fragmentos": [
+   [
+    "bachillerato_torres_landa.md",
+    "8791d444769a3230",
+    0.048395
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "19c6ab19dda62e50",
+    0.047123
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "de2b728e917e51d7",
+    0.03009
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "fb363f35271dde91",
+    0.02885
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "e845bb79d9c57702",
+    0.048131
+   ]
+  ]
+ },
+ "sin|P2": {
+  "accion": "responder",
+  "intencion": "consultar_plan_estudios",
+  "confianza": 0.599821,
+  "fragmentos": [
+   [
+    "bachillerato_torres_landa.md",
+    "19c6ab19dda62e50",
+    0.048916
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "8791d444769a3230",
+    0.045197
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "fb363f35271dde91",
+    0.028439
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "de2b728e917e51d7",
+    0.028992
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "7aab7aa9ed4ae07b",
+    0.048395
+   ]
+  ]
+ },
+ "sin|P3": {
+  "accion": "responder",
+  "intencion": "consultar_plan_estudios",
+  "confianza": 0.59812,
+  "fragmentos": [
+   [
+    "bachillerato_hilario_medina.md",
+    "b33e647b73f5fe90",
+    0.048916
+   ],
+   [
+    "bachillerato_hilario_medina.md",
+    "219fd27ac874344a",
+    0.047371
+   ],
+   [
+    "bachillerato_hilario_medina.md",
+    "448b9e4b2b62ae15",
+    0.028259
+   ],
+   [
+    "bachillerato_hilario_medina.md",
+    "de2b728e917e51d7",
+    0.028595
+   ],
+   [
+    "bachillerato_hilario_medina.md",
+    "d0072cc1f5a04a63",
+    0.048131
+   ]
+  ]
+ },
+ "sin|P4": {
+  "accion": "responder",
+  "intencion": "consultar_plan_estudios",
+  "confianza": 0.751544,
+  "fragmentos": [
+   [
+    "bachillerato_torres_landa.md",
+    "8bec3aa7d12941d7",
+    0.048412
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "574f0b8087fe17d2",
+    0.031054
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "e2589851c23211bb",
+    0.030536
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "19c6ab19dda62e50",
+    0.029958
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "e845bb79d9c57702",
+    0.029437
+   ]
+  ]
+ },
+ "sin|P5": {
+  "accion": "responder",
+  "intencion": "consultar_plan_estudios",
+  "confianza": 0.65638,
+  "fragmentos": [
+   [
+    "bachillerato_hilario_medina.md",
+    "15f4a59607f5a0e9",
+    0.04918
+   ],
+   [
+    "bachillerato_hilario_medina.md",
+    "d0072cc1f5a04a63",
+    0.047875
+   ],
+   [
+    "bachillerato_hilario_medina.md",
+    "219fd27ac874344a",
+    0.048131
+   ],
+   [
+    "bachillerato_hilario_medina.md",
+    "574f0b8087fe17d2",
+    0.02967
+   ],
+   [
+    "bachillerato_hilario_medina.md",
+    "e2589851c23211bb",
+    0.029644
+   ]
+  ]
+ },
+ "sin|P6": {
+  "accion": "responder",
+  "intencion": "consultar_plan_estudios",
+  "confianza": 0.625767,
+  "fragmentos": [
+   [
+    "bachillerato_torres_landa.md",
+    "e845bb79d9c57702",
+    0.048916
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "7aab7aa9ed4ae07b",
+    0.045991
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "8791d444769a3230",
+    0.048652
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "19c6ab19dda62e50",
+    0.030303
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "574f0b8087fe17d2",
+    0.029911
+   ]
+  ]
+ },
+ "sin|O1": {
+  "accion": "responder",
+  "intencion": "consultar_informacion_programa",
+  "confianza": 0.342059,
+  "fragmentos": [
+   [
+    "bachillerato_torres_landa.md",
+    "fb363f35271dde91",
+    0.032787
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "1f17e8128d4adee7",
+    0.030331
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "de2b728e917e51d7",
+    0.030303
+   ],
+   [
+    "cualidades_aspirante.md",
+    "8830ce1bc1c65a21",
+    0.031746
+   ],
+   [
+    "bachillerato_torres_landa.md",
+    "8f121196dac5caf8",
+    0.031054
+   ]
+  ]
+ }
+}

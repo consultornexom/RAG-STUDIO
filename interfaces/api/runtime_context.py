@@ -27,7 +27,8 @@ from typing import Callable, Optional
 
 from application.conversational.service import ConversationalService
 from application.rag.service import RagService
-from domain.rag.ports import EmbeddingProvider, ImageEmbeddingProvider
+from domain.rag.exceptions import RerankingRequiredUnavailableError
+from domain.rag.ports import EmbeddingProvider, ImageEmbeddingProvider, Reranker
 from domain.release.entities import ProjectSnapshot
 from infrastructure.database.conversational_repositories import (
     SqlAlchemyChannelingSchemeRepository,
@@ -48,6 +49,7 @@ from infrastructure.embeddings.caching_provider import CachingEmbeddingProvider
 from infrastructure.embeddings.fastembed_image_provider import FastEmbedImageProvider
 from infrastructure.embeddings.fastembed_provider import AVAILABLE_EMBEDDING_PROFILES, make_provider_for_profile
 from infrastructure.filesystem.paths import InstallationPaths, SnapshotInstallationPaths
+from infrastructure.rerankers.fastembed_cross_encoder import FastEmbedReranker
 from infrastructure.filesystem.snapshot_identity import (
     SnapshotIdentityError, content_fingerprint, read_snapshot_identity,
 )
@@ -61,6 +63,9 @@ EmbeddingProviderFactory = Callable[[str, Path], EmbeddingProvider]
 # runtime HTTP sin depender de red (FastEmbedImageProvider descarga un
 # modelo CLIP real de Hugging Face en su primer uso).
 ImageEmbeddingProviderFactory = Callable[[Path], ImageEmbeddingProvider]
+# Ronda 105b (P1): el Runtime solo construye un reranker para los proyectos
+# con «Reranking en el agente: Activado». Inyectable para pruebas sin red.
+RerankerFactory = Callable[[Path], Reranker]
 
 
 def _default_embedding_provider_factory(profile: str, cache_dir: Path) -> EmbeddingProvider:
@@ -69,6 +74,10 @@ def _default_embedding_provider_factory(profile: str, cache_dir: Path) -> Embedd
 
 def _default_image_embedding_provider_factory(cache_dir: Path) -> ImageEmbeddingProvider:
     return FastEmbedImageProvider(cache_dir=cache_dir)
+
+
+def _default_reranker_factory(cache_dir: Path) -> Reranker:
+    return FastEmbedReranker(cache_dir=cache_dir)
 
 
 class SnapshotNotFoundError(Exception):
@@ -147,8 +156,10 @@ class RuntimeContext:
         image_embedding_provider_factory: Optional[ImageEmbeddingProviderFactory] = None,
         pinned_snapshot_dir: Optional[str | Path] = None, pinned_snapshot_version: Optional[int] = None,
         pinned_project_id: Optional[str] = None,
+        reranker_factory: Optional[RerankerFactory] = None,
     ):
         self._installation_paths = InstallationPaths(installation_dir)
+        self._reranker_factory = reranker_factory or _default_reranker_factory
         self._embedding_profile = embedding_profile
         self._embedding_provider_factory = embedding_provider_factory or _default_embedding_provider_factory
         self._image_embedding_provider_factory = (
@@ -288,6 +299,26 @@ class RuntimeContext:
         )
         vector_store = QdrantLocalVectorStore(paths)
         index_info_repository = SqlAlchemyIndexInfoRepository(paths)
+        # Ronda 105b (P1, alternativa B estricta, decisión de NEXOM): solo un
+        # proyecto con «Reranking en el agente: Activado» necesita el modelo.
+        # Se construye y se CARGA aquí, al cargar la instantánea; si no carga,
+        # la instantánea no se sirve (error explícito, sin degradar). Los
+        # demás proyectos no construyen reranker: mismo comportamiento y mismos
+        # requisitos de siempre.
+        agent_reranking = ProjectAgentRerankingReader(paths)
+        reranker: Optional[Reranker] = None
+        if agent_reranking(project_id) is True:
+            reranker = self._reranker_factory(paths.models_dir())
+            try:
+                reranker.ensure_ready()
+            except Exception as exc:  # noqa: BLE001 - se reexpresa como error de configuración explícito
+                raise RerankingRequiredUnavailableError(
+                    f"El proyecto {project_id!r} (instantánea v{snapshot.version}) tiene «Reranking en el agente: "
+                    f"Activado», pero este servidor no pudo cargar el modelo de reranking "
+                    f"{getattr(reranker, 'model_name', '?')!r}. Aprovisione el modelo en la carpeta de modelos del "
+                    "Runtime o cambie el ajuste del proyecto y publique una versión nueva. "
+                    f"Detalle: {type(exc).__name__}: {exc}"
+                ) from exc
         rag_service = RagService(
             chunk_repository, embedding_provider, vector_store, index_info_repository,
             embedding_provider_factory=lambda profile: self._embedding_provider_factory(
@@ -311,6 +342,7 @@ class RuntimeContext:
             # ese módulo) -- construirlo aquí siempre, sin condicionarlo
             # a nada, no tiene costo de arranque en frío adicional.
             image_embedding_provider=self._image_embedding_provider_factory(paths.models_dir()),
+            reranker=reranker,
         )
         intent_repository = SqlAlchemyIntentRepository(paths)
         conversational_variable_repository = SqlAlchemyConversationalVariableRepository(paths)
@@ -325,7 +357,7 @@ class RuntimeContext:
             catalog_repository=SqlAlchemyCatalogRepository(paths),
             # Ronda 102 (C4): el ajuste "Reranking en el agente" se lee de la
             # instantánea servida (mismo project.db que el resto).
-            agent_reranking=ProjectAgentRerankingReader(paths),
+            agent_reranking=agent_reranking,
         )
         # Calentar el proveedor de embeddings ahora (al construir,
         # nunca en la primera solicitud real) -- ADR-002, sección 5,
@@ -348,7 +380,7 @@ class RuntimeContext:
                 "query_embedding_model": getattr(embedding_provider, "model_name", None),
             },
             "reranking": {
-                "model_available": rag_service.has_reranker,
+                "model_available": rag_service.reranker_loaded,
                 "available_model": rag_service.reranker_model_name,
             },
         }

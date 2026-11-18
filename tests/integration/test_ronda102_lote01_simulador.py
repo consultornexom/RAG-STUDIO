@@ -174,7 +174,9 @@ def test_consulta_de_nexom_requisitos_primero(corpus, variante):
     assert trace.action == RuleActionType.RESPONDER
     assert _posicion(trace, titulo_de, "requisitos_ingreso.md", "Acta de nacimiento con vigencia") == 1
     assert trace.result_ordering[0].affinity_title == "Requisitos de ingreso — Bachillerato UDL"
-    assert trace.reranking_applied is (variante == "con")
+    # Ronda 105b (P1): con el ajuste predeterminado (Automático) no hay
+    # reranking aunque el motor tenga modelo, igual que en el Runtime.
+    assert trace.reranking_applied is False
 
 
 CASOS = [

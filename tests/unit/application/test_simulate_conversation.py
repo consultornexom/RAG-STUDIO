@@ -486,7 +486,11 @@ class FixtureWithReranker(Fixture):
         )
 
 
-def test_simulate_uses_the_real_reranker_by_default_when_rag_service_has_one_configured():
+def test_simulate_does_not_use_the_reranker_by_default_even_if_configured_ronda105b():
+    """Ronda 105b (P1, alternativa B estricta, decisión de NEXOM): hasta la
+    Ronda 105, el predeterminado aplicaba el reranking si había modelo
+    configurado (Ronda 40) -- el Simulador lo hacía y el Runtime nunca. Ahora
+    el predeterminado es sin reranking en ambos."""
     fx = FixtureWithReranker()
     fx.add_validated_source_with_chunk("s1", "los requisitos de ingreso son boleta y acta de nacimiento")
     fx.intents.save(Intent(
@@ -494,12 +498,11 @@ def test_simulate_uses_the_real_reranker_by_default_when_rag_service_has_one_con
         positive_examples=["qué requisitos necesito", "requisitos de ingreso"],
     ))
 
-    fx.simulate.execute("p1", "qué requisitos necesito para ingresar")
+    trace = fx.simulate.execute("p1", "qué requisitos necesito para ingresar")
 
-    # FakeReranker.received_query solo queda asignado si de verdad se
-    # invocó -- confirma que SimulateConversation pidió rerank=True sin
-    # que se lo pidiera explícitamente quien la llama.
-    assert fx.reranker.received_query == "qué requisitos necesito para ingresar"
+    # FakeReranker.received_query solo queda asignado si se invocó.
+    assert fx.reranker.received_query is None
+    assert trace.reranking_applied is False and trace.runtime_effective_reranking == "sin_reranking"
 
 
 def test_simulate_does_not_request_rerank_when_rag_service_has_no_reranker_configured():

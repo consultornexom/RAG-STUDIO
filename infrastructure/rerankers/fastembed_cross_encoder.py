@@ -76,6 +76,14 @@ class FastEmbedReranker(Reranker):
     def model_name(self) -> str:
         return self._model_name
 
+    def ensure_ready(self) -> None:
+        """Ronda 105b (P1): carga el modelo ya (RerankerError si no puede)."""
+        self._ensure_loaded()
+
+    @property
+    def is_loaded(self) -> bool:
+        return self._model is not None
+
     def score(self, query_text: str, passages: list[str]) -> list[float]:
         if not passages:
             return []

@@ -1329,6 +1329,20 @@ conexión a Hugging Face (ver "Limitaciones conocidas").
   este entorno), `ruff` sin hallazgos. Ver
   `Validacion_observaciones_RAG_STUDIO.md`, Ronda 24, puntos 67-70.
 
+- **2026-11-18 -- Ronda 105b: P1, alternativa B estricta (decisión de NEXOM).**
+  - **Comportamiento:**
+    - «Automático» (predeterminado) y «Desactivado» = sin reranking, en el Simulador y en el Runtime;
+    - «Activado» = con reranking en ambos, exigiendo el modelo **cargado**;
+    - si no está cargado: error explícito (`RerankingRequiredUnavailableError`; en el Runtime, 503 `configuration.reranking_unavailable`), sin degradación silenciosa.
+  - **Runtime:** solo construye el reranker para proyectos con «Activado». Los demás no cambian de comportamiento ni de requisitos.
+  - **Simulador:** muestra la configuración efectiva en el Runtime y la registra en `execution.reranking` (`effective_in_runtime`, `model_status`). Procedimiento `r105b`.
+  - **Pruebas:**
+    - equivalencia Simulador–Runtime con la misma instantánea;
+    - LOTE01 real: Runtime antes y después 14/14 iguales, y Simulador igual al Runtime 14/14;
+    - casos de Calidad antes y después, cuya única diferencia es R2 (consulta del incidente) en el Simulador;
+    - integración: 577 pasadas.
+  - **Detalle e instrucciones de actualización:** `docs proyecto/Ronda105b_P1_Reranking/Informe_P1.md`.
+
 - **2026-11-17 -- Ronda 104b: cierre de la Etapa 0 y disponibilidad de evidencias (solo documentación).**
   NEXOM validó la Etapa 0 en Windows (commit `40be219`, AGENTE UDL v2, `r102`, `fingerprint_matches = true`,
   reranking no disponible, `execution` con clave operativa, trace `bccc81c9-…` en `runtime.db`) y la cerró

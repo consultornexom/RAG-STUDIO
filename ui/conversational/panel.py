@@ -1329,26 +1329,30 @@ class ConversationalPanel(QWidget):
         self._sim_source_id.setPlaceholderText("Restringir a una fuente (opcional, ID de fuente)")
         form_layout.addWidget(self._sim_source_id)
 
-        # Ronda 102 (C4, autorizado por NEXOM): el Simulador y el canal de
-        # mensajes aplicaban siempre el reranking si había modelo, aunque
-        # en Búsqueda RAG se desactivara. Ajuste propio del proyecto; el
-        # predeterminado conserva el comportamiento anterior.
+        # Ronda 102 (C4) y Ronda 105b (P1, alternativa B estricta, decisión de
+        # NEXOM): ajuste propio del proyecto, con la MISMA configuración
+        # efectiva en el Simulador y en el Runtime. Automático = sin reranking.
         rerank_row = QHBoxLayout()
         rerank_row.addWidget(QLabel("Reranking en el agente:", form))
         self._sim_reranking = QComboBox(form)
         for etiqueta, valor in (
-            ("Automático (predeterminado): si hay modelo instalado", None),
-            ("Activado", True),
-            ("Desactivado", False),
+            ("Automático (predeterminado): sin reranking", None),
+            ("Activado: con reranking (exige el modelo cargado)", True),
+            ("Desactivado: sin reranking", False),
         ):
             self._sim_reranking.addItem(etiqueta, valor)
         self._sim_reranking.setToolTip(
-            "Se guarda en el proyecto y lo usan el Simulador y el canal de mensajes de la versión publicada. "
-            "Es independiente de la casilla Reranking de Búsqueda RAG (Laboratorio)."
+            "Se guarda en el proyecto y viaja con cada versión publicada. El Simulador y el Runtime aplican la "
+            "misma configuración. Con «Activado», ambos exigen el modelo de reranking cargado: si no está, la "
+            "consulta falla con un error explícito y el Runtime no sirve el proyecto. Es independiente de la "
+            "casilla Reranking de Búsqueda RAG (Laboratorio)."
         )
         self._sim_reranking.activated.connect(self._on_agent_reranking_changed)
         rerank_row.addWidget(self._sim_reranking, 1)
         form_layout.addLayout(rerank_row)
+        self._sim_reranking_effective = QLabel("", form)
+        self._sim_reranking_effective.setWordWrap(True)
+        form_layout.addWidget(self._sim_reranking_effective)
 
         action_row = QHBoxLayout()
         self._btn_simulate = QPushButton("Simular", form)
@@ -1381,6 +1385,22 @@ class ConversationalPanel(QWidget):
                 valor = None
         indice = self._sim_reranking.findData(valor)
         self._sim_reranking.setCurrentIndex(indice if indice >= 0 else 0)
+        self._update_effective_reranking_label()
+
+    @staticmethod
+    def effective_reranking_text(valor) -> str:
+        """Ronda 105b (P1): configuración efectiva que aplicarán el Simulador y
+        el Runtime para el ajuste `valor` (None, True o False)."""
+        if valor is True:
+            return (
+                "Configuración efectiva (Simulador y Runtime): CON reranking. Requiere el modelo de reranking "
+                "cargado en este equipo y en el servidor del Runtime; si no está, la consulta falla con un error "
+                "explícito y el Runtime no sirve el proyecto."
+            )
+        return "Configuración efectiva (Simulador y Runtime): SIN reranking. No requiere ningún modelo adicional."
+
+    def _update_effective_reranking_label(self) -> None:
+        self._sim_reranking_effective.setText(self.effective_reranking_text(self._sim_reranking.currentData()))
 
     def _on_agent_reranking_changed(self, _index: int = 0) -> None:
         if not self._project_id:
@@ -1391,7 +1411,16 @@ class ConversationalPanel(QWidget):
             self._report_error(exc)
             self._load_agent_reranking()
             return
+        self._update_effective_reranking_label()
         self._sim_status.setText(f"Reranking en el agente: {self._sim_reranking.currentText()} (guardado).")
+        if self._sim_reranking.currentData() is True:
+            QMessageBox.information(
+                self, "Reranking activado",
+                "Este proyecto aplicará reranking en el Simulador y en el Runtime.\n\n"
+                "El servidor del Runtime deberá tener el modelo de reranking en su carpeta de modelos; si no lo "
+                "tiene, rechazará servir este proyecto con un error explícito "
+                "(configuration.reranking_unavailable). El cambio llega al Runtime al publicar una versión nueva.",
+            )
 
     def _on_simulate(self) -> None:
         if self._active_job is not None or not self._project_id:
@@ -1664,11 +1693,16 @@ class ConversationalPanel(QWidget):
             f"RAG Studio {html_escape(codigo.get('version') or 'versión desconocida')} — commit "
             f"{html_escape(commit_txt)} — huella del código {html_escape(huella[:12] if huella else 'desconocida')}",
             f"Procedimiento de recuperación: {html_escape(trace.retrieval_pipeline)}",
-            "Reranking: modelo " + (
-                f"disponible ({html_escape(trace.reranking_available_model or 'sin nombre')})"
-                if trace.reranking_available else "no disponible"
-            ) + f"; ajuste {html_escape(trace.reranking_setting)}; "
-            + ("aplicado" if trace.reranking_applied else "no aplicado"),
+            f"Reranking: ajuste {html_escape(trace.reranking_setting)}; "
+            + ("aplicado" if trace.reranking_applied else "no aplicado")
+            + "; modelo " + (
+                f"cargado ({html_escape(trace.reranking_available_model or 'sin nombre')})"
+                if trace.reranking_available else "no cargado"
+            ) + f" ({html_escape(trace.reranking_model_status.replace('_', ' '))})",
+            "Configuración efectiva en el Runtime: "
+            + ("con reranking (requiere el modelo en el servidor)"
+               if trace.runtime_effective_reranking == "con_reranking" else "sin reranking")
+            + " — igual a la de esta simulación.",
         ]
         if trace.search_text is not None:
             filas.append(f"Texto exacto de búsqueda: «{html_escape(trace.search_text)}»")

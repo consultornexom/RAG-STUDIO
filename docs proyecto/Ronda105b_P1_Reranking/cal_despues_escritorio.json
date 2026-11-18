@@ -1,0 +1,122 @@
+{
+ "codigo": ".",
+ "config": "escritorio",
+ "veredicto_global": "amarillo",
+ "recall_at_3": 1.0,
+ "casos": {
+  "G1": {
+   "veredicto": "verde",
+   "accion": "responder",
+   "intencion": "consultar_informacion_programa",
+   "rango_fuente_esperada": 1,
+   "discrepancias": [],
+   "error": null
+  },
+  "G2": {
+   "veredicto": "verde",
+   "accion": "responder",
+   "intencion": "consultar_informacion_programa",
+   "rango_fuente_esperada": 1,
+   "discrepancias": [],
+   "error": null
+  },
+  "O1": {
+   "veredicto": "verde",
+   "accion": "responder",
+   "intencion": "consultar_informacion_programa",
+   "rango_fuente_esperada": 1,
+   "discrepancias": [],
+   "error": null
+  },
+  "P1": {
+   "veredicto": "verde",
+   "accion": "responder",
+   "intencion": "consultar_plan_estudios",
+   "rango_fuente_esperada": 1,
+   "discrepancias": [],
+   "error": null
+  },
+  "P2": {
+   "veredicto": "verde",
+   "accion": "responder",
+   "intencion": "consultar_plan_estudios",
+   "rango_fuente_esperada": 1,
+   "discrepancias": [],
+   "error": null
+  },
+  "P3": {
+   "veredicto": "verde",
+   "accion": "responder",
+   "intencion": "consultar_plan_estudios",
+   "rango_fuente_esperada": 1,
+   "discrepancias": [],
+   "error": null
+  },
+  "P4": {
+   "veredicto": "verde",
+   "accion": "responder",
+   "intencion": "consultar_plan_estudios",
+   "rango_fuente_esperada": 1,
+   "discrepancias": [],
+   "error": null
+  },
+  "P5": {
+   "veredicto": "verde",
+   "accion": "responder",
+   "intencion": "consultar_plan_estudios",
+   "rango_fuente_esperada": 1,
+   "discrepancias": [],
+   "error": null
+  },
+  "P6": {
+   "veredicto": "verde",
+   "accion": "responder",
+   "intencion": "consultar_plan_estudios",
+   "rango_fuente_esperada": 1,
+   "discrepancias": [],
+   "error": null
+  },
+  "R1": {
+   "veredicto": "verde",
+   "accion": "responder",
+   "intencion": "consultar_requisitos_bachillerato",
+   "rango_fuente_esperada": 1,
+   "discrepancias": [],
+   "error": null
+  },
+  "R2": {
+   "veredicto": "amarillo",
+   "accion": "responder",
+   "intencion": "consultar_requisitos_bachillerato",
+   "rango_fuente_esperada": 3,
+   "discrepancias": [
+    "Se esperaba el primer resultado de la fuente 'requisitos_ingreso.md', se obtuvo 'bachillerato_torres_landa.md'"
+   ],
+   "error": null
+  },
+  "R3": {
+   "veredicto": "verde",
+   "accion": "responder",
+   "intencion": "consultar_requisitos_bachillerato",
+   "rango_fuente_esperada": 1,
+   "discrepancias": [],
+   "error": null
+  },
+  "S1": {
+   "veredicto": "verde",
+   "accion": "responder",
+   "intencion": "consultar_areas_programa",
+   "rango_fuente_esperada": 1,
+   "discrepancias": [],
+   "error": null
+  },
+  "S2": {
+   "veredicto": "verde",
+   "accion": "responder",
+   "intencion": "consultar_cualidades_aspirante",
+   "rango_fuente_esperada": 1,
+   "discrepancias": [],
+   "error": null
+  }
+ }
+}

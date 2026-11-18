@@ -39,10 +39,11 @@ def test_messages_con_clave_operativa_trae_execution_completo(tmp_path):
     assert ejecucion["snapshot"]["declared_fingerprint"].startswith("sha256:")
     assert ejecucion["snapshot"]["fingerprint_matches"] is True
     assert ejecucion["index"]["query_embedding_profile"] == "simetrico"
-    assert ejecucion["retrieval_pipeline"] == "r102"
+    assert ejecucion["retrieval_pipeline"] == "r105b"
     # El Runtime de RAG Studio no tiene modelo de reranking: se informa así.
     assert ejecucion["reranking"] == {
         "setting": "automatico", "model_available": False, "available_model": None,
+        "model_status": "no_requerido", "effective_in_runtime": "sin_reranking",
         "applied": False, "model": None, "note": None,
     }
     assert ejecucion["search_text"] == _PREGUNTA["message"]
@@ -89,12 +90,12 @@ def test_runtime_db_guarda_orden_y_ejecucion_localizables_por_trace(tmp_path):
 def test_health_publico_sin_detalles_internos_y_details_protegido(tmp_path):
     _, client = _cliente(tmp_path)
     publico = client.get("/health").json()
-    assert publico["retrieval_pipeline"] == "r102" and publico["code_version"]
+    assert publico["retrieval_pipeline"] == "r105b" and publico["code_version"]
     assert "commit" not in json.dumps(publico) and "fingerprint" not in json.dumps(publico)
     assert client.get("/health/details").status_code == 401
     client.post(f"/projects/{_PROJECT_ID}/messages", json=_PREGUNTA, headers={"X-API-Key": _KEY})
     detalles = client.get("/health/details", headers={"X-API-Key": _KEY}).json()
-    assert detalles["code"]["fingerprint"] and detalles["retrieval_pipeline"] == "r102"
+    assert detalles["code"]["fingerprint"] and detalles["retrieval_pipeline"] == "r105b"
     assert detalles["reranking_model_available"] is False
     assert detalles["loaded_snapshots"][0]["snapshot"]["version"] == 1
     assert set(detalles["package_fingerprints"]) >= {"application", "domain", "infrastructure", "interfaces"}

@@ -213,11 +213,17 @@ class ExecutionIndex(BaseModel):
 
 class ExecutionReranking(BaseModel):
     setting: str = Field(description='Ajuste del proyecto: "automatico", "activado" o "desactivado".')
-    model_available: bool
+    model_available: bool = Field(description="Ronda 105b: True solo si el modelo está cargado y verificado.")
     available_model: Optional[str] = None
     applied: bool
     model: Optional[str] = None
     note: Optional[str] = None
+    model_status: Optional[str] = Field(
+        default=None, description='Ronda 105b: "no_requerido" (Automático/Desactivado) o "cargado" (Activado).',
+    )
+    effective_in_runtime: Optional[str] = Field(
+        default=None, description='Ronda 105b: "sin_reranking" o "con_reranking" (igual en Simulador y Runtime).',
+    )
 
 
 class ExecutionResult(BaseModel):

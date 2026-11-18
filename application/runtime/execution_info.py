@@ -80,6 +80,9 @@ def execution_record(base: Optional[Mapping[str, Any]], trace) -> dict:
             "setting": trace.reranking_setting,
             "model_available": trace.reranking_available,
             "available_model": trace.reranking_available_model,
+            # Ronda 105b (P1): estado del modelo y configuración efectiva en el Runtime.
+            "model_status": trace.reranking_model_status,
+            "effective_in_runtime": trace.runtime_effective_reranking,
             "applied": trace.reranking_applied,
             "model": trace.reranking_model,
             "note": trace.reranking_note,

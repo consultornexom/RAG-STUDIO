@@ -76,7 +76,7 @@ class ResultOrderingView(BaseModel):
     """Título con el que se midió la afinidad (ver _section_title)."""
 
 
-RETRIEVAL_PIPELINE = "r102"
+RETRIEVAL_PIPELINE = "r105b"
 """Ronda 104b (Etapa 0): identificador del procedimiento de recuperación del
 motor conversacional. Cambia cada vez que una ronda altera cómo se ordenan
 los fragmentos, para que un trace diga con qué procedimiento se produjo:
@@ -84,7 +84,12 @@ los fragmentos, para que un trace diga con qué procedimiento se produjo:
   Ronda 100, conflicto de ordinal de la Ronda 101), reranking según el ajuste
   del proyecto (Ronda 102, C4), filtro de metadatos previo y afinidad
   título-intención combinada por RRF con el puesto de la búsqueda (C1) con
-  títulos de C2."""
+  títulos de C2.
+- "r105b": igual que "r102", con la configuración efectiva de reranking de
+  la Ronda 105b (P1, alternativa B estricta): Automático y Desactivado =
+  sin reranking en el Simulador y en el Runtime; Activado = con reranking,
+  exigiendo el modelo cargado (error explícito si no). Para proyectos sin
+  «Activado», el orden del Runtime es idéntico al de "r102"."""
 
 RERANKING_AUTOMATICO = "automatico"
 RERANKING_ACTIVADO = "activado"
@@ -156,8 +161,19 @@ class SimulationTrace(BaseModel):
     """Ronda 102 (C4): modelo de reranking que intervino (None si no se
     aplicó)."""
     reranking_available: bool = False
-    """Ronda 104b (Etapa 0): si este motor tenía modelo de reranking
-    disponible (el Runtime de RAG Studio hoy no lo tiene)."""
+    """Ronda 104b (Etapa 0); desde la Ronda 105b (P1): True solo si el modelo
+    de reranking está CARGADO y verificado en este proceso (no basta con que
+    esté configurado)."""
+    reranking_model_status: str = "no_requerido"
+    """Ronda 105b (P1): "no_requerido" (Automático/Desactivado: no se
+    necesita ni se carga el modelo) o "cargado" (Activado: verificado antes
+    de buscar). Si el modelo no carga, no hay trazado: la consulta falla con
+    un error explícito."""
+    runtime_effective_reranking: str = "sin_reranking"
+    """Ronda 105b (P1): configuración efectiva que aplicará el Runtime para
+    este proyecto -- la misma del Simulador por construcción: "sin_reranking"
+    o "con_reranking" (en el Runtime exige el modelo en el servidor; si no
+    lo tiene, el Runtime rechaza servir el proyecto)."""
     reranking_available_model: Optional[str] = None
     retrieval_pipeline: str = RETRIEVAL_PIPELINE
     """Ronda 104b (Etapa 0): ver RETRIEVAL_PIPELINE."""
@@ -276,13 +292,16 @@ class SimulateConversation:
             for score in (match.scores if match is not None else [])
         ]
         if match is None:
+            decision = self._reranking_decision(project_id)
             return SimulationTrace(
                 query_text=query_text, provided_variables=provided, action=RuleActionType.ABSTENERSE,
                 abstention_reason="Ninguna intención activa coincide con esta consulta -- el documento "
                 "maestro exige abstenerse (o canalizar) antes que responder con una intención adivinada.",
-                reranking_setting=self._reranking_decision(project_id)[0],
-                reranking_available=self._rag.has_reranker,
+                reranking_setting=decision[0],
+                reranking_available=self._rag.reranker_loaded,
                 reranking_available_model=self._rag.reranker_model_name,
+                reranking_model_status="cargado" if decision[1] else "no_requerido",
+                runtime_effective_reranking="con_reranking" if decision[1] else "sin_reranking",
             )
 
         intent, confidence = match.intent, match.confidence
@@ -446,26 +465,30 @@ class SimulateConversation:
             result_ordering=result_ordering, reranking_setting=reranking_setting,
             reranking_applied=reranking_applied,
             reranking_model=self._rag.reranker_model_name if reranking_applied else None,
-            reranking_note=reranking_note, reranking_available=self._rag.has_reranker,
+            reranking_note=reranking_note, reranking_available=self._rag.reranker_loaded,
             reranking_available_model=self._rag.reranker_model_name, search_text=search_text,
+            reranking_model_status="cargado" if use_rerank else "no_requerido",
+            runtime_effective_reranking="con_reranking" if use_rerank else "sin_reranking",
         )
 
     def _reranking_decision(self, project_id: str) -> tuple[str, bool, Optional[str]]:
-        """Ronda 102 (C4): (ajuste, si se aplica reranking, aviso).
-        Automático conserva el comportamiento de siempre (Ronda 40): se
-        aplica si RagService tiene modelo de reranking."""
+        """(ajuste, si se aplica reranking, aviso).
+
+        Ronda 105b (P1, alternativa B estricta, decisión de NEXOM): la
+        configuración efectiva es la misma en el Simulador y en el Runtime.
+        - Automático (predeterminado) y Desactivado: SIN reranking, haya o no
+          modelo. (Hasta la Ronda 105, Automático aplicaba el reranking si
+          había modelo: el Simulador sí lo hacía y el Runtime nunca.)
+        - Activado: CON reranking; antes de buscar se verifica que el modelo
+          esté disponible y cargado. Si no, RerankingRequiredUnavailableError:
+          error explícito, nunca una respuesta sin reranking."""
         ajuste = self._agent_reranking(project_id) if self._agent_reranking is not None else None
-        disponible = self._rag.has_reranker
+        if ajuste is True:
+            self._rag.ensure_reranker_ready()
+            return RERANKING_ACTIVADO, True, None
         if ajuste is False:
             return RERANKING_DESACTIVADO, False, None
-        if ajuste is True:
-            if not disponible:
-                return RERANKING_ACTIVADO, False, (
-                    "El proyecto tiene el reranking del agente activado, pero esta instalación no tiene "
-                    "modelo de reranking: la búsqueda se hizo sin reranking."
-                )
-            return RERANKING_ACTIVADO, True, None
-        return RERANKING_AUTOMATICO, disponible, None
+        return RERANKING_AUTOMATICO, False, None
 
     def _query_structured(
         self, project_id: str, provided: dict[str, str], source_id: Optional[str],
@@ -532,9 +555,10 @@ class SimulateConversation:
         # False y el comportamiento no cambia respecto a antes de esta
         # ronda.
         # Ronda 102 (C4): el ajuste del proyecto decide (ver
-        # _reranking_decision); None conserva el comportamiento de siempre.
+        # _reranking_decision). Ronda 105b (P1): sin decisión explícita, sin
+        # reranking (el texto de arriba describe el criterio anterior).
         if rerank is None:
-            rerank = self._rag.has_reranker
+            rerank = False
         variables = self._variables.list_for_project(project_id)
         active_filters = {
             variable.code: provided[variable.code].strip()

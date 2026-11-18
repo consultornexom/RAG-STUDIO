@@ -953,8 +953,9 @@ credenciales, rutas ni secretos:
                 "fingerprint_at_load": "sha256:…", "fingerprint_matches": true}},
   "index": {{"embedding_model": "…", "dimensions": 384, "points_count": 120,
              "query_embedding_profile": "simetrico"}},
-  "retrieval_pipeline": "r102",
-  "reranking": {{"setting": "automatico", "model_available": false, "applied": false, "model": null}},
+  "retrieval_pipeline": "r105b",
+  "reranking": {{"setting": "automatico", "model_available": false, "model_status": "no_requerido",
+                 "effective_in_runtime": "sin_reranking", "applied": false, "model": null}},
   "search_text": "¿Qué documentos necesito para entrar ?",
   "applied_filters": {{"nivel_academico": "bachillerato"}},
   "results": [{{"position": 1, "chunk_id": "…", "source_id": "…", "score": 0.031,
@@ -972,6 +973,12 @@ credenciales, rutas ni secretos:
   `retrieval_rank` y `affinity`.
 - Lo mismo queda guardado en `runtime.db` (`conversation_log.execution` y
   `conversation_log.chunk_ids`, en orden), localizable por `trace_id`.
+- Reranking (Ronda 105b): con el ajuste del proyecto «Automático» o
+  «Desactivado» el Runtime no aplica reranking ni necesita modelo. Con
+  «Activado» lo aplica y exige el modelo de reranking en la carpeta de
+  modelos del servidor; si no puede cargarlo, rechaza servir el proyecto con
+  503 y `error.code = "configuration.reranking_unavailable"` (nunca responde
+  sin reranking en silencio).
 - `GET /health` (público) informa `code_version` y `retrieval_pipeline`;
   `GET /health/details` (con `X-API-Key`) informa commit, huella del código,
   identidad de la instantánea servida, índice y disponibilidad del reranker.

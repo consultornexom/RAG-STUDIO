@@ -23,6 +23,7 @@ import traceback
 from types import TracebackType
 from typing import Optional
 
+from domain.rag.exceptions import RerankingRequiredUnavailableError
 from domain.runtime.failures import FailureCategory, FailureDiagnosis, FailureStage
 
 # (prefijo de módulo, categoría, etapa por defecto si ningún marco de la
@@ -146,7 +147,15 @@ def diagnose_exception(
 
     codigo_especifico: Optional[str] = None
     texto_raiz = str(raiz)
-    if any(isinstance(e, TimeoutError) for e in cadena):
+    requerido = next((e for e in cadena if isinstance(e, RerankingRequiredUnavailableError)), None)
+    if requerido is not None:
+        # Ronda 105b (P1): el proyecto exige reranking y el modelo no está
+        # disponible -- error de configuración del despliegue, explícito. El
+        # resumen usa el mensaje de configuración (qué hacer), no la causa
+        # técnica, que queda en el detalle.
+        categoria, codigo_especifico = FailureCategory.CONFIGURATION, "configuration.reranking_unavailable"
+        texto_raiz = str(requerido)
+    elif any(isinstance(e, TimeoutError) for e in cadena):
         categoria, codigo_especifico = FailureCategory.TIMEOUT, "timeout"
     elif any(isinstance(e, MemoryError) for e in cadena):
         categoria, codigo_especifico = FailureCategory.INFRASTRUCTURE, "infrastructure.out_of_memory"

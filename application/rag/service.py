@@ -10,7 +10,10 @@ from domain.documents.entities import AccessLevel
 from domain.documents.ports import SourceRepository
 from domain.ingestion.ports import ChunkRepository
 from domain.rag.entities import DEFAULT_MIN_RELEVANT_SCORE, IndexInfo, has_low_relevance
-from domain.rag.exceptions import EmbeddingProfileComparisonUnavailableError, ImageSearchUnavailableError
+from domain.rag.exceptions import (
+    EmbeddingProfileComparisonUnavailableError, ImageSearchUnavailableError, RerankerError,
+    RerankerUnavailableError, RerankingRequiredUnavailableError,
+)
 from domain.rag.ports import EmbeddingProvider, ImageEmbeddingProvider, IndexInfoRepository, Reranker, VectorStore
 from domain.rag.structured_query import StructuredAggregation, StructuredFilter, StructuredQueryResult
 
@@ -321,6 +324,29 @@ class RagService:
         """Ronda 102 (C4): nombre del modelo de reranking configurado, para
         mostrar en el Simulador cuál intervino. None si no hay ninguno."""
         return self._hybrid_search.reranker_model_name
+
+    @property
+    def reranker_loaded(self) -> bool:
+        """Ronda 105b (P1): el modelo de reranking está cargado y verificado
+        (has_reranker solo dice que está configurado)."""
+        return self._hybrid_search.reranker_loaded
+
+    def ensure_reranker_ready(self) -> None:
+        """Ronda 105b (P1, B estricta): verifica que el modelo de reranking esté
+        disponible y CARGADO. Lanza RerankingRequiredUnavailableError con un
+        mensaje explícito si no hay modelo configurado o no se pudo cargar."""
+        try:
+            self._hybrid_search.ensure_reranker_ready()
+        except RerankerUnavailableError as exc:
+            raise RerankingRequiredUnavailableError(
+                "El proyecto tiene «Reranking en el agente: Activado», pero este proceso no tiene modelo de "
+                "reranking configurado."
+            ) from exc
+        except RerankerError as exc:
+            raise RerankingRequiredUnavailableError(
+                "El proyecto tiene «Reranking en el agente: Activado», pero el modelo de reranking "
+                f"{self.reranker_model_name!r} no se pudo cargar: {exc}"
+            ) from exc
 
     @property
     def has_image_search(self) -> bool:

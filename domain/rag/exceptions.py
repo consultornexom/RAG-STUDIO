@@ -44,6 +44,14 @@ class RerankerError(RagDomainError):
     disponible) -- mismo criterio que EmbeddingProviderError."""
 
 
+class RerankingRequiredUnavailableError(RagDomainError):
+    """Ronda 105b (P1, alternativa B estricta, autorizada por NEXOM): el
+    proyecto tiene «Reranking en el agente: Activado» y el modelo de
+    reranking no está disponible o no se pudo cargar. Se falla de forma
+    explícita (Simulador y Runtime) en vez de responder sin reranking: la
+    configuración efectiva debe ser la misma en pruebas y despliegue."""
+
+
 class RerankerUnavailableError(RagDomainError):
     """Se lanza al pedir rerank=True en HybridSearch.execute/
     RagService.search_hybrid cuando no se configuro ningun Reranker --

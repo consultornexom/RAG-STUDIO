@@ -80,6 +80,18 @@ class HybridSearch:
         """Ronda 102 (C4): modelo de reranking configurado (None si no hay)."""
         return self._reranker.model_name if self._reranker is not None else None
 
+    @property
+    def reranker_loaded(self) -> bool:
+        """Ronda 105b (P1): hay reranker y su modelo está cargado."""
+        return self._reranker is not None and self._reranker.is_loaded
+
+    def ensure_reranker_ready(self) -> None:
+        """Ronda 105b (P1): carga y verifica el modelo; RerankerUnavailableError
+        si no hay reranker, RerankerError si no carga."""
+        if self._reranker is None:
+            raise RerankerUnavailableError()
+        self._reranker.ensure_ready()
+
     def execute(
         self, project_id: str, query_text: str, limit: int = 5,
         source_id: Optional[str] = None, only_usable_sources: bool = False,

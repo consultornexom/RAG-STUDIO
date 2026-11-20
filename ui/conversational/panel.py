@@ -420,6 +420,7 @@ class ConversationalPanel(QWidget):
         self._refresh_rules()
         self._refresh_schemes()
         self._load_agent_reranking()
+        self._load_retrieval_procedure()
         self._apply_button_states()
         if self._project_id:
             self._gate_status_label.refresh(self._context.release_service, self._project_id)
@@ -510,7 +511,8 @@ class ConversationalPanel(QWidget):
             widget.setEnabled(ready)
         self._btn_simulate.setEnabled(ready and not busy)
         self._sim_cancel.setEnabled(busy)
-        for widget in (self._sim_query, self._sim_variables, self._sim_source_id, self._sim_reranking):
+        for widget in (self._sim_query, self._sim_variables, self._sim_source_id, self._sim_reranking,
+                       self._sim_procedure):
             widget.setEnabled(ready and not busy)
 
     def refresh_metadata_fields(self) -> None:
@@ -1354,6 +1356,25 @@ class ConversationalPanel(QWidget):
         self._sim_reranking_effective.setWordWrap(True)
         form_layout.addWidget(self._sim_reranking_effective)
 
+        # Ronda 106 (autorizada por NEXOM): procedimiento de recuperación del
+        # proyecto. r106 = V + Y + R siempre juntos (no hay ajustes separados:
+        # V sin R reintroduce la regresión de la Ronda 102); r105b = anterior.
+        procedure_row = QHBoxLayout()
+        procedure_row.addWidget(QLabel("Procedimiento de recuperación:", form))
+        self._sim_procedure = QComboBox(form)
+        for etiqueta, valor in self.RETRIEVAL_PROCEDURE_OPTIONS:
+            self._sim_procedure.addItem(etiqueta, valor)
+        self._sim_procedure.setToolTip(
+            "Se guarda en el proyecto y viaja con cada versión publicada: el Simulador y el Runtime usan el mismo "
+            "procedimiento. r106 reordena los fragmentos con afinidad ponderada por valor, sin afinidad para "
+            "fragmentos solo-YAML y resolviendo los fragmentos que remiten a otro documento. Solo actúa cuando se "
+            "aplica un filtro de metadatos. No cambia la intención, la decisión ni el reranking. r105b conserva "
+            "el orden anterior (para revertir)."
+        )
+        self._sim_procedure.activated.connect(self._on_retrieval_procedure_changed)
+        procedure_row.addWidget(self._sim_procedure, 1)
+        form_layout.addLayout(procedure_row)
+
         action_row = QHBoxLayout()
         self._btn_simulate = QPushButton("Simular", form)
         self._btn_simulate.clicked.connect(self._on_simulate)
@@ -1374,6 +1395,40 @@ class ConversationalPanel(QWidget):
         self._sim_report.setReadOnly(True)
         layout.addWidget(self._sim_report)
         return tab
+
+    RETRIEVAL_PROCEDURE_OPTIONS = (
+        ("r106: afinidad por valor + solo-YAML sin afinidad + referencias (predeterminado en proyectos nuevos)",
+         "r106"),
+        ("r105b: procedimiento anterior", "r105b"),
+    )
+
+    def _load_retrieval_procedure(self) -> None:
+        """Ronda 106: muestra el procedimiento efectivo del proyecto activo
+        (sin ajuste guardado, r105b)."""
+        valor = "r105b"
+        if self._project_id:
+            try:
+                valor, _guardado = self._context.project_service.get_retrieval_procedure(self._project_id)
+            except Exception:  # noqa: BLE001 - solo es la vista del ajuste
+                valor = "r105b"
+        indice = self._sim_procedure.findData(valor)
+        self._sim_procedure.setCurrentIndex(indice if indice >= 0 else self._sim_procedure.findData("r105b"))
+
+    def _on_retrieval_procedure_changed(self, _index: int = 0) -> None:
+        if not self._project_id:
+            return
+        try:
+            self._context.project_service.update_retrieval_procedure(
+                self._project_id, self._sim_procedure.currentData(),
+            )
+        except Exception as exc:  # noqa: BLE001 - mismo criterio que el resto del panel
+            self._report_error(exc)
+            self._load_retrieval_procedure()
+            return
+        self._sim_status.setText(
+            f"Procedimiento de recuperación: {self._sim_procedure.currentData()} (guardado; llega al Runtime al "
+            "publicar una versión nueva)."
+        )
 
     def _load_agent_reranking(self) -> None:
         """Ronda 102 (C4): muestra el ajuste guardado del proyecto activo."""
@@ -1653,7 +1708,13 @@ class ConversationalPanel(QWidget):
                     o = orden[posicion]
                     detalle = (
                         f" <small>(búsqueda #{o.retrieval_rank}; afinidad {o.affinity:.2f} con "
-                        f"«{html_escape(o.affinity_title[:60])}»)</small>"
+                        f"«{html_escape(o.affinity_title[:60])}»"
+                        + (
+                            "; traído por referencia desde "
+                            + html_escape(", ".join(t for t in o.referenced_from_sources if t) or "un fragmento puente")
+                            if o.referenced_from else ""
+                        )
+                        + ")</small>"
                     )
                 parts.append(
                     f"<p>[{result.score:.3f}] {html_escape(source_title)}{detalle} — {html_escape(preview)}…</p>"
@@ -1692,7 +1753,8 @@ class ConversationalPanel(QWidget):
         filas = [
             f"RAG Studio {html_escape(codigo.get('version') or 'versión desconocida')} — commit "
             f"{html_escape(commit_txt)} — huella del código {html_escape(huella[:12] if huella else 'desconocida')}",
-            f"Procedimiento de recuperación: {html_escape(trace.retrieval_pipeline)}",
+            f"Procedimiento de recuperación: {html_escape(trace.retrieval_pipeline)} (ajuste del proyecto; el "
+            "Runtime usa el mismo de la versión publicada)",
             f"Reranking: ajuste {html_escape(trace.reranking_setting)}; "
             + ("aplicado" if trace.reranking_applied else "no aplicado")
             + "; modelo " + (
@@ -1706,4 +1768,8 @@ class ConversationalPanel(QWidget):
         ]
         if trace.search_text is not None:
             filas.append(f"Texto exacto de búsqueda: «{html_escape(trace.search_text)}»")
+        if getattr(trace, "ambiguous_references", None):
+            filas.append(
+                "Referencias ambiguas (no resueltas): " + html_escape(", ".join(trace.ambiguous_references))
+            )
         return "<hr><p><small><b>Ejecución</b><br>" + "<br>".join(filas) + "</small></p>"

@@ -1,0 +1,220 @@
+{
+ "r105b": {
+  "veredicto_global": "amarillo",
+  "recall_at_3": 0.9285714285714286,
+  "mrr": 0.857,
+  "casos": {
+   "G1": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_informacion_programa",
+    "rango_fuente_esperada": 1,
+    "error": null
+   },
+   "G2": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_informacion_programa",
+    "rango_fuente_esperada": 1,
+    "error": null
+   },
+   "O1": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_requisitos_bachillerato",
+    "rango_fuente_esperada": 1,
+    "error": null
+   },
+   "P1": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_areas_programa",
+    "rango_fuente_esperada": 1,
+    "error": null
+   },
+   "P2": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_areas_programa",
+    "rango_fuente_esperada": 1,
+    "error": null
+   },
+   "P3": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_areas_programa",
+    "rango_fuente_esperada": 1,
+    "error": null
+   },
+   "P4": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_areas_programa",
+    "rango_fuente_esperada": 1,
+    "error": null
+   },
+   "P5": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_informacion_programa",
+    "rango_fuente_esperada": 1,
+    "error": null
+   },
+   "P6": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_informacion_programa",
+    "rango_fuente_esperada": 1,
+    "error": null
+   },
+   "R1": {
+    "veredicto": "amarillo",
+    "accion": "responder",
+    "intencion": "consultar_requisitos_bachillerato",
+    "rango_fuente_esperada": 2,
+    "error": null
+   },
+   "R2": {
+    "veredicto": "amarillo",
+    "accion": "responder",
+    "intencion": "consultar_requisitos_bachillerato",
+    "rango_fuente_esperada": null,
+    "error": null
+   },
+   "R3": {
+    "veredicto": "amarillo",
+    "accion": "responder",
+    "intencion": "consultar_requisitos_bachillerato",
+    "rango_fuente_esperada": 2,
+    "error": null
+   },
+   "S1": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_areas_programa",
+    "rango_fuente_esperada": 1,
+    "error": null
+   },
+   "S2": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_cualidades_aspirante",
+    "rango_fuente_esperada": 1,
+    "error": null
+   }
+  }
+ },
+ "r106": {
+  "veredicto_global": "verde",
+  "recall_at_3": 1.0,
+  "mrr": 1.0,
+  "casos": {
+   "G1": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_informacion_programa",
+    "rango_fuente_esperada": 1,
+    "error": null
+   },
+   "G2": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_informacion_programa",
+    "rango_fuente_esperada": 1,
+    "error": null
+   },
+   "O1": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_requisitos_bachillerato",
+    "rango_fuente_esperada": 1,
+    "error": null
+   },
+   "P1": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_areas_programa",
+    "rango_fuente_esperada": 1,
+    "error": null
+   },
+   "P2": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_areas_programa",
+    "rango_fuente_esperada": 1,
+    "error": null
+   },
+   "P3": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_areas_programa",
+    "rango_fuente_esperada": 1,
+    "error": null
+   },
+   "P4": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_areas_programa",
+    "rango_fuente_esperada": 1,
+    "error": null
+   },
+   "P5": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_informacion_programa",
+    "rango_fuente_esperada": 1,
+    "error": null
+   },
+   "P6": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_informacion_programa",
+    "rango_fuente_esperada": 1,
+    "error": null
+   },
+   "R1": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_requisitos_bachillerato",
+    "rango_fuente_esperada": 1,
+    "error": null
+   },
+   "R2": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_requisitos_bachillerato",
+    "rango_fuente_esperada": 1,
+    "error": null
+   },
+   "R3": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_requisitos_bachillerato",
+    "rango_fuente_esperada": 1,
+    "error": null
+   },
+   "S1": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_areas_programa",
+    "rango_fuente_esperada": 1,
+    "error": null
+   },
+   "S2": {
+    "veredicto": "verde",
+    "accion": "responder",
+    "intencion": "consultar_cualidades_aspirante",
+    "rango_fuente_esperada": 1,
+    "error": null
+   }
+  }
+ },
+ "comparacion_r106_vs_r105b": {
+  "cambios": [
+   "R1",
+   "R2",
+   "R3"
+  ],
+  "peores": []
+ }
+}

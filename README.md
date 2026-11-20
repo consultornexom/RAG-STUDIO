@@ -1329,6 +1329,26 @@ conexión a Hugging Face (ver "Limitaciones conocidas").
   este entorno), `ruff` sin hallazgos. Ver
   `Validacion_observaciones_RAG_STUDIO.md`, Ronda 24, puntos 67-70.
 
+- **2026-11-20 -- Ronda 106: procedimiento de recuperación r106 (V + Y + R), autorizado por NEXOM.**
+  - **Qué cambia:** en el reordenamiento conversacional (con filtro de metadatos), tres correcciones que siempre actúan juntas:
+    - **V:** la afinidad título-intención suma según su valor (`combine_by_value`);
+    - **Y:** los fragmentos solo-YAML no reciben afinidad;
+    - **R:** un fragmento corto que remite a otro documento por su nombre de archivo trae por delante el contenido de ese documento (`domain/conversational/reference_resolution.py`).
+  - **Ajuste por proyecto** «Procedimiento de recuperación» (Simulador): `r106` o `r105b`. No hay ajustes separados, para que V nunca opere sin R.
+    - **Proyectos nuevos:** `r106`.
+    - **Proyectos, instantáneas y `.agentproj` anteriores:** `r105b`, sin cambios silenciosos.
+    - **Almacenamiento:** entrada versionada `retrieval_procedure` de la tabla `configuration`. **Sin migración, dependencias nuevas ni reindexación.**
+  - **Simulador y Runtime:** leen el ajuste con el mismo lector. El Runtime usa el de la instantánea publicada. Se informa en `execution.retrieval_pipeline`, `results[].referenced_from`, `/health/details` y el bloque «Ejecución» del Simulador. Un valor desconocido da 503 `configuration.retrieval_procedure_unknown`.
+  - **Sin cambios en:** intención, decisiones, filtros, reglas y reranking (P1).
+  - **Resultados con la configuración real de AGENTE UDL** (LOTE01, 14 consultas, intención real):
+    - MRR 0.857 → **1.000**;
+    - UDL-BACH-003 y la consulta de documentos en 1.º;
+    - Calidad LOTE01: amarillo → **verde**, Recall@3 0.929 → 1.000;
+    - ninguna consulta peor en las tres estrategias de fragmentación;
+    - corpus sintético de la Ronda 102 protegido.
+  - **Detalle, pruebas e instrucciones de actualización:** `docs proyecto/Ronda106_Procedimiento_r106/Informe_Ronda106.md`.
+  - **Estado:** no libera AGENTE UDL ni cierra el incidente 493c8033 hasta la validación real de NEXOM.
+
 - **2026-11-18 -- Ronda 105b: P1, alternativa B estricta (decisión de NEXOM).**
   - **Comportamiento:**
     - «Automático» (predeterminado) y «Desactivado» = sin reranking, en el Simulador y en el Runtime;

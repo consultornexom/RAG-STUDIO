@@ -1,0 +1,19 @@
+documento_completo+subpalabras       r105b  MRR 0.857  R1=2 R2=None R3=2 S1=1 S2=1 G1=1 G2=1 P1=1 P2=1 P3=1 P4=1 P5=1 P6=1 O1=1
+documento_completo+subpalabras       r106   MRR 1.000  R1=1 R2=1 R3=1 S1=1 S2=1 G1=1 G2=1 P1=1 P2=1 P3=1 P4=1 P5=1 P6=1 O1=1
+                                     decisiones idénticas r105b/r106: True
+  r106 R1: 1. requisitos_ingreso.md búsq#2 afin 0.64 (por referencia) | 2. bachillerato_torres_landa. búsq#1 afin 0.19 | 3. bachillerato_hilario_medin búsq#3 afin 0.19 | 4. cualidades_aspirante.md búsq#4 afin 0.14 (por referencia) | 5. areas_formacion.md búsq#7 afin 0.14 (por referencia)
+  r106 R2: 1. requisitos_ingreso.md búsq#13 afin 0.37 (por referencia) | 2. areas_formacion.md búsq#14 afin 0.14 (por referencia) | 3. cualidades_aspirante.md búsq#12 afin 0.14 (por referencia) | 4. bachillerato_hilario_medin búsq#5 afin 0.19 | 5. bachillerato_torres_landa. búsq#6 afin 0.19
+por_encabezado+subpalabras           r105b  MRR 0.696  R1=None R2=None R3=None S1=4 S2=2 G1=1 G2=1 P1=1 P2=1 P3=1 P4=1 P5=1 P6=1 O1=1
+por_encabezado+subpalabras           r106   MRR 0.857  R1=3 R2=3 R3=1 S1=3 S2=1 G1=1 G2=1 P1=1 P2=1 P3=1 P4=1 P5=1 P6=1 O1=1
+                                     decisiones idénticas r105b/r106: True
+  r106 R1: 1. bachillerato_torres_landa. búsq#4 afin 0.19 | 2. bachillerato_hilario_medin búsq#5 afin 0.19 | 3. requisitos_ingreso.md búsq#1 afin 0.00 (por referencia) | 4. requisitos_ingreso.md búsq#2 afin 0.00 (por referencia) | 5. requisitos_ingreso.md búsq#3 afin 0.00
+  r106 R2: 1. bachillerato_hilario_medin búsq#6 afin 0.19 | 2. bachillerato_torres_landa. búsq#7 afin 0.19 | 3. requisitos_ingreso.md búsq#5 afin 0.00 (por referencia) | 4. requisitos_ingreso.md búsq#16 afin 0.00 (por referencia) | 5. areas_formacion.md búsq#15 afin 0.00 (por referencia)
+por_tamanio_todos+subpalabras        r105b  MRR 0.788  R1=1 R2=3 R3=1 S1=1 S2=1 G1=1 G2=1 P1=2 P2=1 P3=1 P4=2 P5=2 P6=1 O1=5
+por_tamanio_todos+subpalabras        r106   MRR 0.871  R1=1 R2=1 R3=1 S1=1 S2=1 G1=1 G2=1 P1=1 P2=1 P3=1 P4=2 P5=2 P6=1 O1=5
+                                     decisiones idénticas r105b/r106: True
+  r106 R1: 1. requisitos_ingreso.md búsq#2 afin 0.64 | 2. bachillerato_hilario_medin búsq#3 afin 0.23 | 3. bachillerato_torres_landa. búsq#6 afin 0.23 | 4. cualidades_aspirante.md búsq#1 afin 0.14 | 5. areas_formacion.md búsq#7 afin 0.14
+  r106 R2: 1. requisitos_ingreso.md búsq#6 afin 0.37 | 2. bachillerato_torres_landa. búsq#3 afin 0.23 | 3. bachillerato_hilario_medin búsq#4 afin 0.23 | 4. cualidades_aspirante.md búsq#5 afin 0.14 | 5. areas_formacion.md búsq#7 afin 0.14
+sintetico+subpalabras                r105b  MRR 1.000  R1=1
+sintetico+subpalabras                r106   MRR 1.000  R1=1
+                                     decisiones idénticas r105b/r106: True
+  r106 R1: 1. requisitos_ingreso.md búsq#1 afin 0.86 (por referencia) | 2. bachillerato_hilario_medin búsq#2 afin 1.00 | 3. bachillerato_torres_landa. búsq#4 afin 1.00 | 4. bachillerato_torres_landa. búsq#3 afin 0.19 | 5. bachillerato_hilario_medin búsq#5 afin 0.19

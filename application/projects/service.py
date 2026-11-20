@@ -25,6 +25,9 @@ from .commands.update_project_details import UpdateProjectDetails
 from .commands.update_project_name import UpdateProjectName
 from .commands.update_quality_regression_threshold import UpdateQualityRegressionThreshold
 from .commands.update_agent_reranking import UpdateAgentReranking
+from .commands.update_retrieval_procedure import (
+    GetRetrievalProcedure, UpdateRetrievalProcedure, set_default_for_new_project,
+)
 from .commands.validate_project_integrity import ValidateProjectIntegrity
 from .queries.compare_projects import CompareProjects
 from .queries.get_project import GetProject
@@ -54,6 +57,9 @@ class ProjectService:
         self._update_details = UpdateProjectDetails(repository)
         self._update_quality_regression_threshold = UpdateQualityRegressionThreshold(repository)
         self._update_agent_reranking = UpdateAgentReranking(repository)
+        self._configuration = configuration_repository
+        self._update_retrieval_procedure = UpdateRetrievalProcedure(repository, configuration_repository)
+        self._get_retrieval_procedure = GetRetrievalProcedure(configuration_repository)
         self._change_status = ChangeProjectStatus(repository)
         # source_repository es opcional solo para no romper a quien ya
         # instancia ProjectService sin él (p. ej. pruebas existentes que
@@ -62,10 +68,15 @@ class ProjectService:
         self._delete = DeleteProject(repository, source_repository) if source_repository is not None else None
 
     def create_project(self, name: str, **kwargs) -> Project:
-        return self._create.execute(name, **kwargs)
+        project = self._create.execute(name, **kwargs)
+        # Ronda 106: los proyectos nuevos usan el procedimiento r106.
+        set_default_for_new_project(self._configuration, project.id)
+        return project
 
     def clone_project(self, source_project_id: str, new_name: str) -> Project:
-        return self._clone.execute(source_project_id, new_name)
+        project = self._clone.execute(source_project_id, new_name)
+        set_default_for_new_project(self._configuration, project.id)
+        return project
 
     def archive_project(self, project_id: str) -> Project:
         return self._archive.execute(project_id)
@@ -90,6 +101,16 @@ class ProjectService:
         """Ronda 102 (C4): "Reranking en el agente" del proyecto. None =
         automático (predeterminado), True = activado, False = desactivado."""
         return self._update_agent_reranking.execute(project_id, enabled)
+
+    def get_retrieval_procedure(self, project_id: str) -> tuple[str, bool]:
+        """Ronda 106: (procedimiento efectivo "r105b"/"r106", si hay ajuste
+        guardado). Sin ajuste (proyecto anterior a la Ronda 106): "r105b"."""
+        return self._get_retrieval_procedure.execute(project_id)
+
+    def update_retrieval_procedure(self, project_id: str, procedure: str) -> str:
+        """Ronda 106: "r106" (V + Y + R) o "r105b" (anterior). Llega al
+        Runtime al publicar una versión nueva."""
+        return self._update_retrieval_procedure.execute(project_id, procedure)
 
     def change_project_status(self, project_id: str, target_status: str) -> Project:
         """Mueve el estado de un proyecto (Ronda 15, punto 48). target_status

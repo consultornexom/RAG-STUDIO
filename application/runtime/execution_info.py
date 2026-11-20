@@ -47,6 +47,7 @@ def failure_execution_record(base: Optional[Mapping[str, Any]]) -> dict:
     return {
         "format_version": EXECUTION_FORMAT_VERSION,
         "code": base.get("code"), "snapshot": base.get("snapshot"), "index": base.get("index"),
+        "retrieval_pipeline": base.get("retrieval_pipeline"),
         "unknown": base_unknown(base),
     }
 
@@ -68,6 +69,9 @@ def execution_record(base: Optional[Mapping[str, Any]], trace) -> dict:
             # la posición entregada.
             "retrieval_rank": detalle.retrieval_rank if detalle else posicion,
             "affinity": detalle.affinity if detalle else None,
+            # Ronda 106 (r106, componente R): fragmentos puente que trajeron
+            # este fragmento por delante de ellos (vacía si no aplica).
+            "referenced_from": list(detalle.referenced_from) if detalle else [],
         })
     desconocidos = base_unknown(base)
     return {
@@ -91,6 +95,7 @@ def execution_record(base: Optional[Mapping[str, Any]], trace) -> dict:
         "applied_filters": dict(trace.applied_metadata_filters),
         "excluded_sources": trace.excluded_by_metadata_filter,
         "affinity_ordering": trace.section_ordering,
+        "ambiguous_references": list(getattr(trace, "ambiguous_references", []) or []),
         "results": resultados,
         "unknown": desconocidos,
     }

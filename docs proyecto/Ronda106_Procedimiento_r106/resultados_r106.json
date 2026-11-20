@@ -1,0 +1,892 @@
+{
+ "documento_completo+subpalabras|r105b": {
+  "MRR": 0.857,
+  "posiciones": {
+   "R1": 2,
+   "R2": null,
+   "R3": 2,
+   "S1": 1,
+   "S2": 1,
+   "G1": 1,
+   "G2": 1,
+   "P1": 1,
+   "P2": 1,
+   "P3": 1,
+   "P4": 1,
+   "P5": 1,
+   "P6": 1,
+   "O1": 1
+  },
+  "decisiones": {
+   "R1": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.7892,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ],
+   "R2": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.8868,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ],
+   "R3": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.6285,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "S1": [
+    "consultar_areas_programa",
+    "responder",
+    1.0,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ],
+   "S2": [
+    "consultar_cualidades_aspirante",
+    "responder",
+    0.9997,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ],
+   "G1": [
+    "consultar_informacion_programa",
+    "responder",
+    0.7052,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "G2": [
+    "consultar_informacion_programa",
+    "responder",
+    1.0,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "hilario_medina"
+    }
+   ],
+   "P1": [
+    "consultar_areas_programa",
+    "responder",
+    0.5272,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "P2": [
+    "consultar_areas_programa",
+    "responder",
+    0.4298,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "P3": [
+    "consultar_areas_programa",
+    "responder",
+    0.4221,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "hilario_medina"
+    }
+   ],
+   "P4": [
+    "consultar_areas_programa",
+    "responder",
+    0.412,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "P5": [
+    "consultar_informacion_programa",
+    "responder",
+    0.4452,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "hilario_medina"
+    }
+   ],
+   "P6": [
+    "consultar_informacion_programa",
+    "responder",
+    0.4415,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "O1": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.4717,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ]
+  }
+ },
+ "documento_completo+subpalabras|r106": {
+  "MRR": 1.0,
+  "posiciones": {
+   "R1": 1,
+   "R2": 1,
+   "R3": 1,
+   "S1": 1,
+   "S2": 1,
+   "G1": 1,
+   "G2": 1,
+   "P1": 1,
+   "P2": 1,
+   "P3": 1,
+   "P4": 1,
+   "P5": 1,
+   "P6": 1,
+   "O1": 1
+  },
+  "decisiones": {
+   "R1": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.7892,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ],
+   "R2": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.8868,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ],
+   "R3": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.6285,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "S1": [
+    "consultar_areas_programa",
+    "responder",
+    1.0,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ],
+   "S2": [
+    "consultar_cualidades_aspirante",
+    "responder",
+    0.9997,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ],
+   "G1": [
+    "consultar_informacion_programa",
+    "responder",
+    0.7052,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "G2": [
+    "consultar_informacion_programa",
+    "responder",
+    1.0,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "hilario_medina"
+    }
+   ],
+   "P1": [
+    "consultar_areas_programa",
+    "responder",
+    0.5272,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "P2": [
+    "consultar_areas_programa",
+    "responder",
+    0.4298,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "P3": [
+    "consultar_areas_programa",
+    "responder",
+    0.4221,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "hilario_medina"
+    }
+   ],
+   "P4": [
+    "consultar_areas_programa",
+    "responder",
+    0.412,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "P5": [
+    "consultar_informacion_programa",
+    "responder",
+    0.4452,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "hilario_medina"
+    }
+   ],
+   "P6": [
+    "consultar_informacion_programa",
+    "responder",
+    0.4415,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "O1": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.4717,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ]
+  }
+ },
+ "por_encabezado+subpalabras|r105b": {
+  "MRR": 0.696,
+  "posiciones": {
+   "R1": null,
+   "R2": null,
+   "R3": null,
+   "S1": 4,
+   "S2": 2,
+   "G1": 1,
+   "G2": 1,
+   "P1": 1,
+   "P2": 1,
+   "P3": 1,
+   "P4": 1,
+   "P5": 1,
+   "P6": 1,
+   "O1": 1
+  },
+  "decisiones": {
+   "R1": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.7892,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ],
+   "R2": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.8868,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ],
+   "R3": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.6285,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "S1": [
+    "consultar_areas_programa",
+    "responder",
+    1.0,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ],
+   "S2": [
+    "consultar_cualidades_aspirante",
+    "responder",
+    0.9997,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ],
+   "G1": [
+    "consultar_informacion_programa",
+    "responder",
+    0.7052,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "G2": [
+    "consultar_informacion_programa",
+    "responder",
+    1.0,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "hilario_medina"
+    }
+   ],
+   "P1": [
+    "consultar_areas_programa",
+    "responder",
+    0.5272,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "P2": [
+    "consultar_areas_programa",
+    "responder",
+    0.4298,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "P3": [
+    "consultar_areas_programa",
+    "responder",
+    0.4221,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "hilario_medina"
+    }
+   ],
+   "P4": [
+    "consultar_areas_programa",
+    "responder",
+    0.412,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "P5": [
+    "consultar_informacion_programa",
+    "responder",
+    0.4452,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "hilario_medina"
+    }
+   ],
+   "P6": [
+    "consultar_informacion_programa",
+    "responder",
+    0.4415,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "O1": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.4717,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ]
+  }
+ },
+ "por_encabezado+subpalabras|r106": {
+  "MRR": 0.857,
+  "posiciones": {
+   "R1": 3,
+   "R2": 3,
+   "R3": 1,
+   "S1": 3,
+   "S2": 1,
+   "G1": 1,
+   "G2": 1,
+   "P1": 1,
+   "P2": 1,
+   "P3": 1,
+   "P4": 1,
+   "P5": 1,
+   "P6": 1,
+   "O1": 1
+  },
+  "decisiones": {
+   "R1": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.7892,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ],
+   "R2": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.8868,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ],
+   "R3": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.6285,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "S1": [
+    "consultar_areas_programa",
+    "responder",
+    1.0,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ],
+   "S2": [
+    "consultar_cualidades_aspirante",
+    "responder",
+    0.9997,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ],
+   "G1": [
+    "consultar_informacion_programa",
+    "responder",
+    0.7052,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "G2": [
+    "consultar_informacion_programa",
+    "responder",
+    1.0,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "hilario_medina"
+    }
+   ],
+   "P1": [
+    "consultar_areas_programa",
+    "responder",
+    0.5272,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "P2": [
+    "consultar_areas_programa",
+    "responder",
+    0.4298,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "P3": [
+    "consultar_areas_programa",
+    "responder",
+    0.4221,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "hilario_medina"
+    }
+   ],
+   "P4": [
+    "consultar_areas_programa",
+    "responder",
+    0.412,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "P5": [
+    "consultar_informacion_programa",
+    "responder",
+    0.4452,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "hilario_medina"
+    }
+   ],
+   "P6": [
+    "consultar_informacion_programa",
+    "responder",
+    0.4415,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "O1": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.4717,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ]
+  }
+ },
+ "por_tamanio_todos+subpalabras|r105b": {
+  "MRR": 0.788,
+  "posiciones": {
+   "R1": 1,
+   "R2": 3,
+   "R3": 1,
+   "S1": 1,
+   "S2": 1,
+   "G1": 1,
+   "G2": 1,
+   "P1": 2,
+   "P2": 1,
+   "P3": 1,
+   "P4": 2,
+   "P5": 2,
+   "P6": 1,
+   "O1": 5
+  },
+  "decisiones": {
+   "R1": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.7892,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ],
+   "R2": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.8868,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ],
+   "R3": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.6285,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "S1": [
+    "consultar_areas_programa",
+    "responder",
+    1.0,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ],
+   "S2": [
+    "consultar_cualidades_aspirante",
+    "responder",
+    0.9997,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ],
+   "G1": [
+    "consultar_informacion_programa",
+    "responder",
+    0.7052,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "G2": [
+    "consultar_informacion_programa",
+    "responder",
+    1.0,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "hilario_medina"
+    }
+   ],
+   "P1": [
+    "consultar_areas_programa",
+    "responder",
+    0.5272,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "P2": [
+    "consultar_areas_programa",
+    "responder",
+    0.4298,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "P3": [
+    "consultar_areas_programa",
+    "responder",
+    0.4221,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "hilario_medina"
+    }
+   ],
+   "P4": [
+    "consultar_areas_programa",
+    "responder",
+    0.412,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "P5": [
+    "consultar_informacion_programa",
+    "responder",
+    0.4452,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "hilario_medina"
+    }
+   ],
+   "P6": [
+    "consultar_informacion_programa",
+    "responder",
+    0.4415,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "O1": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.4717,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ]
+  }
+ },
+ "por_tamanio_todos+subpalabras|r106": {
+  "MRR": 0.871,
+  "posiciones": {
+   "R1": 1,
+   "R2": 1,
+   "R3": 1,
+   "S1": 1,
+   "S2": 1,
+   "G1": 1,
+   "G2": 1,
+   "P1": 1,
+   "P2": 1,
+   "P3": 1,
+   "P4": 2,
+   "P5": 2,
+   "P6": 1,
+   "O1": 5
+  },
+  "decisiones": {
+   "R1": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.7892,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ],
+   "R2": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.8868,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ],
+   "R3": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.6285,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "S1": [
+    "consultar_areas_programa",
+    "responder",
+    1.0,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ],
+   "S2": [
+    "consultar_cualidades_aspirante",
+    "responder",
+    0.9997,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ],
+   "G1": [
+    "consultar_informacion_programa",
+    "responder",
+    0.7052,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "G2": [
+    "consultar_informacion_programa",
+    "responder",
+    1.0,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "hilario_medina"
+    }
+   ],
+   "P1": [
+    "consultar_areas_programa",
+    "responder",
+    0.5272,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "P2": [
+    "consultar_areas_programa",
+    "responder",
+    0.4298,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "P3": [
+    "consultar_areas_programa",
+    "responder",
+    0.4221,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "hilario_medina"
+    }
+   ],
+   "P4": [
+    "consultar_areas_programa",
+    "responder",
+    0.412,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "P5": [
+    "consultar_informacion_programa",
+    "responder",
+    0.4452,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "hilario_medina"
+    }
+   ],
+   "P6": [
+    "consultar_informacion_programa",
+    "responder",
+    0.4415,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ],
+   "O1": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.4717,
+    {
+     "nivel_academico": "bachillerato",
+     "plantel": "torres_landa"
+    }
+   ]
+  }
+ },
+ "sintetico+subpalabras|r105b": {
+  "MRR": 1.0,
+  "posiciones": {
+   "R1": 1
+  },
+  "decisiones": {
+   "R1": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.7892,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ]
+  }
+ },
+ "sintetico+subpalabras|r106": {
+  "MRR": 1.0,
+  "posiciones": {
+   "R1": 1
+  },
+  "decisiones": {
+   "R1": [
+    "consultar_requisitos_bachillerato",
+    "responder",
+    0.7892,
+    {
+     "nivel_academico": "bachillerato"
+    }
+   ]
+  }
+ }
+}

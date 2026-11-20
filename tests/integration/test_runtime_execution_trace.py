@@ -90,12 +90,17 @@ def test_runtime_db_guarda_orden_y_ejecucion_localizables_por_trace(tmp_path):
 def test_health_publico_sin_detalles_internos_y_details_protegido(tmp_path):
     _, client = _cliente(tmp_path)
     publico = client.get("/health").json()
-    assert publico["retrieval_pipeline"] == "r105b" and publico["code_version"]
+    # Ronda 106: /health informa el predeterminado para proyectos nuevos y los
+    # admitidos; el efectivo de cada instantánea está en /health/details.
+    assert publico["retrieval_pipeline"] == "r106" and publico["code_version"]
+    assert publico["retrieval_pipelines_supported"] == ["r105b", "r106"]
     assert "commit" not in json.dumps(publico) and "fingerprint" not in json.dumps(publico)
     assert client.get("/health/details").status_code == 401
     client.post(f"/projects/{_PROJECT_ID}/messages", json=_PREGUNTA, headers={"X-API-Key": _KEY})
     detalles = client.get("/health/details", headers={"X-API-Key": _KEY}).json()
-    assert detalles["code"]["fingerprint"] and detalles["retrieval_pipeline"] == "r105b"
+    assert detalles["code"]["fingerprint"] and detalles["retrieval_pipeline"] == "r106"
+    # Proyecto sin ajuste guardado (anterior a la Ronda 106): r105b.
+    assert detalles["loaded_snapshots"][0]["retrieval_pipeline"] == "r105b"
     assert detalles["reranking_model_available"] is False
     assert detalles["loaded_snapshots"][0]["snapshot"]["version"] == 1
     assert set(detalles["package_fingerprints"]) >= {"application", "domain", "infrastructure", "interfaces"}

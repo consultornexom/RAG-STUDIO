@@ -53,6 +53,7 @@ from infrastructure.database.release_repositories import (
 from infrastructure.build_info import current_code_identity
 from infrastructure.database.repositories import (
     ProjectAgentRerankingReader,
+    ProjectRetrievalProcedureReader,
     SqlAlchemyConfigurationRepository,
     SqlAlchemyProjectRepository,
 )
@@ -285,6 +286,8 @@ def bootstrap(
         catalog_repository=catalog_repository,
         # Ronda 102 (C4): ajuste "Reranking en el agente" del proyecto.
         agent_reranking=ProjectAgentRerankingReader(paths),
+        # Ronda 106: procedimiento de recuperación del proyecto (r105b/r106).
+        retrieval_procedure=ProjectRetrievalProcedureReader(paths),
     )
 
     # Etapa 8, "Complementos": registro global (application.db, no

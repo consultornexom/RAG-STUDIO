@@ -277,3 +277,47 @@ def test_update_agent_reranking_guarda_el_ajuste(service, valor):
 def test_update_agent_reranking_proyecto_inexistente(service):
     with pytest.raises(ProjectNotFoundError):
         service.update_agent_reranking("no-existe", True)
+
+
+# ---------- Ronda 106: procedimiento de recuperación por proyecto ----------
+
+def test_proyecto_nuevo_usa_r106(service):
+    project = service.create_project("Nuevo r106")
+    assert service.get_retrieval_procedure(project.id) == ("r106", True)
+
+
+def test_proyecto_clonado_usa_r106(service):
+    original = service.create_project("Original")
+    service.update_retrieval_procedure(original.id, "r105b")
+    clon = service.clone_project(original.id, "Clon")
+    assert service.get_retrieval_procedure(clon.id) == ("r106", True)
+
+
+def test_proyecto_sin_ajuste_usa_r105b():
+    """Proyecto anterior a la Ronda 106 (sin entrada guardada): r105b, sin
+    cambios silenciosos en su configuración efectiva."""
+    from domain.projects.entities import Project
+
+    repo = InMemoryProjectRepository()
+    service = ProjectService(repo, InMemoryConfigurationRepository(), FakeProjectPackager())
+    anterior = Project(name="Anterior")
+    repo.save(anterior)
+    assert service.get_retrieval_procedure(anterior.id) == ("r105b", False)
+
+
+def test_cambiar_procedimiento_guarda_versiones(service):
+    project = service.create_project("Versionado")
+    assert service.update_retrieval_procedure(project.id, "r105b") == "r105b"
+    assert service.get_retrieval_procedure(project.id) == ("r105b", True)
+    service.update_retrieval_procedure(project.id, "r106")
+    assert service.get_retrieval_procedure(project.id) == ("r106", True)
+
+
+def test_procedimiento_desconocido_o_proyecto_inexistente(service):
+    from domain.conversational.retrieval_procedure import UnknownRetrievalProcedureError
+
+    project = service.create_project("Valida")
+    with pytest.raises(UnknownRetrievalProcedureError):
+        service.update_retrieval_procedure(project.id, "v_sin_r")
+    with pytest.raises(ProjectNotFoundError):
+        service.update_retrieval_procedure("no-existe", "r106")

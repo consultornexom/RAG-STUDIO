@@ -953,13 +953,14 @@ credenciales, rutas ni secretos:
                 "fingerprint_at_load": "sha256:…", "fingerprint_matches": true}},
   "index": {{"embedding_model": "…", "dimensions": 384, "points_count": 120,
              "query_embedding_profile": "simetrico"}},
-  "retrieval_pipeline": "r105b",
+  "retrieval_pipeline": "r106",
   "reranking": {{"setting": "automatico", "model_available": false, "model_status": "no_requerido",
                  "effective_in_runtime": "sin_reranking", "applied": false, "model": null}},
   "search_text": "¿Qué documentos necesito para entrar ?",
   "applied_filters": {{"nivel_academico": "bachillerato"}},
   "results": [{{"position": 1, "chunk_id": "…", "source_id": "…", "score": 0.031,
-               "retrieval_rank": 4, "affinity": 0.4}}],
+               "retrieval_rank": 4, "affinity": 0.4, "referenced_from": []}}],
+  "ambiguous_references": [],
   "unknown": []
 }}
 ```
@@ -979,9 +980,20 @@ credenciales, rutas ni secretos:
   modelos del servidor; si no puede cargarlo, rechaza servir el proyecto con
   503 y `error.code = "configuration.reranking_unavailable"` (nunca responde
   sin reranking en silencio).
-- `GET /health` (público) informa `code_version` y `retrieval_pipeline`;
+- Procedimiento de recuperación (Ronda 106): `retrieval_pipeline` es el del
+  proyecto en la versión publicada: `r106` (afinidad ponderada por valor,
+  fragmentos solo-YAML sin afinidad y resolución de referencias entre
+  documentos) o `r105b` (anterior). Los proyectos creados antes de la
+  Ronda 106 conservan `r105b` hasta que se cambie el ajuste en el Simulador y
+  se publique una versión nueva. Con `r106`, cada elemento de `results`
+  indica en `referenced_from` los fragmentos que remiten a su documento. Si
+  la instantánea pide un procedimiento que el servidor no conoce, responde
+  503 `configuration.retrieval_procedure_unknown`.
+- `GET /health` (público) informa `code_version`, `retrieval_pipeline` (el
+  predeterminado para proyectos nuevos) y `retrieval_pipelines_supported`;
   `GET /health/details` (con `X-API-Key`) informa commit, huella del código,
-  identidad de la instantánea servida, índice y disponibilidad del reranker.
+  identidad de la instantánea servida, índice, disponibilidad del reranker y
+  `retrieval_pipeline` efectivo de cada instantánea cargada.
 
 ## 8. Preguntas frecuentes
 

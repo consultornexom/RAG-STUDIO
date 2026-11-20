@@ -8,6 +8,7 @@ from typing import Optional
 
 from sqlalchemy import select
 
+from domain.conversational.retrieval_procedure import CONFIGURATION_KEY as RETRIEVAL_PROCEDURE_KEY
 from domain.projects.entities import ConfigurationEntry, Project, ProjectStatus
 from domain.projects.exceptions import DuplicateProjectError
 from domain.projects.ports import ConfigurationRepository, ProjectRepository
@@ -77,6 +78,24 @@ class ProjectAgentRerankingReader:
         with session_factory() as session:
             record = session.get(ProjectRecord, project_id)
             return record.agent_reranking if record is not None else None
+
+
+class ProjectRetrievalProcedureReader:
+    """Ronda 106: lee el procedimiento de recuperación del proyecto (entrada
+    versionada `retrieval_procedure` de la tabla `configuration`) del
+    project.db de `paths`. Mismo criterio que ProjectAgentRerankingReader:
+    el Simulador lee el proyecto en edición y el Runtime la instantánea que
+    sirve. None si no hay ajuste guardado (proyectos e instantáneas
+    anteriores a la Ronda 106 -> "r105b")."""
+
+    def __init__(self, paths: InstallationPaths):
+        self._paths = paths
+
+    def __call__(self, project_id: str) -> Optional[str]:
+        if not self._paths.project_db_path(project_id).exists():
+            return None
+        entry = SqlAlchemyConfigurationRepository(self._paths).get_latest(project_id, RETRIEVAL_PROCEDURE_KEY)
+        return entry.value if entry is not None else None
 
 
 class SqlAlchemyProjectRepository(ProjectRepository):

@@ -23,6 +23,7 @@ import traceback
 from types import TracebackType
 from typing import Optional
 
+from domain.conversational.retrieval_procedure import UnknownRetrievalProcedureError
 from domain.rag.exceptions import RerankingRequiredUnavailableError
 from domain.runtime.failures import FailureCategory, FailureDiagnosis, FailureStage
 
@@ -155,6 +156,12 @@ def diagnose_exception(
         # técnica, que queda en el detalle.
         categoria, codigo_especifico = FailureCategory.CONFIGURATION, "configuration.reranking_unavailable"
         texto_raiz = str(requerido)
+    elif (desconocido := next((e for e in cadena if isinstance(e, UnknownRetrievalProcedureError)), None)) is not None:
+        # Ronda 106: la instantánea pide un procedimiento de recuperación que
+        # este código no conoce -- configuración, explícito (nunca se sirve
+        # con otro procedimiento en silencio).
+        categoria, codigo_especifico = FailureCategory.CONFIGURATION, "configuration.retrieval_procedure_unknown"
+        texto_raiz = str(desconocido)
     elif any(isinstance(e, TimeoutError) for e in cadena):
         categoria, codigo_especifico = FailureCategory.TIMEOUT, "timeout"
     elif any(isinstance(e, MemoryError) for e in cadena):

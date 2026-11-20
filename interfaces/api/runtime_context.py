@@ -27,6 +27,7 @@ from typing import Callable, Optional
 
 from application.conversational.service import ConversationalService
 from application.rag.service import RagService
+from domain.conversational.retrieval_procedure import validate_procedure
 from domain.rag.exceptions import RerankingRequiredUnavailableError
 from domain.rag.ports import EmbeddingProvider, ImageEmbeddingProvider, Reranker
 from domain.release.entities import ProjectSnapshot
@@ -44,7 +45,7 @@ from infrastructure.database.metadata_repositories import (
 from infrastructure.database.rag_repositories import SqlAlchemyIndexInfoRepository
 from infrastructure.database.release_repositories import SqlAlchemyProjectSnapshotRepository
 from infrastructure.build_info import current_code_identity
-from infrastructure.database.repositories import ProjectAgentRerankingReader
+from infrastructure.database.repositories import ProjectAgentRerankingReader, ProjectRetrievalProcedureReader
 from infrastructure.embeddings.caching_provider import CachingEmbeddingProvider
 from infrastructure.embeddings.fastembed_image_provider import FastEmbedImageProvider
 from infrastructure.embeddings.fastembed_provider import AVAILABLE_EMBEDDING_PROFILES, make_provider_for_profile
@@ -306,6 +307,11 @@ class RuntimeContext:
         # demás proyectos no construyen reranker: mismo comportamiento y mismos
         # requisitos de siempre.
         agent_reranking = ProjectAgentRerankingReader(paths)
+        # Ronda 106: procedimiento de recuperación de la instantánea (r105b/
+        # r106; sin ajuste, r105b). Se valida al cargar: un valor desconocido
+        # impide servirla (UnknownRetrievalProcedureError, explícito).
+        retrieval_procedure = ProjectRetrievalProcedureReader(paths)
+        procedimiento = validate_procedure(retrieval_procedure(project_id))
         reranker: Optional[Reranker] = None
         if agent_reranking(project_id) is True:
             reranker = self._reranker_factory(paths.models_dir())
@@ -358,6 +364,9 @@ class RuntimeContext:
             # Ronda 102 (C4): el ajuste "Reranking en el agente" se lee de la
             # instantánea servida (mismo project.db que el resto).
             agent_reranking=agent_reranking,
+            # Ronda 106: el procedimiento de recuperación también se lee de
+            # la instantánea servida -- mismo lector que el Simulador.
+            retrieval_procedure=retrieval_procedure,
         )
         # Calentar el proveedor de embeddings ahora (al construir,
         # nunca en la primera solicitud real) -- ADR-002, sección 5,
@@ -383,6 +392,7 @@ class RuntimeContext:
                 "model_available": rag_service.reranker_loaded,
                 "available_model": rag_service.reranker_model_name,
             },
+            "retrieval_pipeline": procedimiento,
         }
         return LoadedSnapshot(
             snapshot=snapshot, conversational_service=conversational_service, lock=threading.Lock(),

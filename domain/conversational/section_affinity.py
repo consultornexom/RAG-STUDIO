@@ -51,6 +51,7 @@ import re
 from collections.abc import Callable, Iterable
 
 from .entities import Intent
+from .reference_resolution import is_yaml_only
 from .text_normalization import normalize_text
 
 _PALABRA = re.compile(r"[a-z0-9]+")
@@ -159,13 +160,22 @@ def first_markdown_heading(text: str | None) -> str | None:
     return None
 
 
-def affinity_title(section_title: str | None, text: str | None, source_title: str | None) -> str:
+def affinity_title(
+    section_title: str | None, text: str | None, source_title: str | None, *, exclude_yaml_only: bool = False,
+) -> str:
     """Título con el que se mide la afinidad de un fragmento: su título de
     sección (por_encabezado lo guarda); si no tiene, su primer encabezado
     Markdown; si tampoco, el título de la fuente (sin extensión de
-    archivo). Cadena vacía si no hay nada (afinidad cero)."""
+    archivo). Cadena vacía si no hay nada (afinidad cero).
+
+    exclude_yaml_only (Ronda 106, componente Y; procedimiento r106): un
+    fragmento sin título de sección y sin ninguna palabra fuera del
+    encabezado YAML no tiene título (afinidad 0), en vez de tomar el título
+    de la fuente. Sin contenido no hay de qué tratar."""
     if section_title and section_title.strip():
         return section_title.strip()
+    if exclude_yaml_only and is_yaml_only(text):
+        return ""
     encabezado = first_markdown_heading(text)
     if encabezado:
         return encabezado
@@ -200,5 +210,33 @@ def combine_with_retrieval(affinities: list[float], k: int = RRF_K) -> list[int]
         if valor in puesto_afinidad:
             total += 1.0 / (k + puesto_afinidad[valor])
         return total
+
+    return sorted(range(len(affinities)), key=lambda i: (-puntaje(i), i))
+
+
+# ---------- Ronda 106, componente V: afinidad ponderada por su valor ----------
+
+def combine_by_value(affinities: list[float], k: int = RRF_K) -> list[int]:
+    """Procedimiento r106 (autorizado por NEXOM, Ronda 106). Orden final de
+    candidatos que ya vienen ordenados por la búsqueda (posición i -> puesto
+    i+1), sumando la afinidad según su VALOR y no según su puesto:
+
+    puntaje = 1/(k + puesto_búsqueda) + afinidad/(k + 1)
+
+    Con `combine_with_retrieval` (r102/r105b) la segunda mejor afinidad suma
+    casi lo mismo que la primera aunque valga un tercio: en AGENTE UDL,
+    «Información general» (afinidad 0.18, búsqueda #1) empataba con los
+    requisitos (afinidad 0.57, búsqueda #2) y el empate lo ganaba la
+    búsqueda (UDL-BACH-003, Ronda 105f). Aquí una afinidad de 1.0 vale lo
+    mismo que el primer puesto de la búsqueda, y una afinidad 0 no suma.
+
+    A igual puntaje se conserva el orden de la búsqueda. Devuelve los
+    índices de `affinities` en el orden final.
+
+    Por sí sola reabre la regresión sintética de la Ronda 102 (secciones
+    puente con el título exacto de la intención): se usa SIEMPRE con la
+    resolución de referencias (reference_resolution, componente R)."""
+    def puntaje(i: int) -> float:
+        return 1.0 / (k + i + 1) + max(0.0, affinities[i]) / (k + 1)
 
     return sorted(range(len(affinities)), key=lambda i: (-puntaje(i), i))

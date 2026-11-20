@@ -33,7 +33,13 @@ from domain.conversational.ports import (
 )
 from domain.conversational.rule_evaluation import select_firing_action
 from domain.documents.entities import AccessLevel
-from domain.conversational.section_affinity import SectionAffinity, affinity_title, combine_with_retrieval
+from domain.conversational.reference_resolution import enforce_destinations_first, resolve_references
+from domain.conversational.retrieval_procedure import (
+    DEFAULT_FOR_NEW_PROJECTS, PROCEDURE_R106, SUPPORTED_PROCEDURES, validate_procedure,
+)
+from domain.conversational.section_affinity import (
+    SectionAffinity, affinity_title, combine_by_value, combine_with_retrieval,
+)
 from domain.conversational.variable_extraction import (
     ValueCandidate, alias_forms, extract_variable_values, find_mentions, remove_spans,
 )
@@ -42,13 +48,14 @@ from domain.metadata.ports import CatalogRepository, MetadataSchemaRepository, S
 from domain.rag.structured_query import StructuredFilter, StructuredFilterOperator, StructuredQueryResult
 
 
-def _section_title(chunk, source_title: Optional[str] = None) -> str:
+def _section_title(chunk, source_title: Optional[str] = None, exclude_yaml_only: bool = False) -> str:
     """Título con el que se mide la afinidad del fragmento (Ronda 102, C2):
     su título de sección; si la fragmentación no lo guardó, su primer
     encabezado Markdown (fuera del encabezado YAML) y, si tampoco hay, el
     título de la fuente. Antes era la primera línea del texto ("---" en
-    los documentos con encabezado YAML)."""
-    return affinity_title(chunk.section_title, chunk.text, source_title)
+    los documentos con encabezado YAML). exclude_yaml_only: componente Y
+    del procedimiento r106 (Ronda 106)."""
+    return affinity_title(chunk.section_title, chunk.text, source_title, exclude_yaml_only=exclude_yaml_only)
 
 
 class IntentScoreView(BaseModel):
@@ -74,10 +81,21 @@ class ResultOrderingView(BaseModel):
     """Afinidad título-intención (0 a 1)."""
     affinity_title: str
     """Título con el que se midió la afinidad (ver _section_title)."""
+    referenced_from: list[str] = Field(default_factory=list)
+    """Ronda 106 (r106, componente R): chunk_ids de los fragmentos puente que
+    remiten a la fuente de este fragmento y lo pusieron por delante de ellos.
+    Vacía si el fragmento no llegó por referencia."""
+    referenced_from_sources: list[str] = Field(default_factory=list)
+    """Ronda 106: títulos de las fuentes de esos fragmentos puente."""
 
 
-RETRIEVAL_PIPELINE = "r105b"
-"""Ronda 104b (Etapa 0): identificador del procedimiento de recuperación del
+RETRIEVAL_PIPELINE = DEFAULT_FOR_NEW_PROJECTS
+"""Desde la Ronda 106, el procedimiento lo elige cada proyecto (ver
+domain.conversational.retrieval_procedure): esta constante es el
+predeterminado para proyectos NUEVOS ("r106"); el efectivo de cada
+consulta está en SimulationTrace.retrieval_pipeline.
+
+Ronda 104b (Etapa 0): identificador del procedimiento de recuperación del
 motor conversacional. Cambia cada vez que una ronda altera cómo se ordenan
 los fragmentos, para que un trace diga con qué procedimiento se produjo:
 - "r102": búsqueda híbrida (RRF semántica + BM25 + señal jerárquica de la
@@ -89,7 +107,13 @@ los fragmentos, para que un trace diga con qué procedimiento se produjo:
   la Ronda 105b (P1, alternativa B estricta): Automático y Desactivado =
   sin reranking en el Simulador y en el Runtime; Activado = con reranking,
   exigiendo el modelo cargado (error explícito si no). Para proyectos sin
-  «Activado», el orden del Runtime es idéntico al de "r102"."""
+  «Activado», el orden del Runtime es idéntico al de "r102".
+- "r106" (Ronda 106, autorizado por NEXOM): igual que "r105b" con V + Y + R
+  en el reordenamiento conversacional (solo con filtro de metadatos): afinidad
+  ponderada por valor, sin afinidad para fragmentos solo-YAML y resolución de
+  referencias de fragmentos puente. Reranking (P1) sin cambios."""
+
+RETRIEVAL_PIPELINES_SUPPORTED = SUPPORTED_PROCEDURES
 
 RERANKING_AUTOMATICO = "automatico"
 RERANKING_ACTIVADO = "activado"
@@ -175,8 +199,13 @@ class SimulationTrace(BaseModel):
     o "con_reranking" (en el Runtime exige el modelo en el servidor; si no
     lo tiene, el Runtime rechaza servir el proyecto)."""
     reranking_available_model: Optional[str] = None
-    retrieval_pipeline: str = RETRIEVAL_PIPELINE
-    """Ronda 104b (Etapa 0): ver RETRIEVAL_PIPELINE."""
+    retrieval_pipeline: str = "r105b"
+    """Ronda 104b (Etapa 0): procedimiento con que se produjo esta traza.
+    Desde la Ronda 106 es el ajuste del proyecto ("r105b" o "r106"), el mismo
+    en el Simulador y en el Runtime (ver RETRIEVAL_PIPELINE)."""
+    ambiguous_references: list[str] = Field(default_factory=list)
+    """Ronda 106 (r106, componente R): nombres de fuente mencionados por
+    fragmentos puente que corresponden a más de una fuente (no se resuelven)."""
     search_text: Optional[str] = None
     """Ronda 104b (Etapa 0): texto EXACTO con el que se buscó (la consulta
     o, con filtros, retrieval_query). None si no hubo búsqueda de texto."""
@@ -218,6 +247,7 @@ class SimulateConversation:
         schema_repository: Optional[MetadataSchemaRepository] = None,
         catalog_repository: Optional[CatalogRepository] = None,
         agent_reranking: Optional[Callable[[str], Optional[bool]]] = None,
+        retrieval_procedure: Optional[Callable[[str], Optional[str]]] = None,
     ):
         """source_repository/schema_repository/catalog_repository (Ronda
         89, opcionales para no romper a quien construya este caso de uso
@@ -229,8 +259,16 @@ class SimulateConversation:
         agent_reranking (Ronda 102, C4): devuelve el ajuste "Reranking en
         el agente" del proyecto (None = automático, True = activado,
         False = desactivado). Sin él, automático: el comportamiento de
-        siempre (se aplica si RagService tiene modelo de reranking)."""
+        siempre (se aplica si RagService tiene modelo de reranking).
+
+        retrieval_procedure (Ronda 106): devuelve el procedimiento guardado
+        del proyecto ("r105b", "r106" o None = sin ajuste -> "r105b"). El
+        Simulador de escritorio lo lee del project.db en edición y el Runtime
+        del project.db de la instantánea servida: el mismo lector y el mismo
+        código, por lo que ambos aplican el mismo procedimiento. Sin él,
+        "r105b" (comportamiento anterior)."""
         self._agent_reranking = agent_reranking
+        self._retrieval_procedure = retrieval_procedure
         self._sources = source_repository
         self._schemas = schema_repository
         self._catalogs = catalog_repository
@@ -261,6 +299,7 @@ class SimulateConversation:
         ahí quien prueba el agente ya tiene acceso completo al
         proyecto."""
         provided = dict(provided_variables or {})
+        procedure = self._procedure_decision(project_id)
         intents = self._intents.list_for_project(project_id)
         # embed_query/embed_texts reutilizan el mismo EmbeddingProvider
         # de RagService (Etapa 4) para emparejamiento semántico de
@@ -302,6 +341,7 @@ class SimulateConversation:
                 reranking_available_model=self._rag.reranker_model_name,
                 reranking_model_status="cargado" if decision[1] else "no_requerido",
                 runtime_effective_reranking="con_reranking" if decision[1] else "sin_reranking",
+                retrieval_pipeline=procedure,
             )
 
         intent, confidence = match.intent, match.confidence
@@ -389,6 +429,7 @@ class SimulateConversation:
         abstention_reason: Optional[str] = None
         structured_result: Optional[StructuredQueryResult] = None
         image_results: list[ImageSearchResult] = []
+        ambiguous_references: list[str] = []
         tried_structured = False
 
         if final_action == RuleActionType.RESPONDER:
@@ -410,12 +451,15 @@ class SimulateConversation:
                 # del documento de diseño de B.4): marcar una intención
                 # como ESTRUCTURADO nunca debe dejarla peor que si
                 # hubiera quedado en SEMANTICO.
+                ambiguous_sink: list[str] = []
                 (
                     search_results, applied_filters, excluded_count, retrieval_query, result_ordering,
                 ) = self._search_and_filter(
                     project_id, query_text, effective, source_id=source_id, limit=limit,
                     max_access_level=max_access_level, intent=intent, intents=intents, rerank=use_rerank,
+                    procedure=procedure, ambiguous_sink=ambiguous_sink,
                 )
+                ambiguous_references = ambiguous_sink
                 reranking_applied = use_rerank
                 search_text = retrieval_query or query_text
                 section_ordering = bool(applied_filters) and self._sources is not None
@@ -469,7 +513,16 @@ class SimulateConversation:
             reranking_available_model=self._rag.reranker_model_name, search_text=search_text,
             reranking_model_status="cargado" if use_rerank else "no_requerido",
             runtime_effective_reranking="con_reranking" if use_rerank else "sin_reranking",
+            retrieval_pipeline=procedure, ambiguous_references=ambiguous_references,
         )
+
+    def _procedure_decision(self, project_id: str) -> str:
+        """Ronda 106: procedimiento de recuperación efectivo del proyecto
+        ("r105b" o "r106"). Sin ajuste guardado, "r105b". Un valor que este
+        código no conoce produce UnknownRetrievalProcedureError (nunca se
+        sustituye en silencio por otro procedimiento)."""
+        guardado = self._retrieval_procedure(project_id) if self._retrieval_procedure is not None else None
+        return validate_procedure(guardado)
 
     def _reranking_decision(self, project_id: str) -> tuple[str, bool, Optional[str]]:
         """(ajuste, si se aplica reranking, aviso).
@@ -530,6 +583,8 @@ class SimulateConversation:
         max_access_level: Optional[AccessLevel] = None,
         intent: Optional[Intent] = None, intents: Optional[list[Intent]] = None,
         rerank: Optional[bool] = None,
+        procedure: str = "r105b",
+        ambiguous_sink: Optional[list[str]] = None,
     ) -> tuple[list[SemanticSearchResult], dict[str, str], int, Optional[str], list[ResultOrderingView]]:
         # Un motor conversacional real siempre debe forzar
         # only_usable_sources=True (a diferencia del Laboratorio RAG de
@@ -606,14 +661,50 @@ class SimulateConversation:
                     intent, intents or [intent], query_text, self._catalog_mention_masker(project_id),
                 )
                 titulos_fuente = {source.id: source.title for source in all_sources}
-                titulos = [_section_title(r.chunk, titulos_fuente.get(r.chunk.source_id)) for r in results]
+                puesto_busqueda = {r.chunk.id: n for n, r in enumerate(results, start=1)}
+                r106 = procedure == PROCEDURE_R106
+                enlaces: dict[str, list[str]] = {}
+                if r106:
+                    # Ronda 106, componente R: el contenido de la fuente a la
+                    # que remite un fragmento puente se inserta antes del
+                    # puente. Destinos solo de este mismo conjunto (mismos
+                    # filtros, vigencia y nivel de acceso).
+                    resolucion = resolve_references(
+                        results, {sid: titulos_fuente.get(sid, "") for sid in allowed},
+                    )
+                    results, enlaces = resolucion.candidates, resolucion.links
+                    if ambiguous_sink is not None:
+                        ambiguous_sink.extend(resolucion.ambiguous)
+                titulos = [
+                    _section_title(r.chunk, titulos_fuente.get(r.chunk.source_id), exclude_yaml_only=r106)
+                    for r in results
+                ]
                 puntajes = [afinidad.score(titulo) for titulo in titulos]
-                # Ronda 102 (C1, hallazgo real de NEXOM): la afinidad ya no
-                # es la clave principal; se combina por RRF con el orden de
-                # la búsqueda (ver combine_with_retrieval).
-                orden = combine_with_retrieval(puntajes)[:limit]
+                if r106:
+                    # Componente V: la afinidad suma según su valor; después,
+                    # la restricción de R (cada destino delante de su puente).
+                    orden_completo = combine_by_value(puntajes)
+                    indice = {r.chunk.id: i for i, r in enumerate(results)}
+                    orden_ids = enforce_destinations_first([results[i].chunk.id for i in orden_completo], enlaces)
+                    orden = [indice[cid] for cid in orden_ids][:limit]
+                else:
+                    # Ronda 102 (C1, hallazgo real de NEXOM): la afinidad ya no
+                    # es la clave principal; se combina por RRF con el orden de
+                    # la búsqueda (ver combine_with_retrieval).
+                    orden = combine_with_retrieval(puntajes)[:limit]
+                puentes_de: dict[str, list[str]] = {}
+                for destino, puentes in enlaces.items():
+                    puentes_de[destino] = list(puentes)
+                fuente_de = {r.chunk.id: r.chunk.source_id for r in results}
                 ordering = [
-                    ResultOrderingView(retrieval_rank=i + 1, affinity=round(puntajes[i], 3), affinity_title=titulos[i])
+                    ResultOrderingView(
+                        retrieval_rank=puesto_busqueda[results[i].chunk.id], affinity=round(puntajes[i], 3),
+                        affinity_title=titulos[i],
+                        referenced_from=puentes_de.get(results[i].chunk.id, []),
+                        referenced_from_sources=list(dict.fromkeys(
+                            titulos_fuente.get(fuente_de.get(p, ""), "") for p in puentes_de.get(results[i].chunk.id, [])
+                        )),
+                    )
                     for i in orden
                 ]
                 results = [results[i] for i in orden]

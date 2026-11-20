@@ -233,6 +233,10 @@ class ExecutionResult(BaseModel):
     score: float
     retrieval_rank: Optional[int] = None
     affinity: Optional[float] = None
+    referenced_from: list[str] = Field(
+        default_factory=list,
+        description="Ronda 106 (r106): chunk_ids de los fragmentos puente que remiten a la fuente de este fragmento.",
+    )
 
 
 class ExecutionInfo(BaseModel):
@@ -251,6 +255,9 @@ class ExecutionInfo(BaseModel):
     applied_filters: dict[str, str] = Field(default_factory=dict)
     excluded_sources: int = 0
     affinity_ordering: bool = False
+    ambiguous_references: list[str] = Field(default_factory=list)
+    """Ronda 106 (r106): nombres de fuente ambiguos mencionados por fragmentos
+    puente (no se resolvieron)."""
     results: list[ExecutionResult] = Field(default_factory=list)
     unknown: list[str] = Field(
         default_factory=list, description="Datos que no se pudieron determinar (nunca se inventan).",
@@ -384,7 +391,13 @@ class HealthResponse(BaseModel):
     huella del código están en GET /health/details (protegido)."""
     retrieval_pipeline: Optional[str] = None
     """Ronda 104b (Etapa 0, aditivo): procedimiento de recuperación del
-    motor (ver RETRIEVAL_PIPELINE en simulate_conversation.py)."""
+    motor (ver RETRIEVAL_PIPELINE en simulate_conversation.py). Desde la
+    Ronda 106 el procedimiento lo elige cada proyecto: aquí va el
+    predeterminado para proyectos nuevos ("r106"); el efectivo de cada
+    instantánea está en /health/details (loaded_snapshots) y el de cada
+    respuesta en `execution.retrieval_pipeline`."""
+    retrieval_pipelines_supported: list[str] = Field(default_factory=list)
+    """Ronda 106 (aditivo): procedimientos que admite este código."""
 
 
 class HealthDetailsResponse(BaseModel):

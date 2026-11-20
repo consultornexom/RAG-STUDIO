@@ -175,7 +175,9 @@ from .runtime_config import LEGACY_API_KEY_VARS, load_runtime_config
 from .runtime_context import (
     EmbeddingProviderFactory, ImageEmbeddingProviderFactory, RuntimeContext, SnapshotNotFoundError,
 )
-from application.conversational.queries.simulate_conversation import RETRIEVAL_PIPELINE
+from application.conversational.queries.simulate_conversation import (
+    RETRIEVAL_PIPELINE, RETRIEVAL_PIPELINES_SUPPORTED,
+)
 from infrastructure.build_info import current_code_identity
 from .schemas import (
     ErrorInfo, ErrorResponse, ExecutionCode, HealthDetailsResponse, HealthResponse, IssueWidgetTokenRequest, MessageRequest, MessageResponse, MetricsResponse,
@@ -370,6 +372,7 @@ def create_app(
             # público; el commit y las huellas van en /health/details.
             code_version=current_code_identity().version,
             retrieval_pipeline=RETRIEVAL_PIPELINE,
+            retrieval_pipelines_supported=list(RETRIEVAL_PIPELINES_SUPPORTED),
         )
 
     @app.get("/health/details", response_model=HealthDetailsResponse, dependencies=[Depends(_require_api_key)])
@@ -387,7 +390,8 @@ def create_app(
             reranking_available_model=reranking.get("available_model"),
             pinned_snapshot=runtime_context.pinned_snapshot_description(),
             loaded_snapshots=[
-                {"snapshot": base.get("snapshot"), "index": base.get("index"), "reranking": base.get("reranking")}
+                {"snapshot": base.get("snapshot"), "index": base.get("index"), "reranking": base.get("reranking"),
+                 "retrieval_pipeline": base.get("retrieval_pipeline")}
                 for base in bases
             ],
             package_fingerprints=identidad.package_dict(),

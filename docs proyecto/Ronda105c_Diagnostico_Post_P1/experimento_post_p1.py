@@ -10,6 +10,7 @@ pendientes, simuladas FUERA del motor:
   R     P2b: resolución de referencias (puente detrás de su destino; 2 por fuente)
   T     P3:  buscar con la consulta original (sin quitar los valores filtrados;
              el filtro de metadatos se sigue aplicando a las fuentes)
+  V     (Ronda 105e) combinación ponderada por el valor de la afinidad
   M     (Ronda 105d) enmascarar el valor de catálogo también dentro del nombre
         de la intención en snake_case
   P4    corpus indexado SIN el encabezado YAML (copias temporales de los
@@ -64,6 +65,11 @@ def main() -> int:
     ap.add_argument("--variantes", default="base,Y,T,YT,YR,YRT")
     ap.add_argument("--p4", action="store_true", help="indexar copias de los archivos sin YAML")
     ap.add_argument("--detalle", action="store_true")
+    ap.add_argument("--intenciones", choices=["r102", "historico", "historico+asesor", "hipotesis_info"],
+                    default="r102",
+                    help="r102: 4 históricas + consultar_plan_estudios (supuesta); historico: solo las 4 activas "
+                         "del proyecto histórico de Bachillerato; historico+asesor: + solicitar_asesor_admisiones "
+                         "(supuesta, Ronda 103)")
     ap.add_argument("--listar", action="store_true", help="lista los fragmentos indexados")
     ap.add_argument("--contador", choices=["palabras", "subpalabras", "x3"], default="palabras",
                     help="conteo de tokens al fragmentar: palabras (1 por palabra); subpalabras (tokenizador "
@@ -143,6 +149,21 @@ def main() -> int:
             init_original(self, *args, **kw)
 
         base.IngestionService.__init__ = init
+    if a.intenciones == "hipotesis_info":
+        # HIPÓTESIS (Ronda 105e) para reproducir la observación real: la
+        # intención de requisitos incluye la palabra «información».
+        base.INTENCIONES[:] = [
+            (n, ("Consultar información general de los requisitos de ingreso al bachillerato." if n ==
+                 "consultar_requisitos_bachillerato" else d), pos, neg)
+            for n, d, pos, neg in base.INTENCIONES]
+    elif a.intenciones != "r102":
+        base.INTENCIONES[:] = [i for i in base.INTENCIONES if i[0] != "consultar_plan_estudios"]
+        if a.intenciones == "historico+asesor":
+            base.INTENCIONES.append((
+                "solicitar_asesor_admisiones", "Solicitar hablar con un asesor de admisiones de la Universidad de León.",
+                ["Quiero hablar con un asesor de admisiones", "¿Me pueden comunicar con un asesor?",
+                 "Necesito que me atienda una persona de admisiones"],
+                ["¿Cuáles son los requisitos de ingreso?"]))
     simuladores, titulo_de = getattr(base.corpus, "__wrapped__", base.corpus)()
     if a.listar:
         repo = simuladores["sin"]._rag._hybrid_search._text._chunks
@@ -202,7 +223,12 @@ def main() -> int:
         afinidad = SectionAffinity(intent, perfiles, consulta, sim._catalog_mention_masker(P))
         titulos = [titulo(r.chunk, "Y" in variante) for r in pool]
         puntajes = [afinidad.score(t) for t in titulos]
-        orden_idx = combine_with_retrieval(puntajes)
+        if "V" in variante:
+            # V (Ronda 105e): la afinidad suma en proporción a su VALOR
+            # (afinidad/61) y no por su puesto; 0 no suma.
+            orden_idx = sorted(range(len(puntajes)), key=lambda i: (-(1 / (61 + i) + puntajes[i] / 61), i))
+        else:
+            orden_idx = combine_with_retrieval(puntajes)
         valores = sorted({round(x, 3) for x in puntajes if x > 0}, reverse=True)
         puesto_af = {v: n + 1 for n, v in enumerate(valores)}
         orden = [pool[i].chunk.id for i in orden_idx]
@@ -242,7 +268,8 @@ def main() -> int:
         n = len(posiciones)
         mrr = sum(1 / p for p in posiciones.values() if p) / n
         r1 = sum(1 for p in posiciones.values() if p == 1) / n
-        clave = f"{a.compartidos}{'+P4' if a.p4 else ''}{'' if a.contador == 'palabras' else '+' + a.contador}|{variante}"
+        clave = (f"{a.compartidos}{'+P4' if a.p4 else ''}{'' if a.contador == 'palabras' else '+' + a.contador}"
+                 f"{'' if a.intenciones == 'r102' else '+' + a.intenciones}|{variante}")
         resultados[clave] = {"R@1": round(r1, 3), "MRR": round(mrr, 3), "posiciones": posiciones}
         print(f"{clave:32} R@1 {r1:.2f} MRR {mrr:.3f}  " + " ".join(f"{c}={p}" for c, p in posiciones.items()))
     if a.salida:

@@ -1,0 +1,183 @@
+fragmentos indexados: 5 (tipos: ['texto'])
+   areas_formacion.md           #0  texto  tokens  159 título=None         «---»
+   bachillerato_hilario_medina. #0  texto  tokens  573 título=None         «---»
+   bachillerato_torres_landa.md #0  texto  tokens  577 título=None         «---»
+   cualidades_aspirante.md      #0  texto  tokens  140 título=None         «---»
+   requisitos_ingreso.md        #0  texto  tokens  199 título=None         «---»
+
+[por_tamanio_todos | base] R1 UDL-BACH-003 / requisitos: texto de búsqueda '¿Cuáles son los requisitos para ingresar Universidad de León?' → correcto en 2
+  1. bachillerato_hilario_medina. contenido       lista#1  búsq#1    sem#2    tex#2    afin 0.15 (#2   ) rrf 0.03252 «Bachillerato — Plantel Hilario Medina»
+  2. requisitos_ingreso.md        contenido       lista#3  búsq#3    sem#4    tex#1    afin 0.65 (#1   ) rrf 0.03227 «Requisitos de ingreso — Bachillerato UDL»
+  3. cualidades_aspirante.md      contenido       lista#2  búsq#2    sem#1    tex#4    afin 0.15 (#2   ) rrf 0.03226 «Cualidades del aspirante — Bachillerato UDL»
+  4. bachillerato_torres_landa.md contenido       lista#4  búsq#4    sem#3    tex#3    afin 0.15 (#2   ) rrf 0.03175 «Bachillerato — Plantel Torres Landa»
+  5. areas_formacion.md           contenido       lista#5  búsq#5    sem#5    tex#5    afin 0.15 (#2   ) rrf 0.03151 «Áreas de formación — Bachillerato UDL»
+
+[por_tamanio_todos | base] R2 incidente 493c8033 / documentos: texto de búsqueda '¿Qué documentos necesito para entrar ?' → correcto en 3
+  1. bachillerato_torres_landa.md contenido       lista#1  búsq#1    sem#1    tex#2    afin 0.15 (#2   ) rrf 0.03252 «Bachillerato — Plantel Torres Landa»
+  2. bachillerato_hilario_medina. contenido       lista#2  búsq#2    sem#2    tex#1    afin 0.15 (#2   ) rrf 0.03226 «Bachillerato — Plantel Hilario Medina»
+  3. requisitos_ingreso.md        contenido       lista#4  búsq#4    sem#4    tex#None afin 0.40 (#1   ) rrf 0.03202 «Requisitos de ingreso — Bachillerato UDL»
+  4. cualidades_aspirante.md      contenido       lista#3  búsq#3    sem#3    tex#None afin 0.15 (#2   ) rrf 0.03200 «Cualidades del aspirante — Bachillerato UDL»
+  5. areas_formacion.md           contenido       lista#5  búsq#5    sem#5    tex#None afin 0.15 (#2   ) rrf 0.03151 «Áreas de formación — Bachillerato UDL»
+
+[por_tamanio_todos | base] R3 requisitos con plantel: texto de búsqueda 'Requisitos de ingreso plantel' → correcto en 1
+  1. requisitos_ingreso.md        contenido       lista#1  búsq#1    sem#2    tex#2    afin 0.65 (#1   ) rrf 0.03279 «Requisitos de ingreso — Bachillerato UDL»
+  2. cualidades_aspirante.md      contenido       lista#2  búsq#2    sem#1    tex#4    afin 0.15 (#3   ) rrf 0.03200 «Cualidades del aspirante — Bachillerato UDL»
+  3. bachillerato_torres_landa.md contenido       lista#3  búsq#3    sem#4    tex#1    afin 0.40 (#2   ) rrf 0.03200 «Bachillerato — Plantel Torres Landa»
+  4. areas_formacion.md           contenido       lista#4  búsq#4    sem#3    tex#3    afin 0.15 (#3   ) rrf 0.03150 «Áreas de formación — Bachillerato UDL»
+por_tamanio_todos|base           R@1 0.86 MRR 0.917  R1=2 R2=3 R3=1 S1=1 S2=1 G1=1 G2=1 P1=1 P2=1 P3=1 P4=1 P5=1 P6=1 O1=1
+
+[por_tamanio_todos | M] R1 UDL-BACH-003 / requisitos: texto de búsqueda '¿Cuáles son los requisitos para ingresar Universidad de León?' → correcto en 1
+  1. requisitos_ingreso.md        contenido       lista#3  búsq#3    sem#4    tex#1    afin 0.50 (#1   ) rrf 0.03227 «Requisitos de ingreso — Bachillerato UDL»
+  2. bachillerato_hilario_medina. contenido       lista#1  búsq#1    sem#2    tex#2    afin 0.00 (#None) rrf 0.01639 «Bachillerato — Plantel Hilario Medina»
+  3. cualidades_aspirante.md      contenido       lista#2  búsq#2    sem#1    tex#4    afin 0.00 (#None) rrf 0.01613 «Cualidades del aspirante — Bachillerato UDL»
+  4. bachillerato_torres_landa.md contenido       lista#4  búsq#4    sem#3    tex#3    afin 0.00 (#None) rrf 0.01562 «Bachillerato — Plantel Torres Landa»
+  5. areas_formacion.md           contenido       lista#5  búsq#5    sem#5    tex#5    afin 0.00 (#None) rrf 0.01538 «Áreas de formación — Bachillerato UDL»
+
+[por_tamanio_todos | M] R2 incidente 493c8033 / documentos: texto de búsqueda '¿Qué documentos necesito para entrar ?' → correcto en 1
+  1. requisitos_ingreso.md        contenido       lista#4  búsq#4    sem#4    tex#None afin 0.25 (#1   ) rrf 0.03202 «Requisitos de ingreso — Bachillerato UDL»
+  2. bachillerato_torres_landa.md contenido       lista#1  búsq#1    sem#1    tex#2    afin 0.00 (#None) rrf 0.01639 «Bachillerato — Plantel Torres Landa»
+  3. bachillerato_hilario_medina. contenido       lista#2  búsq#2    sem#2    tex#1    afin 0.00 (#None) rrf 0.01613 «Bachillerato — Plantel Hilario Medina»
+  4. cualidades_aspirante.md      contenido       lista#3  búsq#3    sem#3    tex#None afin 0.00 (#None) rrf 0.01587 «Cualidades del aspirante — Bachillerato UDL»
+  5. areas_formacion.md           contenido       lista#5  búsq#5    sem#5    tex#None afin 0.00 (#None) rrf 0.01538 «Áreas de formación — Bachillerato UDL»
+
+[por_tamanio_todos | M] R3 requisitos con plantel: texto de búsqueda 'Requisitos de ingreso plantel' → correcto en 1
+  1. requisitos_ingreso.md        contenido       lista#1  búsq#1    sem#2    tex#2    afin 0.50 (#1   ) rrf 0.03279 «Requisitos de ingreso — Bachillerato UDL»
+  2. bachillerato_torres_landa.md contenido       lista#3  búsq#3    sem#4    tex#1    afin 0.25 (#2   ) rrf 0.03200 «Bachillerato — Plantel Torres Landa»
+  3. cualidades_aspirante.md      contenido       lista#2  búsq#2    sem#1    tex#4    afin 0.00 (#None) rrf 0.01613 «Cualidades del aspirante — Bachillerato UDL»
+  4. areas_formacion.md           contenido       lista#4  búsq#4    sem#3    tex#3    afin 0.00 (#None) rrf 0.01562 «Áreas de formación — Bachillerato UDL»
+por_tamanio_todos|M              R@1 1.00 MRR 1.000  R1=1 R2=1 R3=1 S1=1 S2=1 G1=1 G2=1 P1=1 P2=1 P3=1 P4=1 P5=1 P6=1 O1=1
+fragmentos indexados: 7 (tipos: ['texto'])
+   areas_formacion.md           #0  texto  tokens  388 título=None         «---»
+   bachillerato_hilario_medina. #0  texto  tokens  500 título=None         «---»
+   bachillerato_hilario_medina. #1  texto  tokens  478 título=None         «de la Comunicación II»
+   bachillerato_torres_landa.md #0  texto  tokens  499 título=None         «---»
+   bachillerato_torres_landa.md #1  texto  tokens  479 título=None         «Financieras II»
+   cualidades_aspirante.md      #0  texto  tokens  358 título=None         «---»
+   requisitos_ingreso.md        #0  texto  tokens  458 título=None         «---»
+
+[por_tamanio_todos | base] R1 UDL-BACH-003 / requisitos: texto de búsqueda '¿Cuáles son los requisitos para ingresar Universidad de León?' → correcto en 2
+  1. cualidades_aspirante.md      contenido       lista#1  búsq#1    sem#1    tex#4    afin 0.15 (#2   ) rrf 0.03252 «Cualidades del aspirante — Bachillerato UDL»
+  2. requisitos_ingreso.md        contenido       lista#2  búsq#2    sem#4    tex#1    afin 0.65 (#1   ) rrf 0.03252 «Requisitos de ingreso — Bachillerato UDL»
+  3. bachillerato_hilario_medina. contenido       lista#3  búsq#3    sem#2    tex#6    afin 0.15 (#2   ) rrf 0.03200 «Bachillerato — Plantel Hilario Medina»
+  4. bachillerato_torres_landa.md contenido       lista#6  búsq#6    sem#3    tex#7    afin 0.15 (#2   ) rrf 0.03128 «Bachillerato — Plantel Torres Landa»
+  5. areas_formacion.md           contenido       lista#7  búsq#7    sem#5    tex#5    afin 0.15 (#2   ) rrf 0.03105 «Áreas de formación — Bachillerato UDL»
+  6. bachillerato_hilario_medina. contenido       lista#4  búsq#4    sem#7    tex#2    afin 0.00 (#None) rrf 0.01562 «Área Físico-Matemática y Químico-Biológicas»
+  7. bachillerato_torres_landa.md contenido       lista#5  búsq#5    sem#6    tex#3    afin 0.00 (#None) rrf 0.01538 «Área Físico-Matemática y Químico-Biológicas»
+
+[por_tamanio_todos | base] R2 incidente 493c8033 / documentos: texto de búsqueda '¿Qué documentos necesito para entrar ?' → correcto en 3
+  1. bachillerato_torres_landa.md contenido       lista#3  búsq#3    sem#1    tex#None afin 0.15 (#2   ) rrf 0.03200 «Bachillerato — Plantel Torres Landa»
+  2. bachillerato_hilario_medina. contenido       lista#4  búsq#4    sem#2    tex#None afin 0.15 (#2   ) rrf 0.03175 «Bachillerato — Plantel Hilario Medina»
+  3. requisitos_ingreso.md        contenido       lista#6  búsq#6    sem#4    tex#None afin 0.40 (#1   ) rrf 0.03154 «Requisitos de ingreso — Bachillerato UDL»
+  4. cualidades_aspirante.md      contenido       lista#5  búsq#5    sem#3    tex#None afin 0.15 (#2   ) rrf 0.03151 «Cualidades del aspirante — Bachillerato UDL»
+  5. areas_formacion.md           contenido       lista#7  búsq#7    sem#5    tex#None afin 0.15 (#2   ) rrf 0.03105 «Áreas de formación — Bachillerato UDL»
+  6. bachillerato_hilario_medina. contenido       lista#1  búsq#1    sem#7    tex#1    afin 0.00 (#None) rrf 0.01639 «Área Físico-Matemática y Químico-Biológicas»
+  7. bachillerato_torres_landa.md contenido       lista#2  búsq#2    sem#6    tex#2    afin 0.00 (#None) rrf 0.01613 «Área Físico-Matemática y Químico-Biológicas»
+
+[por_tamanio_todos | base] R3 requisitos con plantel: texto de búsqueda 'Requisitos de ingreso plantel' → correcto en 1
+  1. requisitos_ingreso.md        contenido       lista#1  búsq#1    sem#2    tex#1    afin 0.65 (#1   ) rrf 0.03279 «Requisitos de ingreso — Bachillerato UDL»
+  2. cualidades_aspirante.md      contenido       lista#2  búsq#2    sem#1    tex#4    afin 0.15 (#3   ) rrf 0.03200 «Cualidades del aspirante — Bachillerato UDL»
+  3. bachillerato_torres_landa.md contenido       lista#4  búsq#4    sem#4    tex#3    afin 0.40 (#2   ) rrf 0.03175 «Bachillerato — Plantel Torres Landa»
+  4. areas_formacion.md           contenido       lista#5  búsq#5    sem#3    tex#5    afin 0.15 (#3   ) rrf 0.03126 «Áreas de formación — Bachillerato UDL»
+  5. bachillerato_torres_landa.md contenido       lista#3  búsq#3    sem#5    tex#2    afin 0.00 (#None) rrf 0.01587 «Área Físico-Matemática y Químico-Biológicas»
+por_tamanio_todos+subpalabras|base R@1 0.64 MRR 0.792  R1=2 R2=3 R3=1 S1=1 S2=1 G1=1 G2=1 P1=1 P2=1 P3=1 P4=2 P5=2 P6=1 O1=4
+
+[por_tamanio_todos | M] R1 UDL-BACH-003 / requisitos: texto de búsqueda '¿Cuáles son los requisitos para ingresar Universidad de León?' → correcto en 1
+  1. requisitos_ingreso.md        contenido       lista#2  búsq#2    sem#4    tex#1    afin 0.50 (#1   ) rrf 0.03252 «Requisitos de ingreso — Bachillerato UDL»
+  2. cualidades_aspirante.md      contenido       lista#1  búsq#1    sem#1    tex#4    afin 0.00 (#None) rrf 0.01639 «Cualidades del aspirante — Bachillerato UDL»
+  3. bachillerato_hilario_medina. contenido       lista#3  búsq#3    sem#2    tex#6    afin 0.00 (#None) rrf 0.01587 «Bachillerato — Plantel Hilario Medina»
+  4. bachillerato_hilario_medina. contenido       lista#4  búsq#4    sem#7    tex#2    afin 0.00 (#None) rrf 0.01562 «Área Físico-Matemática y Químico-Biológicas»
+  5. bachillerato_torres_landa.md contenido       lista#5  búsq#5    sem#6    tex#3    afin 0.00 (#None) rrf 0.01538 «Área Físico-Matemática y Químico-Biológicas»
+  6. bachillerato_torres_landa.md contenido       lista#6  búsq#6    sem#3    tex#7    afin 0.00 (#None) rrf 0.01515 «Bachillerato — Plantel Torres Landa»
+  7. areas_formacion.md           contenido       lista#7  búsq#7    sem#5    tex#5    afin 0.00 (#None) rrf 0.01493 «Áreas de formación — Bachillerato UDL»
+
+[por_tamanio_todos | M] R2 incidente 493c8033 / documentos: texto de búsqueda '¿Qué documentos necesito para entrar ?' → correcto en 1
+  1. requisitos_ingreso.md        contenido       lista#6  búsq#6    sem#4    tex#None afin 0.25 (#1   ) rrf 0.03154 «Requisitos de ingreso — Bachillerato UDL»
+  2. bachillerato_hilario_medina. contenido       lista#1  búsq#1    sem#7    tex#1    afin 0.00 (#None) rrf 0.01639 «Área Físico-Matemática y Químico-Biológicas»
+  3. bachillerato_torres_landa.md contenido       lista#2  búsq#2    sem#6    tex#2    afin 0.00 (#None) rrf 0.01613 «Área Físico-Matemática y Químico-Biológicas»
+  4. bachillerato_torres_landa.md contenido       lista#3  búsq#3    sem#1    tex#None afin 0.00 (#None) rrf 0.01587 «Bachillerato — Plantel Torres Landa»
+  5. bachillerato_hilario_medina. contenido       lista#4  búsq#4    sem#2    tex#None afin 0.00 (#None) rrf 0.01562 «Bachillerato — Plantel Hilario Medina»
+  6. cualidades_aspirante.md      contenido       lista#5  búsq#5    sem#3    tex#None afin 0.00 (#None) rrf 0.01538 «Cualidades del aspirante — Bachillerato UDL»
+  7. areas_formacion.md           contenido       lista#7  búsq#7    sem#5    tex#None afin 0.00 (#None) rrf 0.01493 «Áreas de formación — Bachillerato UDL»
+
+[por_tamanio_todos | M] R3 requisitos con plantel: texto de búsqueda 'Requisitos de ingreso plantel' → correcto en 1
+  1. requisitos_ingreso.md        contenido       lista#1  búsq#1    sem#2    tex#1    afin 0.50 (#1   ) rrf 0.03279 «Requisitos de ingreso — Bachillerato UDL»
+  2. bachillerato_torres_landa.md contenido       lista#4  búsq#4    sem#4    tex#3    afin 0.25 (#2   ) rrf 0.03175 «Bachillerato — Plantel Torres Landa»
+  3. cualidades_aspirante.md      contenido       lista#2  búsq#2    sem#1    tex#4    afin 0.00 (#None) rrf 0.01613 «Cualidades del aspirante — Bachillerato UDL»
+  4. bachillerato_torres_landa.md contenido       lista#3  búsq#3    sem#5    tex#2    afin 0.00 (#None) rrf 0.01587 «Área Físico-Matemática y Químico-Biológicas»
+  5. areas_formacion.md           contenido       lista#5  búsq#5    sem#3    tex#5    afin 0.00 (#None) rrf 0.01538 «Áreas de formación — Bachillerato UDL»
+por_tamanio_todos+subpalabras|M  R@1 0.79 MRR 0.875  R1=1 R2=1 R3=1 S1=1 S2=1 G1=1 G2=1 P1=1 P2=1 P3=1 P4=2 P5=2 P6=1 O1=4
+fragmentos indexados: 12 (tipos: ['texto'])
+   areas_formacion.md           #0  texto  tokens  477 título=None         «---»
+   bachillerato_hilario_medina. #0  texto  tokens  498 título=None         «---»
+   bachillerato_hilario_medina. #1  texto  tokens  498 título=None         «I»
+   bachillerato_hilario_medina. #2  texto  tokens  498 título=None         «I»
+   bachillerato_hilario_medina. #3  texto  tokens  225 título=None         «conocimiento:»
+   bachillerato_torres_landa.md #0  texto  tokens  498 título=None         «---»
+   bachillerato_torres_landa.md #1  texto  tokens  498 título=None         «I»
+   bachillerato_torres_landa.md #2  texto  tokens  498 título=None         «I»
+   bachillerato_torres_landa.md #3  texto  tokens  237 título=None         «consultar las unidades de conocimiento:»
+   cualidades_aspirante.md      #0  texto  tokens  420 título=None         «---»
+   requisitos_ingreso.md        #0  texto  tokens  498 título=None         «---»
+   requisitos_ingreso.md        #1  texto  tokens  159 título=None         «blanco y negro, en papel mate y fondo blanco.»
+
+[por_tamanio_todos | base] R1 UDL-BACH-003 / requisitos: texto de búsqueda '¿Cuáles son los requisitos para ingresar Universidad de León?' → correcto en 2
+  1. cualidades_aspirante.md      contenido       lista#1  búsq#1    sem#1    tex#4    afin 0.15 (#2   ) rrf 0.03252 «Cualidades del aspirante — Bachillerato UDL»
+  2. requisitos_ingreso.md        contenido       lista#3  búsq#3    sem#5    tex#2    afin 0.65 (#1   ) rrf 0.03227 «Requisitos de ingreso — Bachillerato UDL»
+  3. bachillerato_hilario_medina. contenido       lista#5  búsq#5    sem#2    tex#9    afin 0.15 (#2   ) rrf 0.03151 «Bachillerato — Plantel Hilario Medina»
+  4. bachillerato_torres_landa.md contenido       lista#6  búsq#6    sem#3    tex#10   afin 0.15 (#2   ) rrf 0.03128 «Bachillerato — Plantel Torres Landa»
+  5. areas_formacion.md           contenido       lista#8  búsq#8    sem#6    tex#8    afin 0.15 (#2   ) rrf 0.03083 «Áreas de formación — Bachillerato UDL»
+  6. requisitos_ingreso.md        contenido       lista#2  búsq#2    sem#4    tex#1    afin 0.00 (#None) rrf 0.01613 «Procedencia»
+  7. bachillerato_hilario_medina. puente          lista#4  búsq#4    sem#7    tex#3    afin 0.00 (#None) rrf 0.01562 «Procedencia»
+  8. bachillerato_torres_landa.md puente          lista#7  búsq#7    sem#8    tex#5    afin 0.00 (#None) rrf 0.01493 «Procedencia»
+
+[por_tamanio_todos | base] R2 incidente 493c8033 / documentos: texto de búsqueda '¿Qué documentos necesito para entrar ?' → correcto en 3
+  1. bachillerato_torres_landa.md contenido       lista#6  búsq#6    sem#4    tex#None afin 0.15 (#2   ) rrf 0.03128 «Bachillerato — Plantel Torres Landa»
+  2. bachillerato_hilario_medina. contenido       lista#7  búsq#7    sem#5    tex#None afin 0.15 (#2   ) rrf 0.03105 «Bachillerato — Plantel Hilario Medina»
+  3. requisitos_ingreso.md        contenido       lista#9  búsq#9    sem#7    tex#None afin 0.40 (#1   ) rrf 0.03089 «Requisitos de ingreso — Bachillerato UDL»
+  4. cualidades_aspirante.md      contenido       lista#8  búsq#8    sem#6    tex#None afin 0.15 (#2   ) rrf 0.03083 «Cualidades del aspirante — Bachillerato UDL»
+  5. areas_formacion.md           contenido       lista#10 búsq#10   sem#8    tex#None afin 0.15 (#2   ) rrf 0.03041 «Áreas de formación — Bachillerato UDL»
+  6. bachillerato_hilario_medina. puente          lista#1  búsq#1    sem#1    tex#1    afin 0.00 (#None) rrf 0.01639 «Procedencia»
+  7. bachillerato_torres_landa.md puente          lista#2  búsq#2    sem#2    tex#2    afin 0.00 (#None) rrf 0.01613 «Procedencia»
+  8. bachillerato_hilario_medina. contenido       lista#3  búsq#3    sem#11   tex#3    afin 0.00 (#None) rrf 0.01587 «6.º semestre»
+
+[por_tamanio_todos | base] R3 requisitos con plantel: texto de búsqueda 'Requisitos de ingreso plantel' → correcto en 1
+  1. requisitos_ingreso.md        contenido       lista#1  búsq#1    sem#2    tex#2    afin 0.65 (#1   ) rrf 0.03279 «Requisitos de ingreso — Bachillerato UDL»
+  2. cualidades_aspirante.md      contenido       lista#4  búsq#4    sem#1    tex#7    afin 0.15 (#3   ) rrf 0.03150 «Cualidades del aspirante — Bachillerato UDL»
+  3. bachillerato_torres_landa.md contenido       lista#6  búsq#6    sem#5    tex#4    afin 0.40 (#2   ) rrf 0.03128 «Bachillerato — Plantel Torres Landa»
+  4. areas_formacion.md           contenido       lista#5  búsq#5    sem#3    tex#6    afin 0.15 (#3   ) rrf 0.03126 «Áreas de formación — Bachillerato UDL»
+  5. bachillerato_torres_landa.md contenido       lista#2  búsq#2    sem#6    tex#1    afin 0.00 (#None) rrf 0.01613 «6.º semestre»
+  6. bachillerato_torres_landa.md puente          lista#3  búsq#3    sem#4    tex#3    afin 0.00 (#None) rrf 0.01587 «Procedencia»
+  7. requisitos_ingreso.md        contenido       lista#7  búsq#7    sem#7    tex#5    afin 0.00 (#None) rrf 0.01493 «Procedencia»
+  8. bachillerato_torres_landa.md contenido       lista#8  búsq#8    sem#8    tex#8    afin 0.00 (#None) rrf 0.01471 «4.º semestre»
+por_tamanio_todos+x3|base        R@1 0.71 MRR 0.833  R1=2 R2=3 R3=1 S1=1 S2=1 G1=1 G2=1 P1=1 P2=1 P3=1 P4=3 P5=1 P6=1 O1=2
+
+[por_tamanio_todos | M] R1 UDL-BACH-003 / requisitos: texto de búsqueda '¿Cuáles son los requisitos para ingresar Universidad de León?' → correcto en 1
+  1. requisitos_ingreso.md        contenido       lista#3  búsq#3    sem#5    tex#2    afin 0.50 (#1   ) rrf 0.03227 «Requisitos de ingreso — Bachillerato UDL»
+  2. cualidades_aspirante.md      contenido       lista#1  búsq#1    sem#1    tex#4    afin 0.00 (#None) rrf 0.01639 «Cualidades del aspirante — Bachillerato UDL»
+  3. requisitos_ingreso.md        contenido       lista#2  búsq#2    sem#4    tex#1    afin 0.00 (#None) rrf 0.01613 «Procedencia»
+  4. bachillerato_hilario_medina. puente          lista#4  búsq#4    sem#7    tex#3    afin 0.00 (#None) rrf 0.01562 «Procedencia»
+  5. bachillerato_hilario_medina. contenido       lista#5  búsq#5    sem#2    tex#9    afin 0.00 (#None) rrf 0.01538 «Bachillerato — Plantel Hilario Medina»
+  6. bachillerato_torres_landa.md contenido       lista#6  búsq#6    sem#3    tex#10   afin 0.00 (#None) rrf 0.01515 «Bachillerato — Plantel Torres Landa»
+  7. bachillerato_torres_landa.md puente          lista#7  búsq#7    sem#8    tex#5    afin 0.00 (#None) rrf 0.01493 «Procedencia»
+  8. areas_formacion.md           contenido       lista#8  búsq#8    sem#6    tex#8    afin 0.00 (#None) rrf 0.01471 «Áreas de formación — Bachillerato UDL»
+
+[por_tamanio_todos | M] R2 incidente 493c8033 / documentos: texto de búsqueda '¿Qué documentos necesito para entrar ?' → correcto en 1
+  1. requisitos_ingreso.md        contenido       lista#9  búsq#9    sem#7    tex#None afin 0.25 (#1   ) rrf 0.03089 «Requisitos de ingreso — Bachillerato UDL»
+  2. bachillerato_hilario_medina. puente          lista#1  búsq#1    sem#1    tex#1    afin 0.00 (#None) rrf 0.01639 «Procedencia»
+  3. bachillerato_torres_landa.md puente          lista#2  búsq#2    sem#2    tex#2    afin 0.00 (#None) rrf 0.01613 «Procedencia»
+  4. bachillerato_hilario_medina. contenido       lista#3  búsq#3    sem#11   tex#3    afin 0.00 (#None) rrf 0.01587 «6.º semestre»
+  5. bachillerato_torres_landa.md contenido       lista#4  búsq#4    sem#12   tex#4    afin 0.00 (#None) rrf 0.01562 «6.º semestre»
+  6. requisitos_ingreso.md        contenido       lista#5  búsq#5    sem#3    tex#None afin 0.00 (#None) rrf 0.01538 «Procedencia»
+  7. bachillerato_torres_landa.md contenido       lista#6  búsq#6    sem#4    tex#None afin 0.00 (#None) rrf 0.01515 «Bachillerato — Plantel Torres Landa»
+  8. bachillerato_hilario_medina. contenido       lista#7  búsq#7    sem#5    tex#None afin 0.00 (#None) rrf 0.01493 «Bachillerato — Plantel Hilario Medina»
+
+[por_tamanio_todos | M] R3 requisitos con plantel: texto de búsqueda 'Requisitos de ingreso plantel' → correcto en 1
+  1. requisitos_ingreso.md        contenido       lista#1  búsq#1    sem#2    tex#2    afin 0.50 (#1   ) rrf 0.03279 «Requisitos de ingreso — Bachillerato UDL»
+  2. bachillerato_torres_landa.md contenido       lista#6  búsq#6    sem#5    tex#4    afin 0.25 (#2   ) rrf 0.03128 «Bachillerato — Plantel Torres Landa»
+  3. bachillerato_torres_landa.md contenido       lista#2  búsq#2    sem#6    tex#1    afin 0.00 (#None) rrf 0.01613 «6.º semestre»
+  4. bachillerato_torres_landa.md puente          lista#3  búsq#3    sem#4    tex#3    afin 0.00 (#None) rrf 0.01587 «Procedencia»
+  5. cualidades_aspirante.md      contenido       lista#4  búsq#4    sem#1    tex#7    afin 0.00 (#None) rrf 0.01562 «Cualidades del aspirante — Bachillerato UDL»
+  6. areas_formacion.md           contenido       lista#5  búsq#5    sem#3    tex#6    afin 0.00 (#None) rrf 0.01538 «Áreas de formación — Bachillerato UDL»
+  7. requisitos_ingreso.md        contenido       lista#7  búsq#7    sem#7    tex#5    afin 0.00 (#None) rrf 0.01493 «Procedencia»
+  8. bachillerato_torres_landa.md contenido       lista#8  búsq#8    sem#8    tex#8    afin 0.00 (#None) rrf 0.01471 «4.º semestre»
+por_tamanio_todos+x3|M           R@1 0.86 MRR 0.917  R1=1 R2=1 R3=1 S1=1 S2=1 G1=1 G2=1 P1=1 P2=1 P3=1 P4=3 P5=1 P6=1 O1=2

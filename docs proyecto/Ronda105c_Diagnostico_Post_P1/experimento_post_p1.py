@@ -10,6 +10,8 @@ pendientes, simuladas FUERA del motor:
   R     P2b: resolución de referencias (puente detrás de su destino; 2 por fuente)
   T     P3:  buscar con la consulta original (sin quitar los valores filtrados;
              el filtro de metadatos se sigue aplicando a las fuentes)
+  M     (Ronda 105d) enmascarar el valor de catálogo también dentro del nombre
+        de la intención en snake_case
   P4    corpus indexado SIN el encabezado YAML (copias temporales de los
         archivos; los originales no se tocan)
 
@@ -41,7 +43,8 @@ for p in (RAIZ, RAIZ / "tests" / "integration", RAIZ / "tests" / "unit" / "appli
           RAIZ / "docs proyecto" / "Ronda102_Diagnostico_Simulador", RAIZ / "docs proyecto" / "Ronda104_Fragmentos_Puente"):
     sys.path.insert(0, str(p))
 
-FOCO = {"R1": "UDL-BACH-003 / requisitos", "R2": "incidente 493c8033 / documentos"}
+FOCO = {"R1": "UDL-BACH-003 / requisitos", "R2": "incidente 493c8033 / documentos",
+        "R3": "requisitos con plantel"}
 
 
 def _sin_yaml(texto: str) -> str:
@@ -54,10 +57,18 @@ def _sin_yaml(texto: str) -> str:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--compartidos", choices=["documento_completo", "por_encabezado"], default="documento_completo")
+    ap.add_argument("--compartidos", choices=["documento_completo", "por_encabezado", "por_tamanio_todos"],
+                    default="documento_completo",
+                    help="por_tamanio_todos (Ronda 105d): TODAS las fuentes con por_tamanio 500/60/80, "
+                         "configuración real de AGENTE UDL informada por NEXOM")
     ap.add_argument("--variantes", default="base,Y,T,YT,YR,YRT")
     ap.add_argument("--p4", action="store_true", help="indexar copias de los archivos sin YAML")
     ap.add_argument("--detalle", action="store_true")
+    ap.add_argument("--listar", action="store_true", help="lista los fragmentos indexados")
+    ap.add_argument("--contador", choices=["palabras", "subpalabras", "x3"], default="palabras",
+                    help="conteo de tokens al fragmentar: palabras (1 por palabra); subpalabras (tokenizador "
+                         "del modelo de embeddings); x3 (3 por palabra, aproxima tiktoken en español). La "
+                         "app real usa tiktoken cl100k_base, no disponible sin red en este entorno")
     ap.add_argument("--salida", type=Path)
     a = ap.parse_args()
 
@@ -85,6 +96,15 @@ def main() -> int:
         for nombre in base.ARCHIVOS:
             (tmp / nombre).write_text(_sin_yaml((base.DOCS / nombre).read_text(encoding="utf-8")), encoding="utf-8")
         base.DOCS = tmp
+    if a.compartidos == "por_tamanio_todos":
+        original_pt = base.IngestionService.set_fragmentation_policy
+
+        def politica_pt(self, project_id, tipo, **kw):
+            kw = dict(strategy=FragmentationStrategy.POR_TAMANIO, target_tokens=500, overlap_tokens=60,
+                      min_tokens=80)
+            return original_pt(self, project_id, tipo, **kw)
+
+        base.IngestionService.set_fragmentation_policy = politica_pt
     if a.compartidos == "por_encabezado":
         original = base.IngestionService.set_fragmentation_policy
 
@@ -96,7 +116,43 @@ def main() -> int:
 
         base.IngestionService.set_fragmentation_policy = politica
 
+    if a.contador != "palabras":
+        from domain.ingestion.ports import TokenCounter
+
+        class Contador(TokenCounter):
+            def __init__(self, modo):
+                self._modo = modo
+                self._tok = None
+                if modo == "subpalabras":
+                    from tokenizers import Tokenizer
+                    ruta = next((RAIZ / "data" / "models").glob(
+                        "models--qdrant--paraphrase-multilingual-MiniLM-L12-v2-onnx-Q/snapshots/*/tokenizer.json"))
+                    self._tok = Tokenizer.from_file(str(ruta))
+                    self._tok.no_truncation()  # el archivo trae truncado a 128 para el modelo
+
+            def count_tokens(self, text: str) -> int:
+                if self._modo == "x3":
+                    return 3 * len(text.split())
+                return len(self._tok.encode(text, add_special_tokens=False).ids)
+
+        contador = Contador(a.contador)
+        init_original = base.IngestionService.__init__
+
+        def init(self, *args, **kw):
+            kw.setdefault("token_counter", contador)
+            init_original(self, *args, **kw)
+
+        base.IngestionService.__init__ = init
     simuladores, titulo_de = getattr(base.corpus, "__wrapped__", base.corpus)()
+    if a.listar:
+        repo = simuladores["sin"]._rag._hybrid_search._text._chunks
+        todos = repo.list_for_project(base.P)
+        print(f"fragmentos indexados: {len(todos)} "
+              f"(tipos: {sorted({c.chunk_type.value for c in todos})})")
+        for c in sorted(todos, key=lambda c: (titulo_de[c.source_id], c.chunk_index)):
+            primera = (c.text or "").strip().split("\n", 1)[0][:50]
+            print(f"   {titulo_de[c.source_id][:28]:28} #{c.chunk_index:<2} {c.chunk_type.value:6} "
+                  f"tokens {c.token_count:4} título={c.section_title!s:12.12} «{primera}»")
     sim = simuladores["sin"]  # r105b con «Automático»: sin reranking, igual en Simulador y Runtime
     rag, P = sim._rag, base.P
     hibrida = rag._hybrid_search
@@ -136,8 +192,14 @@ def main() -> int:
         if "R" in variante:
             res = pr.resolver_referencias(pool, permitidas)
             pool, enlaces = res.candidatos, res.enlaces
-        intent = next(i for i in intents if i.name == trace.matched_intent_name)
-        afinidad = SectionAffinity(intent, intents, consulta, sim._catalog_mention_masker(P))
+        perfiles = intents
+        if "M" in variante:
+            # M (Ronda 105d): el enmascarado de valores de catálogo también
+            # reconoce el valor dentro de nombres de intención en snake_case
+            # ("consultar_requisitos_bachillerato"); hoy no lo hace.
+            perfiles = [i.model_copy(update={"name": i.name.replace("_", " ")}) for i in intents]
+        intent = next(p_ for p_, i in zip(perfiles, intents, strict=True) if i.name == trace.matched_intent_name)
+        afinidad = SectionAffinity(intent, perfiles, consulta, sim._catalog_mention_masker(P))
         titulos = [titulo(r.chunk, "Y" in variante) for r in pool]
         puntajes = [afinidad.score(t) for t in titulos]
         orden_idx = combine_with_retrieval(puntajes)
@@ -180,7 +242,7 @@ def main() -> int:
         n = len(posiciones)
         mrr = sum(1 / p for p in posiciones.values() if p) / n
         r1 = sum(1 for p in posiciones.values() if p == 1) / n
-        clave = f"{a.compartidos}{'+P4' if a.p4 else ''}|{variante}"
+        clave = f"{a.compartidos}{'+P4' if a.p4 else ''}{'' if a.contador == 'palabras' else '+' + a.contador}|{variante}"
         resultados[clave] = {"R@1": round(r1, 3), "MRR": round(mrr, 3), "posiciones": posiciones}
         print(f"{clave:32} R@1 {r1:.2f} MRR {mrr:.3f}  " + " ".join(f"{c}={p}" for c, p in posiciones.items()))
     if a.salida:

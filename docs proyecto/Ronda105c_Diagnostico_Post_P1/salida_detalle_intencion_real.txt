@@ -1,0 +1,93 @@
+
+[documento_completo | base] R1 UDL-BACH-003 / requisitos: texto de búsqueda '¿Cuáles son los requisitos para ingresar Universidad de León?' → correcto en 2
+  1. bachillerato_torres_landa.md contenido       lista#1  búsq#1    sem#1    tex#6    afin 0.19 (#2   ) rrf 0.03252 «Información general»
+  2. requisitos_ingreso.md        contenido       lista#2  búsq#2    sem#6    tex#1    afin 0.64 (#1   ) rrf 0.03252 «Requisitos de ingreso — Bachillerato UDL»
+  3. bachillerato_hilario_medina. contenido       lista#3  búsq#3    sem#2    tex#5    afin 0.19 (#2   ) rrf 0.03200 «Información general»
+  4. bachillerato_hilario_medina. solo-YAML       lista#5  búsq#5    sem#4    tex#8    afin 0.19 (#2   ) rrf 0.03151 «bachillerato_hilario_medina»
+  5. cualidades_aspirante.md      contenido       lista#4  búsq#4    sem#3    tex#4    afin 0.14 (#3   ) rrf 0.03150 «Cualidades del aspirante — Bachillerato UDL»
+  6. bachillerato_torres_landa.md solo-YAML       lista#6  búsq#6    sem#5    tex#9    afin 0.19 (#2   ) rrf 0.03128 «bachillerato_torres_landa»
+  7. areas_formacion.md           contenido       lista#7  búsq#7    sem#7    tex#7    afin 0.14 (#3   ) rrf 0.03080 «Áreas de formación — Bachillerato UDL»
+  8. bachillerato_hilario_medina. puente          lista#8  búsq#8    sem#18   tex#2    afin 0.11 (#4   ) rrf 0.03033 «Información compartida aplicable a este plantel»
+
+[documento_completo | base] R2 incidente 493c8033 / documentos: texto de búsqueda '¿Qué documentos necesito para entrar ?' → correcto en None
+  1. bachillerato_torres_landa.md puente          lista#1  búsq#1    sem#1    tex#2    afin 0.11 (#4   ) rrf 0.03202 «Información compartida aplicable a este plantel»
+  2. bachillerato_hilario_medina. puente          lista#2  búsq#2    sem#2    tex#1    afin 0.11 (#4   ) rrf 0.03175 «Información compartida aplicable a este plantel»
+  3. bachillerato_hilario_medina. contenido       lista#5  búsq#5    sem#3    tex#None afin 0.19 (#2   ) rrf 0.03151 «Información general»
+  4. bachillerato_torres_landa.md contenido       lista#6  búsq#6    sem#4    tex#None afin 0.19 (#2   ) rrf 0.03128 «Información general»
+  5. bachillerato_torres_landa.md solo-YAML       lista#7  búsq#7    sem#5    tex#None afin 0.19 (#2   ) rrf 0.03105 «bachillerato_torres_landa»
+  6. bachillerato_hilario_medina. solo-YAML       lista#9  búsq#9    sem#7    tex#None afin 0.19 (#2   ) rrf 0.03062 «bachillerato_hilario_medina»
+  7. requisitos_ingreso.md        contenido       lista#13 búsq#13   sem#11   tex#None afin 0.37 (#1   ) rrf 0.03009 «Requisitos de ingreso — Bachillerato UDL»
+  8. bachillerato_hilario_medina. contenido       lista#8  búsq#8    sem#6    tex#None afin 0.09 (#5   ) rrf 0.03009 «Reconocimiento oficial y ubicación del plantel»
+
+[documento_completo | base] R3 requisitos con plantel: texto de búsqueda 'Requisitos de ingreso plantel' → correcto en 2
+  1. bachillerato_torres_landa.md puente          lista#1  búsq#1    sem#1    tex#1    afin 0.24 (#3   ) rrf 0.03227 «Información compartida aplicable a este plantel»
+  2. requisitos_ingreso.md        contenido       lista#3  búsq#3    sem#4    tex#2    afin 0.64 (#1   ) rrf 0.03227 «Requisitos de ingreso — Bachillerato UDL»
+  3. cualidades_aspirante.md      contenido       lista#2  búsq#2    sem#2    tex#3    afin 0.14 (#5   ) rrf 0.03151 «Cualidades del aspirante — Bachillerato UDL»
+  4. bachillerato_torres_landa.md contenido       lista#6  búsq#6    sem#7    tex#9    afin 0.25 (#2   ) rrf 0.03128 «Reconocimiento oficial y ubicación del plantel»
+  5. bachillerato_torres_landa.md contenido       lista#4  búsq#4    sem#3    tex#4    afin 0.19 (#4   ) rrf 0.03125 «Información general»
+  6. bachillerato_torres_landa.md solo-YAML       lista#5  búsq#5    sem#6    tex#5    afin 0.19 (#4   ) rrf 0.03101 «bachillerato_torres_landa»
+  7. areas_formacion.md           contenido       lista#9  búsq#9    sem#5    tex#16   afin 0.14 (#5   ) rrf 0.02988 «Áreas de formación — Bachillerato UDL»
+  8. bachillerato_torres_landa.md contenido       lista#7  búsq#7    sem#13   tex#6    afin 0.00 (#None) rrf 0.01493 «4.º semestre»
+documento_completo+subpalabras+real|base R@1 0.79 MRR 0.857  R1=2 R2=None R3=2 S1=1 S2=1 G1=1 G2=1 P1=1 P2=1 P3=1 P4=1 P5=1 P6=1 O1=1
+
+[documento_completo | V] R1 UDL-BACH-003 / requisitos: texto de búsqueda '¿Cuáles son los requisitos para ingresar Universidad de León?' → correcto en 1
+  1. requisitos_ingreso.md        contenido       lista#2  búsq#2    sem#6    tex#1    afin 0.64 (#1   ) rrf 0.03252 «Requisitos de ingreso — Bachillerato UDL»
+  2. bachillerato_torres_landa.md contenido       lista#1  búsq#1    sem#1    tex#6    afin 0.19 (#2   ) rrf 0.03252 «Información general»
+  3. bachillerato_hilario_medina. contenido       lista#3  búsq#3    sem#2    tex#5    afin 0.19 (#2   ) rrf 0.03200 «Información general»
+  4. bachillerato_hilario_medina. solo-YAML       lista#5  búsq#5    sem#4    tex#8    afin 0.19 (#2   ) rrf 0.03151 «bachillerato_hilario_medina»
+  5. bachillerato_torres_landa.md solo-YAML       lista#6  búsq#6    sem#5    tex#9    afin 0.19 (#2   ) rrf 0.03128 «bachillerato_torres_landa»
+  6. cualidades_aspirante.md      contenido       lista#4  búsq#4    sem#3    tex#4    afin 0.14 (#3   ) rrf 0.03150 «Cualidades del aspirante — Bachillerato UDL»
+  7. areas_formacion.md           contenido       lista#7  búsq#7    sem#7    tex#7    afin 0.14 (#3   ) rrf 0.03080 «Áreas de formación — Bachillerato UDL»
+  8. bachillerato_hilario_medina. puente          lista#8  búsq#8    sem#18   tex#2    afin 0.11 (#4   ) rrf 0.03033 «Información compartida aplicable a este plantel»
+
+[documento_completo | V] R2 incidente 493c8033 / documentos: texto de búsqueda '¿Qué documentos necesito para entrar ?' → correcto en 1
+  1. requisitos_ingreso.md        contenido       lista#13 búsq#13   sem#11   tex#None afin 0.37 (#1   ) rrf 0.03009 «Requisitos de ingreso — Bachillerato UDL»
+  2. bachillerato_hilario_medina. contenido       lista#5  búsq#5    sem#3    tex#None afin 0.19 (#2   ) rrf 0.03151 «Información general»
+  3. bachillerato_torres_landa.md contenido       lista#6  búsq#6    sem#4    tex#None afin 0.19 (#2   ) rrf 0.03128 «Información general»
+  4. bachillerato_torres_landa.md puente          lista#1  búsq#1    sem#1    tex#2    afin 0.11 (#4   ) rrf 0.03202 «Información compartida aplicable a este plantel»
+  5. bachillerato_torres_landa.md solo-YAML       lista#7  búsq#7    sem#5    tex#None afin 0.19 (#2   ) rrf 0.03105 «bachillerato_torres_landa»
+  6. bachillerato_hilario_medina. puente          lista#2  búsq#2    sem#2    tex#1    afin 0.11 (#4   ) rrf 0.03175 «Información compartida aplicable a este plantel»
+  7. bachillerato_hilario_medina. solo-YAML       lista#9  búsq#9    sem#7    tex#None afin 0.19 (#2   ) rrf 0.03062 «bachillerato_hilario_medina»
+  8. cualidades_aspirante.md      contenido       lista#12 búsq#12   sem#10   tex#None afin 0.14 (#3   ) rrf 0.02976 «Cualidades del aspirante — Bachillerato UDL»
+
+[documento_completo | V] R3 requisitos con plantel: texto de búsqueda 'Requisitos de ingreso plantel' → correcto en 1
+  1. requisitos_ingreso.md        contenido       lista#3  búsq#3    sem#4    tex#2    afin 0.64 (#1   ) rrf 0.03227 «Requisitos de ingreso — Bachillerato UDL»
+  2. bachillerato_torres_landa.md puente          lista#1  búsq#1    sem#1    tex#1    afin 0.24 (#3   ) rrf 0.03227 «Información compartida aplicable a este plantel»
+  3. bachillerato_torres_landa.md contenido       lista#6  búsq#6    sem#7    tex#9    afin 0.25 (#2   ) rrf 0.03128 «Reconocimiento oficial y ubicación del plantel»
+  4. bachillerato_torres_landa.md contenido       lista#4  búsq#4    sem#3    tex#4    afin 0.19 (#4   ) rrf 0.03125 «Información general»
+  5. bachillerato_torres_landa.md solo-YAML       lista#5  búsq#5    sem#6    tex#5    afin 0.19 (#4   ) rrf 0.03101 «bachillerato_torres_landa»
+  6. cualidades_aspirante.md      contenido       lista#2  búsq#2    sem#2    tex#3    afin 0.14 (#5   ) rrf 0.03151 «Cualidades del aspirante — Bachillerato UDL»
+  7. areas_formacion.md           contenido       lista#9  búsq#9    sem#5    tex#16   afin 0.14 (#5   ) rrf 0.02988 «Áreas de formación — Bachillerato UDL»
+  8. bachillerato_torres_landa.md contenido       lista#7  búsq#7    sem#13   tex#6    afin 0.00 (#None) rrf 0.01493 «4.º semestre»
+documento_completo+subpalabras+real|V R@1 1.00 MRR 1.000  R1=1 R2=1 R3=1 S1=1 S2=1 G1=1 G2=1 P1=1 P2=1 P3=1 P4=1 P5=1 P6=1 O1=1
+
+[documento_completo | VYR] R1 UDL-BACH-003 / requisitos: texto de búsqueda '¿Cuáles son los requisitos para ingresar Universidad de León?' → correcto en 1
+  1. requisitos_ingreso.md        contenido       lista#2  búsq#2    sem#6    tex#1    afin 0.64 (#1   ) rrf 0.03252 «Requisitos de ingreso — Bachillerato UDL»
+  2. bachillerato_torres_landa.md contenido       lista#1  búsq#1    sem#1    tex#6    afin 0.19 (#2   ) rrf 0.03252 «Información general»
+  3. bachillerato_hilario_medina. contenido       lista#3  búsq#3    sem#2    tex#5    afin 0.19 (#2   ) rrf 0.03200 «Información general»
+  4. cualidades_aspirante.md      contenido       lista#4  búsq#4    sem#3    tex#4    afin 0.14 (#3   ) rrf 0.03150 «Cualidades del aspirante — Bachillerato UDL»
+  5. areas_formacion.md           contenido       lista#7  búsq#7    sem#7    tex#7    afin 0.14 (#3   ) rrf 0.03080 «Áreas de formación — Bachillerato UDL»
+  6. bachillerato_hilario_medina. puente          lista#8  búsq#8    sem#18   tex#2    afin 0.11 (#4   ) rrf 0.03033 «Información compartida aplicable a este plantel»
+  7. bachillerato_torres_landa.md puente          lista#9  búsq#9    sem#17   tex#3    afin 0.11 (#4   ) rrf 0.03012 «Información compartida aplicable a este plantel»
+  8. bachillerato_hilario_medina. solo-YAML       lista#5  búsq#5    sem#4    tex#8    afin 0.00 (#None) rrf 0.01538 «»
+
+[documento_completo | VYR] R2 incidente 493c8033 / documentos: texto de búsqueda '¿Qué documentos necesito para entrar ?' → correcto en 1
+  1. requisitos_ingreso.md        contenido       lista#1  búsq#13   sem#11   tex#None afin 0.37 (#1   ) rrf 0.03279 «Requisitos de ingreso — Bachillerato UDL»
+  2. areas_formacion.md           contenido       lista#2  búsq#14   sem#12   tex#None afin 0.14 (#3   ) rrf 0.03200 «Áreas de formación — Bachillerato UDL»
+  3. cualidades_aspirante.md      contenido       lista#3  búsq#12   sem#10   tex#None afin 0.14 (#3   ) rrf 0.03175 «Cualidades del aspirante — Bachillerato UDL»
+  4. bachillerato_hilario_medina. contenido       lista#8  búsq#5    sem#3    tex#None afin 0.19 (#2   ) rrf 0.03083 «Información general»
+  5. bachillerato_torres_landa.md contenido       lista#9  búsq#6    sem#4    tex#None afin 0.19 (#2   ) rrf 0.03062 «Información general»
+  6. bachillerato_torres_landa.md puente          lista#4  búsq#1    sem#1    tex#2    afin 0.11 (#4   ) rrf 0.03125 «Información compartida aplicable a este plantel»
+  7. bachillerato_hilario_medina. puente          lista#5  búsq#2    sem#2    tex#1    afin 0.11 (#4   ) rrf 0.03101 «Información compartida aplicable a este plantel»
+  8. bachillerato_hilario_medina. contenido       lista#11 búsq#8    sem#6    tex#None afin 0.09 (#5   ) rrf 0.02947 «Reconocimiento oficial y ubicación del plantel»
+
+[documento_completo | VYR] R3 requisitos con plantel: texto de búsqueda 'Requisitos de ingreso plantel' → correcto en 1
+  1. requisitos_ingreso.md        contenido       lista#1  búsq#3    sem#4    tex#2    afin 0.64 (#1   ) rrf 0.03279 «Requisitos de ingreso — Bachillerato UDL»
+  2. areas_formacion.md           contenido       lista#2  búsq#9    sem#5    tex#16   afin 0.14 (#5   ) rrf 0.03151 «Áreas de formación — Bachillerato UDL»
+  3. cualidades_aspirante.md      contenido       lista#3  búsq#2    sem#2    tex#3    afin 0.14 (#5   ) rrf 0.03126 «Cualidades del aspirante — Bachillerato UDL»
+  4. bachillerato_torres_landa.md puente          lista#4  búsq#1    sem#1    tex#1    afin 0.24 (#3   ) rrf 0.03150 «Información compartida aplicable a este plantel»
+  5. bachillerato_torres_landa.md contenido       lista#7  búsq#6    sem#7    tex#9    afin 0.25 (#2   ) rrf 0.03105 «Reconocimiento oficial y ubicación del plantel»
+  6. bachillerato_torres_landa.md contenido       lista#5  búsq#4    sem#3    tex#4    afin 0.19 (#4   ) rrf 0.03101 «Información general»
+  7. bachillerato_torres_landa.md solo-YAML       lista#6  búsq#5    sem#6    tex#5    afin 0.00 (#None) rrf 0.01515 «»
+  8. bachillerato_torres_landa.md contenido       lista#8  búsq#7    sem#13   tex#6    afin 0.00 (#None) rrf 0.01471 «4.º semestre»
+documento_completo+subpalabras+real|VYR R@1 1.00 MRR 1.000  R1=1 R2=1 R3=1 S1=1 S2=1 G1=1 G2=1 P1=1 P2=1 P3=1 P4=1 P5=1 P6=1 O1=1

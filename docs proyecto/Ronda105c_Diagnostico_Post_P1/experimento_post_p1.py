@@ -65,7 +65,9 @@ def main() -> int:
     ap.add_argument("--variantes", default="base,Y,T,YT,YR,YRT")
     ap.add_argument("--p4", action="store_true", help="indexar copias de los archivos sin YAML")
     ap.add_argument("--detalle", action="store_true")
-    ap.add_argument("--intenciones", choices=["r102", "historico", "historico+asesor", "hipotesis_info"],
+    ap.add_argument("--documentos", type=Path, help="carpeta alternativa con los cinco archivos (p. ej. corpus "
+                    "sintético de la Ronda 102); por defecto, los reales de LOTE01")
+    ap.add_argument("--intenciones", choices=["r102", "historico", "historico+asesor", "hipotesis_info", "real"],
                     default="r102",
                     help="r102: 4 históricas + consultar_plan_estudios (supuesta); historico: solo las 4 activas "
                          "del proyecto histórico de Bachillerato; historico+asesor: + solicitar_asesor_admisiones "
@@ -149,6 +151,27 @@ def main() -> int:
             init_original(self, *args, **kw)
 
         base.IngestionService.__init__ = init
+    if a.documentos:
+        base.DOCS = a.documentos.resolve()
+    real_requisitos = None
+    if a.intenciones == "real":
+        # Ronda 105f: intención REAL de AGENTE UDL informada por NEXOM (texto
+        # exacto); las demás intenciones siguen siendo las supuestas.
+        real_requisitos = (
+            "consultar_requisitos_bachillerato",
+            "Informar sobre los requisitos generales y documentos necesarios para ingresar al Bachillerato de la "
+            "Universidad de León, utilizando exclusivamente información institucional autorizada.",
+            ["¿Cuáles son los requisitos para ingresar al bachillerato?", "¿Qué documentos necesito para inscribirme?",
+             "¿Qué necesito para entrar a la preparatoria?", "¿Piden certificado de secundaria?",
+             "¿Qué papeles debo entregar para ingresar?", "¿Cuáles son los requisitos de admisión?",
+             "¿Qué documentos solicitan para nuevo ingreso?", "¿Los requisitos son iguales en ambos planteles?"],
+            ["¿Qué materias llevan en quinto semestre?", "¿Cuál es el plan de estudios?",
+             "¿Cuánto cuesta la inscripción?", "¿Dónde se encuentra el plantel Hilario Medina?",
+             "¿Qué áreas de formación ofrece el bachillerato?", "¿Cuáles son las cualidades de un aspirante?",
+             "¿Cuándo comienzan las clases?", "Quiero hablar con un asesor."],
+        )
+        base.INTENCIONES[:] = [real_requisitos if n == real_requisitos[0] else (n, d, pos, neg)
+                               for n, d, pos, neg in base.INTENCIONES]
     if a.intenciones == "hipotesis_info":
         # HIPÓTESIS (Ronda 105e) para reproducir la observación real: la
         # intención de requisitos incluye la palabra «información».
@@ -165,6 +188,15 @@ def main() -> int:
                  "Necesito que me atienda una persona de admisiones"],
                 ["¿Cuáles son los requisitos de ingreso?"]))
     simuladores, titulo_de = getattr(base.corpus, "__wrapped__", base.corpus)()
+    if real_requisitos is not None:
+        # Datos opcionales reales (campus, nivel_academico), sin obligatorios. En esta
+        # reproducción la variable de plantel se llama "plantel".
+        repo_int = simuladores["sin"]._intents
+        for it in repo_int.list_for_project(base.P):
+            if it.name == real_requisitos[0]:
+                repo_int.save(it.model_copy(update={"required_variables": [],
+                                                    "optional_variables": ["plantel", "nivel_academico"],
+                                                    "priority": 50}))
     if a.listar:
         repo = simuladores["sin"]._rag._hybrid_search._text._chunks
         todos = repo.list_for_project(base.P)
@@ -200,6 +232,10 @@ def main() -> int:
         trace = sim.execute(P, consulta, {}, limit=5)
         if trace.action.value != "responder":
             return [], {}, trace, {}
+        if not trace.applied_metadata_filters:
+            # Sin filtros, r105b no reordena por afinidad: se entrega la búsqueda tal cual
+            # (y las variantes, que actúan en ese reordenamiento, tampoco cambian nada).
+            return list(trace.search_results), {}, trace, {"texto": trace.search_text}
         permitidas = {s.id: s.title for s in fuentes if sim._source_matches_filters(
             P, s.id, variables, trace.applied_metadata_filters)}
         texto = consulta if "T" in variante else (trace.retrieval_query or consulta)
@@ -252,11 +288,14 @@ def main() -> int:
     resultados: dict = {}
     for variante in a.variantes.split(","):
         posiciones = {}
+        decisiones = {}
         for cid, _g, consulta, fuente, verif in ev.CASOS:
             final, detalle, trace, info = ejecutar(consulta, variante)
             pos = next((i for i, r in enumerate(final, 1)
                         if titulo_de[r.chunk.source_id] == fuente and verif in r.chunk.text), None)
             posiciones[cid] = pos
+            decisiones[cid] = (trace.matched_intent_name, trace.action.value, round(trace.confidence, 4),
+                               dict(trace.applied_metadata_filters))
             if a.detalle and cid in FOCO:
                 print(f"\n[{a.compartidos}{' P4' if a.p4 else ''} | {variante}] {cid} {FOCO[cid]}: "
                       f"texto de búsqueda {info.get('texto')!r} → correcto en {pos}")
@@ -270,7 +309,8 @@ def main() -> int:
         r1 = sum(1 for p in posiciones.values() if p == 1) / n
         clave = (f"{a.compartidos}{'+P4' if a.p4 else ''}{'' if a.contador == 'palabras' else '+' + a.contador}"
                  f"{'' if a.intenciones == 'r102' else '+' + a.intenciones}|{variante}")
-        resultados[clave] = {"R@1": round(r1, 3), "MRR": round(mrr, 3), "posiciones": posiciones}
+        resultados[clave] = {"R@1": round(r1, 3), "MRR": round(mrr, 3), "posiciones": posiciones,
+                             "decisiones": decisiones}
         print(f"{clave:32} R@1 {r1:.2f} MRR {mrr:.3f}  " + " ".join(f"{c}={p}" for c, p in posiciones.items()))
     if a.salida:
         previo = json.loads(a.salida.read_text()) if a.salida.exists() else {}

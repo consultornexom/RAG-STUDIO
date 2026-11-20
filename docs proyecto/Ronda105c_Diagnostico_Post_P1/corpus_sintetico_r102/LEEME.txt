@@ -1,0 +1,1 @@
+Corpus SINTÉTICO de la Ronda 102 (diagnostico_simulador.py): los planes tienen una sección 'Requisitos de ingreso' que solo remite a requisitos_ingreso.md. No son documentos reales.

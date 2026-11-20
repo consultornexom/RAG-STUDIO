@@ -1,0 +1,12 @@
+SINTETICO_R102+documento_completo+subpalabras+real|base R@1 0.14 MRR 0.143  R1=1 
+SINTETICO_R102+documento_completo+subpalabras+real|V R@1 0.07 MRR 0.095  R1=3 
+SINTETICO_R102+documento_completo+subpalabras+real|VY R@1 0.07 MRR 0.095  R1=3 
+SINTETICO_R102+documento_completo+subpalabras+real|VR R@1 0.14 MRR 0.143  R1=1 
+SINTETICO_R102+documento_completo+subpalabras+real|VYR R@1 0.14 MRR 0.143  R1=1 
+SINTETICO_R102+documento_completo+subpalabras+real|YR R@1 0.14 MRR 0.143  R1=1 
+SINTETICO_R102+documento_completo+subpalabras|base R@1 0.14 MRR 0.143  R1=1 
+SINTETICO_R102+documento_completo+subpalabras|V R@1 0.07 MRR 0.095  R1=3 
+SINTETICO_R102+documento_completo+subpalabras|VY R@1 0.07 MRR 0.095  R1=3 
+SINTETICO_R102+documento_completo+subpalabras|VR R@1 0.14 MRR 0.143  R1=1 
+SINTETICO_R102+documento_completo+subpalabras|VYR R@1 0.14 MRR 0.143  R1=1 
+SINTETICO_R102+documento_completo+subpalabras|YR R@1 0.14 MRR 0.143  R1=1 
